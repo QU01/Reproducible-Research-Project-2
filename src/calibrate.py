@@ -2,6 +2,7 @@
 
 Estimation: simulated method of moments + trajectory fit, using only 1950-1990 data.
     loss = RMSE(log GDP pc, mean of simulations vs data, all country-years <= 1990)
+         + RMSE of natural-resource rents / GDP vs World Bank WDI (1970-1990)
          + |sd of simulated 10y growth - sd observed| (identifies the stochastic tech jumps)
          + cross-entropy of simulated conflict hazard vs observed UCDP conflict incidence
 Backtest: state is re-anchored to observed data in 1990, policies are frozen at each
@@ -26,6 +27,7 @@ FREE = {  # name: (low, high)
     "g0": (0.0, 0.02), "kappa": (0.0, 0.03), "kappa_m": (0.0, 1.0),
     "lam0": (0.0, 1.5), "j0": (0.0, 0.15), "sig_a": (0.005, 0.08), "tau": (0.0, 0.08),
     "b0": (-6.0, 0.0), "b1": (0.0, 3.0), "b2": (-1.5, 0.5), "bp": (0.0, 4.0), "b3": (-3.0, 0.0),
+    "r_R": (0.01, 0.12), "x0": (0.01, 0.5), "x_hist": (0.05, 1.5),
 }
 NAMES = list(FREE)
 
@@ -33,6 +35,7 @@ W = build_world()
 LY = np.log(W.Y / W.pop)
 LY[~W.observed] = np.nan
 CONF = np.where(W.observed, W.conflict, np.nan)
+RR = np.where(W.observed, W.rr_obs, np.nan)
 
 
 def growth_sd(ly, t_end):
@@ -48,14 +51,14 @@ def growth_sd(ly, t_end):
 SD_OBS = growth_sd(LY, T_SPLIT)
 
 
-def loss(v, R=8, seed=1, detail=False):
+def loss(v, R=12, seed=1, detail=False):
     try:
         return _loss(v, R, seed, detail)
     except Exception:
         return 1e3
 
 
-def _loss(v, R=8, seed=1, detail=False):
+def _loss(v, R=12, seed=1, detail=False):
     p = Params().with_vector(NAMES, v)
     sim = Simulator(W, p, R=R, seed=seed)
     o = sim.run(0, T_SPLIT + 1)
@@ -71,9 +74,21 @@ def _loss(v, R=8, seed=1, detail=False):
     # aggregate conflict incidence by decade (keeps conflicts from piling up over time)
     inc = sum(abs(np.nanmean(np.where(okc, h, np.nan)[:, a:a + 10]) - np.nanmean(c[:, a:a + 10]))
               for a in range(0, T_SPLIT, 10)) / 4
-    total = rmse + 2.0 * abs(sd_sim - SD_OBS) + 1.0 * ce + 3.0 * inc
+    # natural-resource rents / GDP (WDI starts in 1970)
+    rs = np.nanmean(o["res_share"], 0)
+    d_rr = RR[:, :T_SPLIT + 1]
+    okr = ~np.isnan(d_rr) & ~np.isnan(rs)
+    rr_rmse = np.sqrt(np.mean((rs[okr] - d_rr[okr]) ** 2))
+    # calibration of the stochastic part: share of observed country-years (from 1955) inside the
+    # simulated 10-90% band (target 0.8)
+    lo, hi = np.nanpercentile(o["ly"], 10, 0), np.nanpercentile(o["ly"], 90, 0)
+    okb = ok & (np.arange(T_SPLIT + 1)[None] >= 5)
+    cov = np.mean((d[okb] >= lo[okb]) & (d[okb] <= hi[okb]))
+    total = (rmse + 2.0 * abs(sd_sim - SD_OBS) + 1.0 * ce + 3.0 * inc + 3.0 * rr_rmse
+             + 1.0 * abs(cov - 0.8))
     if detail:
-        return dict(total=total, rmse=rmse, sd_sim=sd_sim, sd_obs=SD_OBS, ce=ce, inc_gap=inc)
+        return dict(total=total, rmse=rmse, sd_sim=sd_sim, sd_obs=SD_OBS, ce=ce, inc_gap=inc,
+                    rr_rmse=rr_rmse, cobertura_80=cov)
     return total if np.isfinite(total) else 1e3
 
 
@@ -143,6 +158,20 @@ def backtest(p, R=64, seed=7):
         row["cobertura_80"] = cover[-1]
         res["horizons"][str(yr)] = row
 
+    # natural-resource rents / GDP: model vs persistence of the 1990 share
+    rs = np.nanmean(o["res_share"], 0)
+    res["recursos"] = {}
+    for yr in [2000, 2010, 2019]:
+        t = yr - 1950
+        ok = ~np.isnan(RR[:, t]) & ~np.isnan(rs[:, t]) & ~np.isnan(RR[:, t0])
+        truth = RR[ok, t]
+        row = {}
+        for k, pr in {"modelo": rs[ok, t], "persistencia": RR[ok, t0]}.items():
+            row[k] = dict(rmse=float(np.sqrt(np.mean((pr - truth) ** 2))),
+                          spearman=float(spearmanr(pr, truth)[0]))
+        row["n"] = int(ok.sum())
+        res["recursos"][str(yr)] = row
+
     # conflict: per country-year hazard vs observed 1991-2019
     hz = np.nanmean(o["hazard"], 0)[:, t0 + 1:]
     c = CONF[:, t0 + 1:]
@@ -162,9 +191,13 @@ def backtest(p, R=64, seed=7):
 def main():
     OUT.mkdir(exist_ok=True)
     x0 = Params().vector(NAMES)
+    prev = OUT / "calibration.json"
+    if prev.exists():  # warm start from the previous calibration where names overlap
+        old = json.load(open(prev))["params"]
+        x0 = np.array([np.clip(old.get(n, v), *FREE[n]) for n, v in zip(NAMES, x0)])
     print("initial", loss(x0, detail=True))
     t = time.time()
-    r = differential_evolution(loss, [FREE[n] for n in NAMES], seed=3, maxiter=60, popsize=12,
+    r = differential_evolution(loss, [FREE[n] for n in NAMES], seed=3, maxiter=90, popsize=12,
                                tol=1e-4, polish=False, workers=4, updating="deferred", x0=x0)
     print("DE done", round(time.time() - t), "s", r.fun)
     p = Params().with_vector(NAMES, r.x)

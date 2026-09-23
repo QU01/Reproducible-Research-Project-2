@@ -9,7 +9,7 @@
   --grid:#dde2e6; --axis:#bfc6cc; --line:rgba(17,26,34,.12); --accent:#1c5cab; --accent-ink:#fff;
   --nodata:#d5dadf; --ocean:#f6f8f9; --focus:#1c5cab;
   --s-data:#111a22; --s-model:#2a78d6; --s-fc:#eb6834; --s-rl:#1baf7a;
-  --c-k:#2a78d6; --c-r:#eb6834; --c-m:#1baf7a; --c-f:#eda100; --c-w:#e87ba4;
+  --c-k:#2a78d6; --c-r:#eb6834; --c-m:#1baf7a; --c-x:#eda100; --c-f:#e87ba4; --c-w:#008300;
   --z-core:#2a78d6; --z-semi:#1baf7a; --z-per:#eb6834;
   --good:#006300; --bad:#d03b3b;
   --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
@@ -23,7 +23,7 @@
     --grid:#252c33; --axis:#3a434c; --line:rgba(238,242,245,.12); --accent:#5598e7; --accent-ink:#0d1115;
     --nodata:#2a3138; --ocean:#11161a; --focus:#86b6ef;
     --s-data:#eef2f5; --s-model:#3987e5; --s-fc:#d95926; --s-rl:#199e70;
-    --c-k:#3987e5; --c-r:#d95926; --c-m:#199e70; --c-f:#c98500; --c-w:#d55181;
+    --c-k:#3987e5; --c-r:#d95926; --c-m:#199e70; --c-x:#c98500; --c-f:#d55181; --c-w:#008300;
     --z-core:#3987e5; --z-semi:#199e70; --z-per:#d95926;
     --good:#0ca30c; --bad:#e66767;
   }
@@ -34,7 +34,7 @@
   --grid:#252c33; --axis:#3a434c; --line:rgba(238,242,245,.12); --accent:#5598e7; --accent-ink:#0d1115;
   --nodata:#2a3138; --ocean:#11161a; --focus:#86b6ef;
   --s-data:#eef2f5; --s-model:#3987e5; --s-fc:#d95926; --s-rl:#199e70;
-  --c-k:#3987e5; --c-r:#d95926; --c-m:#199e70; --c-f:#c98500; --c-w:#d55181;
+  --c-k:#3987e5; --c-r:#d95926; --c-m:#199e70; --c-x:#c98500; --c-f:#d55181; --c-w:#008300;
   --z-core:#3987e5; --z-semi:#199e70; --z-per:#d95926;
   --good:#0ca30c; --bad:#e66767;
 }
@@ -157,12 +157,13 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div>
       <div class="eyebrow">Modelo agéntico · 180 países · 1950–2019</div>
       <h1>Atlas del Sistema-Mundo</h1>
-      <p class="lede">El excedente fluye de la periferia al centro; allí lo capturan las élites y crece el estrés político. Cada nación decide si invierte en sí misma, compra al centro o invierte fuera. Primero calibramos contra 70 años de datos; después dejamos que aprendan por refuerzo.</p>
+      <p class="lede">El excedente fluye de la periferia al centro; allí lo capturan las élites y crece el estrés político. Cada nación decide si invierte en sí misma, compra al centro, explota sus recursos o sale a buscar los de otros. Primero calibramos contra 70 años de datos; después dejamos que aprendan por refuerzo.</p>
     </div>
     <div class="theory">
       <span class="tag">Sistema-mundo · Wallerstein</span>
       <span class="tag">Demografía estructural · Goldstone/Turchin</span>
       <span class="tag">Frontera metaétnica · Turchin</span>
+      <span class="tag">Agotamiento logístico · Hubbert</span>
     </div>
   </header>
 
@@ -208,6 +209,12 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
       <div class="card"><h3>Conflicto interno 1991–2019 (UCDP)</h3><div class="tablewrap" style="margin-top:8px"><table id="cfTable"></table></div><p class="note">AUC: capacidad de ordenar país-años con conflicto por encima de los que no lo tienen (0,5 = azar). Brier: error cuadrático de la probabilidad (menor es mejor).</p></div>
       <div class="card"><h3>Ajuste dentro de muestra (1950–1990)</h3><dl class="kv" id="fitKV" style="margin-top:10px"></dl><p class="note">Parámetros estimados por evolución diferencial sobre trayectorias simuladas (método de momentos simulados + ajuste de trayectorias + verosimilitud del conflicto).</p></div>
     </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>Rentas de recursos naturales (% del PIB, Banco Mundial)</h3><div class="tablewrap" style="margin-top:8px"><table id="rrTable"></table></div><p class="note">Pronóstico desde 1990 de la participación de las rentas de recursos en el PIB de cada país. La participación mundial se toma de los datos (Cobb-Douglas la fija); el modelo explica cómo se reparte entre países según el agotamiento, la inversión extractiva y las concesiones extranjeras.</p></div>
+      <div class="card"><h3>Precio mundial de los recursos</h3>
+        <div class="keyrow" id="priceKey" style="margin:6px 0"></div><div id="priceChart"></div>
+        <p class="note">Índice 1970 = 1 (antes de 1970 no hay datos de rentas). Sube cuando la demanda (el crecimiento mundial) va por delante de una capacidad de extracción que ya declina, y con la participación mundial de las rentas observada (choques petroleros de 1973 y 1979). Sin descubrimientos ni sustitución, el modelo tiende a exagerar la subida.</p></div>
+    </div>
     <div class="card" style="margin-top:16px">
       <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
         <h3>Trayectorias: datos vs. modelo</h3>
@@ -221,7 +228,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div class="bhead">
       <div class="eyebrow">2 · Aprendizaje por refuerzo</div>
       <h2>Políticas que emergen</h2>
-      <p class="lede">Una red de política compartida (PPO) para las 180 naciones; cada una ve su propio estado y cada cinco años reparte un 40 % de su PIB entre cinco canales. Entrenamos tres sistemas de recompensa distintos y comparamos lo que aprenden.</p>
+      <p class="lede">Una red de política compartida (PPO) para las 180 naciones; cada una ve su propio estado y cada cinco años reparte un 40 % de su PIB entre seis canales. Entrenamos tres sistemas de recompensa distintos y comparamos lo que aprenden.</p>
     </div>
     <div class="grid3" id="rewardCards"></div>
     <div class="grid2" style="margin-top:16px">
@@ -251,7 +258,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div style="margin-top:16px">
       <h3 style="margin-bottom:4px">Arquetipos de política</h3>
       <p class="hint" style="margin-bottom:10px">K-medias sobre la asignación media de cada país en los tres regímenes de recompensa. Pulsa un arquetipo para resaltar sus miembros en el mapa.</p>
-      <div class="grid4" id="archCards"></div>
+      <div class="grid3" id="archCards"></div>
     </div>
     <div class="card prose" style="margin-top:16px" id="findings"></div>
   </section>
@@ -270,7 +277,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
       <div class="card prose" id="limits"></div>
     </div>
   </section>
-  <footer>Datos: Penn World Table 10.01 (Feenstra, Inklaar y Timmer), UCDP/PRIO Armed Conflict Dataset, V-Dem vía <span style="font-family:var(--mono)">peacesciencer</span>; fronteras Natural Earth 1:110m. Código reproducible en el repositorio (<span style="font-family:var(--mono)">src/</span>).</footer>
+  <footer>Datos: Penn World Table 10.01 (Feenstra, Inklaar y Timmer), Banco Mundial WDI (rentas de recursos naturales), UCDP/PRIO Armed Conflict Dataset, V-Dem vía <span style="font-family:var(--mono)">peacesciencer</span>; fronteras Natural Earth 1:110m. Código reproducible en el repositorio (<span style="font-family:var(--mono)">src/</span>).</footer>
 </div>
 <div class="tip" id="tip" hidden></div>
 
@@ -299,10 +306,14 @@ const LAYERS = [
   {id:"asab", name:"Asabiya", desc:"Cohesión colectiva: crece en la frontera metaétnica (periferia expuesta y drenada por el centro) y decae en centros ricos.", kind:"seq", ramp:"aqua"},
   {id:"E", name:"Captura de élites", desc:"Parte del excedente que se apropian las élites (en datos: 1 − participación laboral).", kind:"seq", ramp:"violet"},
   {id:"rent_in", name:"Renta neta del sistema-mundo", desc:"Rentas netas recibidas (+) o drenadas (−) como % del PIB: intercambio desigual, rentas de monopolio y beneficios repatriados.", kind:"div"},
+  {id:"res_share", name:"Rentas de recursos", desc:"Rentas de los recursos naturales extraídos en el territorio, % del PIB (datos: Banco Mundial, desde 1970).", kind:"seq", ramp:"amber"},
+  {id:"reserves", name:"Reservas restantes", desc:"Fracción de los recursos recuperables que aún no se ha extraído. La capacidad de extracción sigue una logística: sube al abrir el yacimiento y cae al agotarlo.", kind:"seq", ramp:"green"},
+  {id:"fshare", name:"Extracción extranjera", desc:"Parte de la extracción del país en manos de capital extranjero: compite con la extracción nacional y acelera el agotamiento.", kind:"seq", ramp:"magenta"},
+  {id:"ims", name:"Dependencia de recursos", desc:"Parte de los recursos que usa el país y que no controla (ni en casa ni en concesiones fuera): paga un sobrecosto por importarlos.", kind:"seq", ramp:"blue"},
   {id:"conflict", name:"Conflicto interno", desc:"Probabilidad anual de conflicto armado interno (en datos: conflicto UCDP activo).", kind:"seq", ramp:"orange"},
   {id:"alloc", name:"Asignación del presupuesto", desc:"Porción del presupuesto discrecional que el país dedica al canal elegido.", kind:"seq", ramp:"chan"},
 ];
-const CHN = {k:"Capital doméstico", r:"Tecnología propia", m:"Importar del centro", f:"Invertir fuera", w:"Redistribuir"};
+const CHN = {k:"Capital doméstico", r:"Tecnología propia", m:"Importar del centro", x:"Extracción propia", f:"Recursos fuera", w:"Redistribuir"};
 const ZN = ["Periferia","Semiperiferia","Centro"];
 const ZC = ["--z-per","--z-semi","--z-core"];
 
@@ -321,6 +332,9 @@ function ramp(name){
     orange: dk ? ["#2d1f19","#8a3a18","#d95926","#fbc7ae"] : ["#fde6da","#f4a37f","#eb6834","#7a2a0c"],
     aqua:   dk ? ["#132823","#146b4c","#199e70","#b5ebd5"] : ["#d8f3e8","#7fd3b0","#1baf7a","#0b5a3d"],
     violet: dk ? ["#1f1c33","#4b3f9c","#9085e9","#dcd8fb"] : ["#e7e4f8","#a79ee6","#4a3aa7","#231a5e"],
+    amber:  dk ? ["#2a2213","#7a5400","#c98500","#f7d58a"] : ["#fcf0d2","#f3c65c","#c98500","#5e3e00"],
+    green:  dk ? ["#142414","#1d5e1d","#2f9a2f","#bfe8bf"] : ["#e0f2e0","#86c986","#008300","#003d00"],
+    magenta:dk ? ["#2b1a22","#7d2f53","#d55181","#f6c6d9"] : ["#fbe5ee","#f0a9c4","#d55181","#7a1f45"],
   };
   if (name === "chan") {
     const c = css("--c-" + st.chan);
@@ -367,6 +381,7 @@ const DOM = {
   ly: [Math.log(500), Math.log(80000)],
   psi: [Math.log(0.2), Math.log(20)],
   asab: [0.05, 0.95], E: [0.2, 0.8], conflict: [0, 0.6], rent_in: [-0.12, 0.12], alloc:[0, 0.6],
+  res_share: [0, 0.3], reserves: [0, 1], fshare: [0, 0.8], ims: [0, 1],
 };
 function colorFor(lay){
   const L = LAYERS.find(l=>l.id===lay);
@@ -436,7 +451,7 @@ function fmtLayer(lay, v){
   if (lay === "psi") return f2(v);
   if (lay === "conflict") return pct(v);
   if (lay === "rent_in") return (v>0?"+":"") + pct1(v);
-  if (lay === "alloc" || lay === "E") return pct(v);
+  if (["alloc","E","res_share","reserves","fshare","ims"].includes(lay)) return pct(v);
   return f2(v);
 }
 
@@ -486,7 +501,7 @@ function weightedGini(x, w){
 
 // ---------- side panel
 function lineChart(el, series, opts={}){
-  const W = 320, H = opts.h || 150, m = {l:40,r:8,t:8,b:20};
+  const W = opts.w || 320, H = opts.h || 150, m = {l:40,r:8,t:8,b:20};
   const xs = d3.scaleLinear().domain([1950,2019]).range([m.l, W-m.r]);
   const all = series.flatMap(s => s.pts.map(p=>p[1]).concat(s.band? s.band.flatMap(b=>[b[1],b[2]]):[])).filter(v=>v!=null);
   if (!all.length){ el.innerHTML = `<p class="hint">Sin datos para este país.</p>`; return; }
@@ -518,6 +533,9 @@ function renderSide(){
   if (arr(sc,"asab")) kv.push(["Asabiya", g(sc,"asab")==null?"—":f2(g(sc,"asab"))]);
   if (arr(sc,"E")) kv.push(["Captura de élites", g(sc,"E")==null?"—":pct(g(sc,"E"))]);
   if (arr(sc,"rent_in")) kv.push(["Renta neta / PIB", g(sc,"rent_in")==null?"—":((g(sc,"rent_in")>0?"+":"")+pct1(g(sc,"rent_in")))]);
+  if (arr(sc,"res_share")) kv.push(["Rentas de recursos / PIB", g(sc,"res_share")==null?"—":pct1(g(sc,"res_share"))]);
+  if (arr(sc,"reserves")) kv.push(["Reservas restantes", g(sc,"reserves")==null?"—":pct(g(sc,"reserves"))]);
+  if (arr(sc,"fshare")) kv.push(["Extracción extranjera", g(sc,"fshare")==null?"—":pct(g(sc,"fshare"))]);
   if (arr(sc,"conflict")) kv.push([sc==="datos"?"Conflicto (UCDP)":"Prob. conflicto", g(sc,"conflict")==null?"—":(sc==="datos"? (g(sc,"conflict")? "Sí":"No") : pct(g(sc,"conflict")))]);
   el.innerHTML = `
     <div><div class="eyebrow">País seleccionado · ${st.year}</div><div class="cname">${M.names[i]}</div>
@@ -612,12 +630,32 @@ function buildValidation(){
     <tr class="ours"><td>Modelo (PSI + ingreso + asabiya)</td><td class="${C.modelo.auc>=C.frecuencia_pasada.auc?"best":""}">${f2(C.modelo.auc)}</td><td class="${C.modelo.brier<=C.frecuencia_pasada.brier?"best":""}">${f3(C.modelo.brier)}</td><td>${pct1(C.modelo.tasa_pred)}</td></tr>
     <tr><td>Frecuencia pasada del país (1970–90)</td><td class="${C.frecuencia_pasada.auc>C.modelo.auc?"best":""}">${f2(C.frecuencia_pasada.auc)}</td><td class="${C.frecuencia_pasada.brier<C.modelo.brier?"best":""}">${f3(C.frecuencia_pasada.brier)}</td><td>${pct1(C.frecuencia_pasada.tasa_pred)}</td></tr>
     <tr><td>Observado</td><td>—</td><td>—</td><td>${pct1(C.tasa_obs)}</td></tr></tbody>`;
+  const RRb = bt.recursos;
+  if (RRb){
+    const yy = Object.keys(RRb);
+    let h2 = `<thead><tr><th>Método</th>${yy.map(y=>`<th>RMSE ${y}</th><th>Spearman ${y}</th>`).join("")}</tr></thead><tbody>`;
+    for (const [k,n] of [["modelo","Modelo híbrido"],["persistencia","Persistencia de 1990"]]){
+      h2 += `<tr class="${k==="modelo"?"ours":""}"><td>${n}</td>`;
+      for (const y of yy){
+        const o = k==="modelo" ? "persistencia" : "modelo";
+        h2 += `<td class="${RRb[y][k].rmse<=RRb[y][o].rmse?"best":""}">${f3(RRb[y][k].rmse)}</td><td class="${RRb[y][k].spearman>=RRb[y][o].spearman?"best":""}">${f2(RRb[y][k].spearman)}</td>`;
+      }
+      h2 += `</tr>`;
+    }
+    document.getElementById("rrTable").innerHTML = h2 + `</tbody>`;
+  }
+  if (D.precio){
+    const PS = [["modelo_hist","Modelo histórico","--s-model"],["rl_bienestar","RL · Bienestar","--s-rl"],["rl_poder","RL · Poder","--c-x"],["rl_elite","RL · Élite","--c-f"]].filter(p=>D.precio[p[0]]);
+    document.getElementById("priceKey").innerHTML = PS.map(p=>`<span><i style="background:var(${p[2]})"></i>${p[1]}</span>`).join("");
+    lineChart(document.getElementById("priceChart"), PS.map(p=>({pts:M.years.map((y,k)=>[y, y<1970 ? null : D.precio[p[0]][k] / D.precio[p[0]][20]]), color:css(p[2])})), {tf:v=>d3.format(".1f")(v), h:260, w:560});
+  }
   const F = D.calibration.fit_1950_1990;
   document.getElementById("fitKV").innerHTML = [
     ["RMSE log PIB pc (país-año)", f3(F.rmse)],
     ["Dispersión crecimiento decenal · modelo", f3(F.sd_sim)],
     ["Dispersión crecimiento decenal · datos", f3(F.sd_obs)],
     ["Entropía cruzada del conflicto", f3(F.ce)],
+    ["RMSE rentas de recursos / PIB (1970–1990)", F.rr_rmse!=null ? f3(F.rr_rmse) : "—"],
   ].map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join("");
   const r19 = H[yrs[yrs.length-1]];
   const bestRmse = d3.min(models.map(([k])=>r19[k].rmse));
@@ -681,22 +719,22 @@ function buildPolicies(){
   // response curves
   let rm = modes.length ? modes[0][0] : null;
   const rs = d3.select("#respMode").selectAll("button").data(modes).join("button").text(d=>d[1]).on("click",(e,d)=>{ rm=d[0]; drawResp(); });
-  const FEAT = {ly_rel:["Ingreso relativo (log vs. media)", f2], asabiya:["Asabiya", f2], log_psi:["log PSI", f2], elite_E:["Captura de élites", pct]};
+  const FEAT = {ly_rel:["Ingreso relativo (log vs. media)", f2], reservas:["Reservas propias restantes", pct], extranjera:["Extracción propia en manos extranjeras", pct], asabiya:["Asabiya", f2], log_psi:["log PSI", f2], elite_E:["Captura de élites", pct]};
   function drawResp(){
     rs.attr("aria-pressed", d=>d[0]===rm);
     const box = document.getElementById("respCharts"); box.innerHTML = "";
     if (!rm) return;
     for (const [fk,[fname,tf]] of Object.entries(FEAT)){
-      const r = D.respuesta[rm][fk]; const d = document.createElement("div");
+      const r = D.respuesta[rm][fk]; if (!r) continue; const d = document.createElement("div");
       d.innerHTML = `<div style="font-size:12px;color:var(--ink2)">${fname}</div><div></div>`; box.appendChild(d);
       const W=300,H=130,m={l:32,r:6,t:6,b:18};
-      const xs=d3.scaleLinear().domain(d3.extent(r.x)).range([m.l,W-m.r]);
+      const xs=d3.scaleLinear().domain(d3.extent(r.grid)).range([m.l,W-m.r]);
       const ymax = d3.max(CH, c=>d3.max(r[c]));
       const ys=d3.scaleLinear().domain([0, Math.max(.2, ymax)]).nice(3).range([H-m.b,m.t]);
       let s = `<svg class="mini" viewBox="0 0 ${W} ${H}">`;
       for (const tk of ys.ticks(3)) s += `<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${ys(tk)}" y2="${ys(tk)}"/><text x="${m.l-4}" y="${ys(tk)+3}" text-anchor="end">${pct(tk)}</text>`;
       for (const tk of xs.ticks(4)) s += `<text x="${xs(tk)}" y="${H-4}" text-anchor="middle">${tf(tk)}</text>`;
-      for (const c of CH) s += `<path d="${d3.line().x((v,j)=>xs(r.x[j])).y(v=>ys(v))(r[c])}" fill="none" stroke="var(--c-${c})" stroke-width="2"/>`;
+      for (const c of CH) s += `<path d="${d3.line().x((v,j)=>xs(r.grid[j])).y(v=>ys(v))(r[c])}" fill="none" stroke="var(--c-${c})" stroke-width="2"/>`;
       s += `</svg>`; d.lastChild.innerHTML = s;
     }
   }
@@ -711,6 +749,11 @@ function buildPolicies(){
     ["Países que ascienden de zona 1970→2019", "movilidad_ascendente", pct], ["Países que descienden", "movilidad_descendente", pct],
     ["Captura de élites media 2019", "elite_share_2019", pct],
     ["PSI mediano del centro 2019", "psi_centro_2019", f2], ["PSI mediano de la periferia 2019", "psi_periferia_2019", f2],
+    ["Precio mundial de los recursos 2019 (1970 = 1)", "precio_recursos_2019", v=>d3.format(".1f")(v)],
+    ["Reservas restantes (mediana) 2019", "reservas_restantes_2019", pct],
+    ["Extracción extranjera en la periferia 2019", "extraccion_extranjera_periferia_2019", pct],
+    ["Extracción extranjera en el centro 2019", "extraccion_extranjera_centro_2019", pct],
+    ["Dependencia de recursos importados del centro 2019", "dependencia_importacion_centro_2019", pct],
   ];
   let t = `<thead><tr><th>Indicador</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>`;
   for (const [n,k,f] of rows) t += `<tr><td>${n}</td>${cols.map(c=>{ const v = get(c[0])?.[k]; return `<td>${v==null?"—":f(v)}</td>`; }).join("")}</tr>`;
@@ -753,25 +796,32 @@ function buildMech(){
   for (const c of colors) defs.append("marker").attr("id","ah-"+c.replace("#","")).attr("viewBox","0 0 10 10").attr("refX",9).attr("refY",5).attr("markerWidth",7).attr("markerHeight",7).attr("orient","auto-start-reverse").append("path").attr("d","M0 0L10 5L0 10z").attr("fill",c);
   box(20,120,180,62,"Periferia","asabiya ↑ en la frontera");
   box(360,120,180,62,"Centro","asabiya ↓ con la riqueza");
-  box(360,250,180,56,"Élites del centro","capturan φ de las rentas");
-  box(20,250,180,56,"Industria propia","saltos tecnológicos");
+  box(20,250,160,56,"Industria propia","saltos tecnológicos");
+  box(200,250,160,56,"Recursos","capacidad logística");
+  box(380,250,160,56,"Élites del centro","capturan φ de las rentas");
   box(190,16,180,54,"Tecnología (frontera)","difusión + saltos");
   arrow("M200 138 C 260 118, 300 118, 358 138", colors[0], "intercambio desigual τ, rentas μ", 280, 112);
-  arrow("M358 168 C 300 190, 260 190, 202 168", colors[1], "bienes de alto valor, IED", 280, 204);
-  arrow("M450 182 L 450 248", colors[0], "", 0, 0);
-  arrow("M110 182 L 110 248", colors[2], "invertir r", 146, 222);
-  arrow("M60 250 C 40 150, 120 60, 188 44", colors[2], "", 0, 0);
-  s.append("text").attr("class","sm").attr("x",450).attr("y",326).attr("text-anchor","middle").text("sobreproducción de élites → PSI ↑");
-  s.append("text").attr("class","sm").attr("x",110).attr("y",326).attr("text-anchor","middle").text("sustituye importaciones");
+  arrow("M358 168 C 300 190, 260 190, 202 168", colors[1], "bienes de alto valor", 280, 204);
+  arrow("M460 182 L 460 248", colors[0], "", 0, 0);
+  arrow("M80 182 L 80 248", colors[2], "", 0, 0);
+  s.append("text").attr("class","sm").attr("x",86).attr("y",214).text("invertir r");
+  arrow("M22 268 C 2 200, 2 60, 188 40", colors[2], "", 0, 0);
+  arrow("M150 182 C 190 210, 230 220, 250 248", colors[2], "", 0, 0);
+  arrow("M420 182 C 380 215, 340 225, 318 248", colors[1], "concesiones f", 388, 236);
+  s.append("text").attr("class","sm").attr("x",460).attr("y",326).attr("text-anchor","middle").text("sobreproducción → PSI ↑");
+  s.append("text").attr("class","sm").attr("x",100).attr("y",326).attr("text-anchor","middle").text("sustituye importaciones");
+  s.append("text").attr("class","sm").attr("x",280).attr("y",326).attr("text-anchor","middle").text("se agotan · compiten");
+  s.append("text").attr("class","sm").attr("x",176).attr("y",236).attr("text-anchor","middle").text("extraer x");
   arrow("M370 44 C 420 50, 450 80, 450 118", colors[3], "", 0, 0);
   document.getElementById("mech").innerHTML = `
     <h3>Tres teorías, una dinámica</h3>
     <p><strong>Sistema-mundo.</strong> La “centralidad” de cada país es una función suave de su productividad relativa. La periferia pierde una fracción τ de su producción comerciada (intercambio desigual) y paga una renta de monopolio μ sobre los bienes de alto valor que compra al centro; el capital extranjero se dirige a donde su rendimiento marginal es alto y los beneficios regresan a sus dueños.</p>
     <p><strong>Demografía estructural.</strong> Las élites capturan una parte E de la producción y φ de toda renta que entra al país. Cuando el ingreso por miembro de la élite es alto, el número de élites crece (sobreproducción); si el ingreso de las masas se estanca, sube su potencial de movilización. PSI = MMP × EMP × SFD determina el riesgo de conflicto interno, que destruye producto y poda a la élite.</p>
     <p><strong>Frontera metaétnica.</strong> La asabiya crece logísticamente donde hay una frontera: periferias abiertas que el centro drena. Decae en los centros ricos, más rápido con élites sobreproducidas. Aumenta la capacidad estatal: eficiencia de la inversión, éxito de la innovación y resistencia a la inestabilidad.</p>
+    <p><strong>Recursos naturales.</strong> Cada país tiene unos recursos recuperables últimos U. Su capacidad bruta de extracción es logística en lo ya extraído (curva de Hubbert): crece mientras se abre el yacimiento y cae al agotarlo. El capital extractivo nacional y el extranjero compiten por esa misma capacidad: una concesión extranjera se lleva su parte, acelera el agotamiento y reduce lo que el país puede explotar por sí mismo; el anfitrión solo conserva una regalía. Los recursos son un insumo de la producción con precio mundial de equilibrio, y quien los importa paga un sobrecosto. Por eso, cuando un país agota los suyos, le conviene asegurarse recursos fuera. Las élites capturan más renta de recursos que de otros ingresos (maldición de los recursos), y la extracción extranjera alimenta la frontera metaétnica.</p>
     <p><strong>Tecnología.</strong> La PTF difunde hacia una frontera que avanza (más rápido con importaciones de alto valor e IED) y da saltos estocásticos con tasa de Poisson creciente en el esfuerzo de mejora y la asabiya; los saltos son mayores cuanto más lejos se está de la frontera.</p>`;
   const P = D.calibration.params;
-  const PN = {g0:"Deriva de la frontera tecnológica (g₀)", kappa:"Velocidad de difusión (κ)", kappa_m:"Difusión incorporada: importaciones/IED (κₘ)", lam0:"Tasa de saltos tecnológicos (λ₀)", j0:"Tamaño medio del salto (j₀)", sig_a:"Ruido de PTF (σ)", tau:"Intercambio desigual (τ)", b0:"Conflicto: intercepto", b1:"Conflicto: sensibilidad a log PSI", b2:"Conflicto: efecto del ingreso", bp:"Persistencia del conflicto (logit)"};
+  const PN = {g0:"Deriva de la frontera tecnológica (g₀)", kappa:"Velocidad de difusión (κ)", kappa_m:"Difusión incorporada: importaciones/IED (κₘ)", lam0:"Tasa de saltos tecnológicos (λ₀)", j0:"Tamaño medio del salto (j₀)", sig_a:"Ruido de PTF (σ)", tau:"Intercambio desigual (τ)", b0:"Conflicto: intercepto", b1:"Conflicto: sensibilidad a log PSI", b2:"Conflicto: efecto del ingreso", bp:"Persistencia del conflicto (logit)", b3:"Conflicto: efecto de la asabiya", r_R:"Pendiente logística de la capacidad extractiva (r_R)", x0:"Fracción ya extraída al entrar (x₀)", x_hist:"Rentas reinvertidas en extracción (histórico)"};
   document.getElementById("paramKV").innerHTML = Object.entries(P).map(([k,v])=>`<dt>${PN[k]||k}</dt><dd>${f3(v)}</dd>`).join("");
 }
 

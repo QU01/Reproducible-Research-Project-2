@@ -14,7 +14,9 @@ from rl import N_OBS, mlp, observe, rollout, to_shares
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT / "results"
 MODES = ["bienestar", "poder", "elite"]
-VARS = ["ly", "core", "E", "ne", "psi", "asab", "conflict", "rent_in", "k", "r", "m", "f", "w"]
+NK = 5  # number of policy archetypes
+VARS = ["ly", "core", "E", "ne", "psi", "asab", "conflict", "rent_in",
+        "res_share", "reserves", "fshare", "ims"] + CHANNELS
 
 
 def rnd(a, d=3):
@@ -41,6 +43,21 @@ def zone_of(ly):
     z = np.where(ly >= q80, 2, np.where(ly >= q50, 1, 0)).astype(float)
     z[~np.isfinite(ly)] = np.nan
     return z
+
+
+def resource_outcomes(o, price):
+    """Natural-resource indicators from per-run arrays (R, N, T) and price (R, T)."""
+    t19 = W.T - 1
+    zr = zone_of(o["ly"])
+    fs = o["fshare"][:, :, t19]
+    return dict(
+        precio_recursos_2019=float(np.nanmean(price[:, t19] / price[:, 20])),  # index 1970 = 1
+        reservas_restantes_2019=float(np.nanmedian(o["reserves"][:, :, t19])),
+        extraccion_extranjera_periferia_2019=float(np.nanmean(fs[zr[:, :, t19] == 0])),
+        extraccion_extranjera_centro_2019=float(np.nanmean(fs[zr[:, :, t19] == 2])),
+        dependencia_importacion_centro_2019=float(np.nanmean(o["ims"][:, :, t19][zr[:, :, t19] == 2])),
+        rentas_recursos_periferia_2019=float(np.nanmean(o["res_share"][:, :, t19][zr[:, :, t19] == 0])),
+    )
 
 
 def outcomes(ly, conflict, E, psi=None, label=""):
@@ -97,8 +114,9 @@ def main():
 
     # ---- observed data
     E_obs = np.where(W.observed, 1 - W.labsh, np.nan)
+    RR = np.where(W.observed, W.rr_obs, np.nan)
     data["scenarios"]["datos"] = {"ly": rnd(LY), "conflict": rnd(CONF, 0), "E": rnd(E_obs),
-                                  "core": rnd(zone_of(LY) / 2, 1)}
+                                  "core": rnd(zone_of(LY) / 2, 1), "res_share": rnd(RR)}
     summary = {"datos": outcomes(LY, CONF, E_obs)}
 
     # ---- model with historical (data-implied) policies, no re-anchoring: 1950-2019
@@ -108,6 +126,8 @@ def main():
     mean["conflict"] = np.nanmean(o["hazard"], 0)
     data["scenarios"]["modelo_hist"] = {k: rnd(mean[k]) for k in VARS}
     summary["modelo_hist"] = outcomes(mean["ly"], mean["conflict"], mean["E"], mean["psi"])
+    summary["modelo_hist"].update(resource_outcomes(o, o["price"]))
+    data["precio"] = {"modelo_hist": rnd(np.nanmean(o["price"], 0))}
     zh = zone_of(o["ly"])
     tot_h = sum(o[c] for c in CHANNELS)
     summary["modelo_hist"]["asignacion_por_zona"] = {
@@ -121,7 +141,8 @@ def main():
     data["scenarios"]["pronostico"] = {
         "ly": rnd(lyb), "ly_p10": rnd(np.where(np.isfinite(lyb), np.nanpercentile(ob["ly"], 10, 0), np.nan)),
         "ly_p90": rnd(np.where(np.isfinite(lyb), np.nanpercentile(ob["ly"], 90, 0), np.nan)),
-        "conflict": rnd(np.where(np.isfinite(lyb), np.nanmean(ob["hazard"], 0), np.nan))}
+        "conflict": rnd(np.where(np.isfinite(lyb), np.nanmean(ob["hazard"], 0), np.nan)),
+        "res_share": rnd(np.where(np.isfinite(lyb), np.nanmean(ob["res_share"], 0), np.nan))}
 
     # fit series for a few showcase countries (data vs model)
     show = ["USA", "CHN", "KOR", "BRA", "IND", "NGA", "DEU", "MEX", "ARG", "ZAF", "RUS", "EGY"]
@@ -145,6 +166,18 @@ def main():
             m[c] = m[c] / tot
         data["scenarios"][f"rl_{mode}"] = {k: rnd(m[k]) for k in VARS}
         out = outcomes(m["ly"], m["conflict"], m["E"], m["psi"])
+        out.update(resource_outcomes(rec, rec["price"]))
+        # how resource decisions react to depletion along the simulated paths (pooled OLS on
+        # country-years; budget shares on remaining own reserves, import dependence, log PSI, coreness)
+        tot_b = sum(rec[c] for c in CHANNELS)
+        Z = [rec["reserves"], rec["ims"], np.log(rec["psi"]), rec["core"]]
+        okz = np.all([np.isfinite(z) for z in Z + [tot_b]], 0)
+        Xr = np.column_stack([np.ones(okz.sum())] + [z[okz] for z in Z])
+        out["sensibilidad"] = {
+            ch: dict(zip(["const", "reservas", "dependencia", "log_psi", "centralidad"],
+                         np.linalg.lstsq(Xr, (rec[ch] / tot_b)[okz], rcond=None)[0].round(4).tolist()))
+            for ch in ("x", "f")}
+        data["precio"][f"rl_{mode}"] = rnd(np.nanmean(rec["price"], 0))
         # allocation by zone (zone defined each year inside each run)
         z = zone_of(rec["ly"])
         tot_r = sum(rec[c] for c in CHANNELS)
@@ -179,6 +212,7 @@ def main():
         ob = observe(simr2, W.T - 1)[simr2.active]
         med = np.median(ob, 0)
         feats = {"ly_rel": (0, np.linspace(-2.5, 2.5, 21)), "asabiya": (5, np.linspace(0.05, 0.95, 21)),
+                 "reservas": (10, np.linspace(0.02, 1.0, 21)), "extranjera": (11, np.linspace(0.0, 0.9, 21)),
                  "log_psi": (4, np.linspace(-2, 3, 21)), "elite_E": (2, np.linspace(0.2, 0.8, 21))}
         resp[mode] = {}
         for fname, (j, grid) in feats.items():
@@ -187,17 +221,17 @@ def main():
             if fname == "ly_rel":  # coreness moves with relative income
                 X[:, 1] = 1 / (1 + np.exp(-(grid - 1.2) / 0.35))
             sh = to_shares(mlp(th["pol"], X))
-            resp[mode][fname] = {"x": grid.round(3).tolist(),
+            resp[mode][fname] = {"grid": grid.round(3).tolist(),
                                  **{c: sh[:, k].round(4).tolist() for k, c in enumerate(CHANNELS)}}
 
     # archetypes
     if archetype_rows:
         X = np.array([r[2] for r in archetype_rows])
         Xs = (X - X.mean(0)) / (X.std(0) + 1e-9)
-        lab, C = kmeans(Xs, k=4)
-        cent = np.array([X[lab == j].mean(0) for j in range(4)])
+        lab, C = kmeans(Xs, k=NK)
+        cent = np.array([X[lab == j].mean(0) for j in range(NK)])
         names = {"k": "Acumulador", "r": "Desarrollista tecnológico", "m": "Importador que aprende",
-                 "f": "Rentista inversor", "w": "Redistributivo"}
+                 "x": "Extractivista", "f": "Buscador de recursos fuera", "w": "Redistributivo"}
         # name each cluster by the channel it over-weights most vs. the average country-regime,
         # assigned greedily so every cluster gets a distinct name
         ratio = cent / X.mean(0)
@@ -208,7 +242,7 @@ def main():
                 top[j] = CHANNELS[ci]
                 used.add(ci)
         arche = []
-        for j in range(4):
+        for j in range(NK):
             members = [(archetype_rows[i][0], W.iso3[archetype_rows[i][1]]) for i in np.where(lab == j)[0]]
             arche.append({"id": j, "nombre": names[top[j]], "canal_dominante": top[j],
                           "centroide": {c: float(v) for c, v in zip(CHANNELS, cent[j])},

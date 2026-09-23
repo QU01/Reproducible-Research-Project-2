@@ -2,14 +2,31 @@
 
 Every country is an agent. Each year it produces output with a Cobb-Douglas technology
     Y = A * K^alpha * (hc * L)^(1-alpha)
-and splits a discretionary budget (share of GDP) across five channels:
+plus a natural-resource input R (share psi_t), bought on a world market, and splits a
+discretionary budget (share of GDP) across six channels:
 
     k  domestic capital accumulation
     r  technology / industrial upgrading (R&D, industrial policy) -> stochastic tech jumps
     m  buy high-value goods from the core (quality consumption + embodied tech, but pays
        a monopoly rent to core exporters; the part produced by one's own industry stays home)
-    f  invest abroad (capital goes to hosts with high marginal product; profits repatriate)
+    x  extraction capital for the country's own natural resources
+    f  invest abroad in other countries' natural resources (concessions; profits repatriate)
     w  redistribution to the masses (lowers elite capture and mass mobilisation potential)
+
+Natural resources
+    * Each country has ultimate recoverable resources U. Its gross extraction capacity follows a
+      logistic (Hubbert) curve in cumulative extraction X:  Cap = r_R * U * (x + eps) * (1 - x),
+      x = X / U: it rises while the deposit is being opened up and falls as it is depleted.
+    * Actual extraction = Cap * (1 - exp(-e)), e = extraction capital / (c_R * Cap). Domestic
+      and foreign extraction capital compete for the same capacity: foreign concessions take
+      their share of the output, speed up depletion (x rises faster) and so shrink the host's
+      own gross capacity. The host keeps a royalty; the rest of the rent is repatriated.
+    * Resources enter production (Y = A K^alpha R^psi (hL)^(1-alpha-psi)); a world price clears
+      the market. psi_t is the observed world rent share (Cobb-Douglas pins it), so the model
+      explains the cross-country distribution of rents, not the global oil cycles. Countries that must import resources pay a markup zeta on the imported
+      share, so running out of one's own resources slows growth unless one secures supply
+      abroad (investing in foreign extraction counts as owned supply).
+    * Elites capture a larger share phi_R of resource income (resource curse).
 
 World-systems layer (Wallerstein / Emmanuel / Amin)
     * "coreness" c_i in (0,1) is a smooth function of relative productivity.
@@ -43,10 +60,11 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 ALPHA = 0.35
-CHANNELS = ["k", "r", "m", "f", "w"]
+CHANNELS = ["k", "r", "m", "x", "f", "w"]
 CHANNEL_NAMES = {"k": "Capital doméstico", "r": "Tecnología/industria propia",
-                 "m": "Importar bienes del centro", "f": "Invertir en el exterior",
-                 "w": "Redistribución"}
+                 "m": "Importar bienes del centro", "x": "Extracción propia de recursos",
+                 "f": "Invertir fuera en recursos", "w": "Redistribución"}
+EPS_X = 0.05
 
 
 @dataclass
@@ -61,7 +79,6 @@ class Params:
     # world-system flows
     tau: float = 0.030         # unequal-exchange drain on the periphery's traded output
     mu: float = 0.25           # monopoly rent share on high-value core goods
-    rho_f: float = 0.35        # share of MPK repatriated as profits on foreign capital
     phi: float = 0.60          # share of incoming rents captured by elites
     core_q: float = 0.80       # coreness threshold quantile of world productivity
     core_s: float = 0.35       # smoothness of coreness (log points)
@@ -81,9 +98,20 @@ class Params:
     r_a: float = 0.12          # asabiya growth at the frontier
     d_a: float = 0.06          # asabiya decay in the core
     s0: float = 0.50           # initial asabiya
+    # natural resources
+    r_R: float = 0.04          # Hubbert steepness of the logistic extraction capacity
+    x0: float = 0.08           # share of ultimate resources already extracted at entry
+    e0: float = 1.2            # initial extraction effort (capital / capacity)
+    c_R: float = 3.0           # extraction capital per unit of capacity
+    d_R: float = 0.06          # depreciation of extraction capital
+    zeta: float = 0.15         # markup paid on imported resources
+    roy: float = 0.30          # royalty the host keeps on foreign extraction
+    phi_R: float = 0.70        # elite capture of resource income (resource curse)
+    nu_a: float = 0.80         # asabiya resists foreign concessions (resource nationalism)
     # historical policy mapping (only used when actions come from data)
+    x_hist: float = 0.30       # share of resource rents reinvested in extraction
     r_hist: float = 0.015      # implied upgrading effort (share of GDP), scaled by investment
-    f_hist: float = 0.02       # implied outward FDI of core countries (share of GDP)
+    f_hist: float = 0.02       # implied outward resource FDI of core countries (share of GDP)
     w_hist: float = 0.03       # implied redistribution
     m_hist: float = 0.35       # fraction of imports that are high-value core goods
 
@@ -116,6 +144,9 @@ class World:
     csh_i: np.ndarray
     csh_m: np.ndarray
     labsh: np.ndarray
+    rr: np.ndarray          # natural-resource rents / GDP (filled)
+    rr_obs: np.ndarray      # same, NaN where WDI has no observation
+    psi_t: np.ndarray       # world resource rents / world GDP by year (T,)
     K: np.ndarray
     Y: np.ndarray
     conflict: np.ndarray
@@ -149,6 +180,9 @@ def build_world(panel=None):
 
     observed = ~np.isnan(grid("rgdpna", fill=None))
     entry = observed.argmax(axis=1)
+    rr = np.clip(grid("res_rents"), 0.001, 0.6)
+    Yg = grid("rgdpna", fill=None)
+    psi_t = np.nansum(np.where(observed, rr * Yg, 0), 0) / np.nansum(np.where(observed, Yg, 0), 0)
     meta = p.groupby("iso3").agg(country=("country", "first"), isonum=("isonum", "first"))
     w = World(
         iso3=iso, names=[meta.loc[c, "country"] for c in iso],
@@ -157,6 +191,7 @@ def build_world(panel=None):
         pop=grid("pop"), hc=grid("hc"),
         open_=np.clip((grid("csh_x") + grid("csh_m")) / 2, 0.02, 1.2),
         delta=grid("delta"), csh_i=grid("csh_i"), csh_m=grid("csh_m"), labsh=grid("labsh"),
+        rr=rr, rr_obs=grid("res_rents_obs", fill=None), psi_t=psi_t,
         K=grid("rnna", fill=None), Y=grid("rgdpna", fill=None),
         conflict=np.nan_to_num(grid("conflict", fill=None)),
         onset=np.nan_to_num(grid("onset", fill=None)),
@@ -169,11 +204,13 @@ def _sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
 
+
+
 class Simulator:
     """Vectorised over R Monte-Carlo worlds x N countries."""
 
     REC = ["ly", "core", "E", "ne", "psi", "asab", "conflict", "gni_pc", "rent_in", "drain",
-           "jump", "k", "r", "m", "f", "w", "cons_pc"]
+           "jump", "cons_pc", "res_share", "reserves", "fshare", "ims", "res_out"] + CHANNELS
 
     def __init__(self, world: World, params: Params, R=8, seed=0):
         self.w, self.p, self.R = world, params, R
@@ -186,60 +223,119 @@ class Simulator:
         self.active = np.zeros((R, N), bool)
         z = lambda v=0.0: np.full((R, N), v)
         self.K, self.lnA, self.E, self.ne = z(1.0), z(), z(0.5), z(1.0)
-        self.asab, self.Kf, self.claims = z(self.p.s0), z(), z()
-        self.conf = z(0.0)
+        self.asab, self.conf = z(self.p.s0), z(0.0)
         self.mass_ma = z(1.0)          # moving average of mass income per capita
         self.v0 = z(1.0)               # reference elite/mass income ratio at entry
+        # natural resources: ultimate stock, cumulative extraction, extraction capital
+        self.U, self.X = z(1e-6), z(0.0)
+        self.KRd, self.KRf, self.claims = z(0.0), z(0.0), z(0.0)
+        self.mR = z(1.0)               # markup multiplier on resources (lagged import dependence)
+        self.price = np.ones((R, 1))
         self.last = {}
-        self._activate(t0, force_all_observed=True)
+        new = w.observed[:, t0] & (w.entry <= t0)
+        self.psi_freeze = None
+        self._init_country(new, t0, price=1.0)
+        self.price = self._clearing_price_from_gdp(new, w.Y[:, t0])
+        self._anchor(new, t0, w.Y[new, t0])
         self.lnA_F = self._q_lnA()
 
-    def _init_country(self, mask, t):
-        """Initialise countries in mask (N,) from data at year index t."""
+    def _init_country(self, mask, t, price):
+        """Initialise countries in mask (N,) from data at year index t (TFP anchored separately)."""
         w, p = self.w, self.p
         if not mask.any():
             return
-        K = w.K[mask, t]
-        L, hc = w.pop[mask, t], w.hc[mask, t]
-        lnA = np.log(w.Y[mask, t]) - ALPHA * np.log(K) - (1 - ALPHA) * np.log(hc * L)
-        self.K[:, mask] = K
-        self.lnA[:, mask] = lnA
+        L = w.pop[mask, t]
+        G = w.Y[mask, t]
+        self.K[:, mask] = w.K[mask, t]
         self.E[:, mask] = np.clip(1 - w.labsh[mask, t], 0.15, 0.85)
         self.ne[:, mask] = 1.0
         self.asab[:, mask] = p.s0
-        self.Kf[:, mask] = 0.0
-        self.claims[:, mask] = 0.0
         self.conf[:, mask] = w.conflict[mask, t]
-        self.mass_ma[:, mask] = (1 - self.E[:, mask]) * (w.Y[mask, t] / L)
+        self.mass_ma[:, mask] = (1 - self.E[:, mask]) * (G / L)
         self.v0[:, mask] = self.E[:, mask] / (1 - self.E[:, mask])
+        # resources: observed rent share pins down current extraction; x0 and e0 the rest
+        E0 = w.rr[mask, t] * G / np.maximum(price, 1e-6)
+        cap_per_U = p.r_R * (p.x0 + EPS_X) * (1 - p.x0)
+        cap0 = E0 / (1 - np.exp(-p.e0))
+        self.U[:, mask] = cap0 / cap_per_U
+        self.X[:, mask] = p.x0 * cap0 / cap_per_U
+        self.KRd[:, mask] = p.e0 * p.c_R * cap0
+        self.KRf[:, mask] = 0.0
+        self.claims[:, mask] = 0.0
+        self.mR[:, mask] = 1.0
         self.active[:, mask] = True
 
-    def _activate(self, t, force_all_observed=False):
+    # ---------------------------------------------------------------- resource helpers
+    def _extraction(self):
+        """Capacity (logistic in cumulative extraction), extraction and domestic share (R, N)."""
+        p = self.p
+        x = np.clip(self.X / np.maximum(self.U, 1e-12), 0.0, 1.0)
+        cap = p.r_R * self.U * (x + EPS_X) * (1 - x)
+        KR = self.KRd + self.KRf
+        e = KR / np.maximum(p.c_R * cap, 1e-12)
+        ext = np.where(self.active, cap * (1 - np.exp(-e)), 0.0)
+        sd = np.where(KR > 0, self.KRd / np.maximum(KR, 1e-12), 1.0)
+        return cap, e, ext, sd, x
+
+    def _psi(self, t):
+        """Resource share in production = observed world rent share (Cobb-Douglas pins it);
+        frozen at the pre-forecast average when forecasting."""
         w = self.w
-        if force_all_observed:
-            new = w.observed[:, t] & (w.entry <= t)
-        else:
-            new = (w.entry == t)
-        new = new & ~self.active[0]
-        self._init_country(new, t)
+        if self.psi_freeze is not None and t > self.psi_freeze:
+            return float(np.mean(w.psi_t[max(0, self.psi_freeze - 9):self.psi_freeze + 1]))
+        return float(w.psi_t[min(t, w.T - 1)])
+
+    def _clearing_price_from_gdp(self, mask, G):
+        """World resource price consistent with observed GDP G (N,) of countries in mask."""
+        psi = self._psi(self.t)
+        _, _, ext, _, _ = self._extraction()
+        a = psi / (1 - psi)
+        m = self.mR
+        Gm = np.where(self.active, np.broadcast_to(G, m.shape), 0.0)
+        num = a * np.nansum(Gm / m, 1, keepdims=True)
+        den = ext.sum(1, keepdims=True) + a * np.sum(ext / m, 1, keepdims=True)
+        return num / np.maximum(den, 1e-12)
+
+    def _anchor(self, mask, t, G):
+        """Set TFP so the model reproduces observed GDP G of countries in mask at the current price."""
+        w, p = self.w, self.p
+        if not np.any(mask):
+            return
+        _, _, ext, _, _ = self._extraction()
+        pr = self.price
+        psi = self._psi(t)
+        Yt = np.maximum((G[None] - pr * ext[:, mask]) / (1 - psi), 0.3 * G[None])
+        pj = pr * self.mR[:, mask]
+        B = Yt ** (1 - psi) / (psi / pj) ** psi
+        L, hc = w.pop[mask, t], w.hc[mask, t]
+        self.lnA[:, mask] = (np.log(B) - ALPHA * np.log(self.K[:, mask])
+                             - (1 - ALPHA - psi) * np.log(hc * L))
+
+    def _activate(self, t):
+        new = (self.w.entry == t) & ~self.active[0]
+        if new.any():
+            self._init_country(new, t, price=self.price)
+            self._anchor(new, t, self.w.Y[new, t])
 
     def _q_lnA(self, q=0.9):
         """Technology frontier: upper quantile of TFP among active countries (R, 1)."""
         return np.nanquantile(np.where(self.active, self.lnA, np.nan), q, axis=1, keepdims=True)
 
     def assimilate(self, t):
-        """Reset observable state (K, TFP, elite share) to data at year t (forecast origin)."""
+        """Re-anchor observable state to data at year t (forecast origin): capital, GDP (via TFP),
+        elite share, conflict and the level of resource rents. Latent states are kept."""
         w = self.w
         m = w.observed[:, t]
-        K = w.K[m, t]
-        L, hc = w.pop[m, t], w.hc[m, t]
-        self.K[:, m] = K
-        self.lnA[:, m] = np.log(w.Y[m, t]) - ALPHA * np.log(K) - (1 - ALPHA) * np.log(hc * L)
+        self.K[:, m] = w.K[m, t]
         self.E[:, m] = np.clip(1 - w.labsh[m, t], 0.15, 0.85)
         self.conf[:, m] = w.conflict[m, t]
-        self.Kf[:, m] = 0.0
-        self.claims[:, m] = 0.0
-        self.active[:, m] = True
+        # rescale the resource base so extraction matches the observed rent share
+        _, _, ext, _, _ = self._extraction()
+        target = w.rr[m, t] * w.Y[m, t] / np.maximum(self.price, 1e-6)
+        sc = np.clip(target / np.maximum(ext[:, m], 1e-12), 0.05, 20)
+        for arr in (self.U, self.X, self.KRd, self.KRf):
+            arr[:, m] *= sc
+        self._anchor(m, t, w.Y[m, t])
         self.lnA_F = np.maximum(self.lnA_F, self._q_lnA())
 
     # ------------------------------------------------------------------ policy helpers
@@ -252,15 +348,17 @@ class Simulator:
             lo = max(0, freeze_from - 9)
             ci = np.nanmean(w.csh_i[:, lo:freeze_from + 1], axis=1)
             cm = np.nanmean(w.csh_m[:, lo:freeze_from + 1], axis=1)
+            rr = np.nanmean(w.rr[:, lo:freeze_from + 1], axis=1)
         else:
-            ci, cm = w.csh_i[:, t], w.csh_m[:, t]
+            ci, cm, rr = w.csh_i[:, t], w.csh_m[:, t], w.rr[:, t]
         c = self.last.get("core", np.zeros((self.R, w.N)))
         k = np.broadcast_to(ci, (self.R, w.N))
         r = p.r_hist * k / 0.22
         m = np.broadcast_to(p.m_hist * np.clip(cm, 0, 0.8), (self.R, w.N))
+        x = np.broadcast_to(p.x_hist * rr, (self.R, w.N))
         f = p.f_hist * c
         wv = np.full((self.R, w.N), p.w_hist)
-        return dict(k=k, r=r, m=m, f=f, w=wv)
+        return dict(k=k, r=r, m=m, x=x, f=f, w=wv)
 
     # ------------------------------------------------------------------ dynamics
     def step(self, actions):
@@ -268,56 +366,77 @@ class Simulator:
         w, p, R, t = self.w, self.p, self.R, self.t
         act = self.active
         L, hc = w.pop[:, t], w.hc[:, t]
-        o = w.open_[:, t] if t < w.T else w.open_[:, -1]
+        o = w.open_[:, t]
         dlt = np.nan_to_num(w.delta[:, t], nan=0.045)
         rng = self.rng
+        psi = self._psi(t)
 
+        # -- natural resources: logistic capacity, extraction, world market clearing
+        cap, eff_e, ext, sd, xdep = self._extraction()
         Kp = np.maximum(self.K, 1e-6)
-        Y = np.exp(self.lnA) * Kp ** ALPHA * (hc * L) ** (1 - ALPHA)
-        Y = Y * (1 - p.gam_c * self.conf)
-        Y = np.where(act, Y, 0.0)
-        ly = np.where(act, np.log(np.maximum(Y, 1e-9) / L), np.nan)
+        B = np.exp(self.lnA) * Kp ** ALPHA * (hc * L) ** (1 - ALPHA - psi) * (1 - p.gam_c * self.conf)
+        B = np.where(act, B, 0.0)
+        S = ext.sum(1, keepdims=True)
+        inv = 1.0 / (1 - psi)
+        denom = np.sum(np.where(act, self.mR ** (-inv) * B ** inv, 0.0), 1, keepdims=True)
+        q = (np.maximum(S, 1e-12) / np.maximum(denom, 1e-12)) ** (1 - psi)   # = psi / price
+        price = psi / q
+        pj = price * self.mR
+        Y = np.where(act, (B * (psi / pj) ** psi) ** inv, 0.0)             # gross output
+        Rres = np.where(act, psi * Y / pj, 0.0)                            # resources used
+        rev = price * ext                                                  # value of extraction
+        G = np.where(act, (1 - psi) * Y + rev, 0.0)                        # GDP (value added)
+        Gs = np.maximum(G, 1e-9)
+        ly = np.where(act, np.log(Gs / L), np.nan)
+
+        # ownership of extraction: domestic, foreign concessions, and claims abroad
+        foreign_ext = (1 - sd) * ext
+        cl_n = self.claims / np.maximum(self.claims.sum(1, keepdims=True), 1e-12)
+        owned = sd * ext + cl_n * foreign_ext.sum(1, keepdims=True)
+        ims = np.where(act, np.clip(1 - owned / np.maximum(Rres, 1e-12), 0.0, 1.0), 0.0)
+        res_out = (1 - p.roy) * price * foreign_ext                        # repatriated rents
+        res_in = cl_n * res_out.sum(1, keepdims=True)
+        res_inc = price * sd * ext + p.roy * price * foreign_ext           # stays in the host
 
         # coreness relative to the world distribution of productivity
         ref = np.nanquantile(ly, p.core_q, axis=1, keepdims=True)
         core = np.where(act, _sigmoid((ly - ref) / p.core_s), 0.0)
-        # technology gap to a frontier that drifts exogenously (g0) and is pushed by innovators
         gap = np.where(act, np.clip(self.lnA_F - self.lnA, 0.0, 4.0), 0.0)
 
         a = {c: np.where(act, actions[c], 0.0) for c in CHANNELS}
 
         # exporters of high-value goods: technological weight
-        wexp = core ** 2 * Y
+        wexp = core ** 2 * G
         wexp_n = wexp / np.maximum(wexp.sum(1, keepdims=True), 1e-9)
         # (1) unequal exchange
-        drain = p.tau * o * Y * (1 - core)
+        drain = p.tau * o * G * (1 - core)
         drain_in = drain.sum(1, keepdims=True) * wexp_n
         # (2) monopoly rents on high-value imports (own industry supplies a share = coreness)
-        mspend = a["m"] * Y
+        mspend = a["m"] * G
         foreign_m = mspend * (1 - core)
         rent_m_in = p.mu * foreign_m.sum(1, keepdims=True) * wexp_n
-        # (3) FDI: capital to high-MPK hosts, profits back to owners
-        mpk = ALPHA * Y / Kp
-        fout = a["f"] * Y
-        host_w = np.where(act, Y * np.minimum(mpk, 0.3) * (1 - self.conf) * o * (1 - core * 0.5), 0.0)
-        host_w = host_w / np.maximum(host_w.sum(1, keepdims=True), 1e-9)
+        # (3) resource concessions abroad: capital goes where untapped capacity is cheapest to
+        #     reach, and competes with the host's own extraction capital
+        fout = a["f"] * G
+        host_w = np.where(act, cap * np.exp(-eff_e) * o * (1 - self.conf)
+                          * np.clip(1 - p.nu_a * self.asab, 0.02, 1), 0.0)
+        host_w = host_w / np.maximum(host_w.sum(1, keepdims=True), 1e-12)
         fin = fout.sum(1, keepdims=True) * host_w
-        self.claims = self.claims * (1 - dlt) + fout
-        self.Kf = self.Kf * (1 - dlt) + fin
-        profits_out = p.rho_f * mpk * self.Kf
-        cl_n = self.claims / np.maximum(self.claims.sum(1, keepdims=True), 1e-9)
-        profits_in = profits_out.sum(1, keepdims=True) * cl_n
+        self.claims = self.claims * (1 - p.d_R) + fout
+        self.KRf = self.KRf * (1 - p.d_R) + fin
+        eff = 0.75 + 0.5 * self.asab                     # state capacity (asabiya)
+        self.KRd = np.where(act, self.KRd * (1 - p.d_R) + eff * a["x"] * G, self.KRd)
+        self.X = np.where(act, self.X + ext, self.X)
 
-        rent_in = drain_in + rent_m_in + profits_in
-        rent_out = drain + p.mu * foreign_m + profits_out
-        gni = np.maximum(Y + rent_in - rent_out, 1e-6 * np.maximum(Y, 1e-6))
+        rent_in = drain_in + rent_m_in + res_in
+        rent_out = drain + p.mu * foreign_m + res_out
+        gni = np.maximum(G + rent_in - rent_out, 1e-6 * Gs)
 
-        # -- capital: efficiency of investment rises with state capacity (asabiya)
-        eff = 0.75 + 0.5 * self.asab
-        self.K = np.where(act, (1 - dlt) * self.K + eff * a["k"] * Y + fin, self.K)
+        # -- capital
+        self.K = np.where(act, (1 - dlt) * self.K + eff * a["k"] * G, self.K)
 
         # -- technology: diffusion + stochastic jumps
-        embodied = np.minimum((foreign_m + fin) / np.maximum(Y, 1e-9), 0.3)
+        embodied = np.minimum(foreign_m / Gs, 0.3)
         dln = (p.g0 + gap * (p.kappa + p.kappa_m * embodied)
                + p.sig_a * rng.standard_normal((R, w.N)) - p.gam_a * self.conf)
         lam = p.lam0 * np.sqrt(np.maximum(a["r"], 0)) * (0.5 + self.asab)
@@ -326,26 +445,27 @@ class Simulator:
         self.lnA = np.where(act, self.lnA + np.clip(dln + jsize, -0.3, 0.3), self.lnA)
         self.lnA_F = np.maximum(self.lnA_F + p.g0, self._q_lnA())
 
-        # -- structural-demographic dynamics
-        Ypc = Y / L
-        elite_inc = self.E * Y + p.phi * rent_in
-        mass_inc = (1 - self.E) * Y + (1 - p.phi) * rent_in - rent_out + a["w"] * Y
-        mass_inc = np.maximum(mass_inc, 0.05 * Y)
-        mass_pc = np.maximum(mass_inc, 1e-9) / L
-        v = elite_inc / np.maximum(mass_inc, 1e-9)            # elite / mass income ratio
+        # -- structural-demographic dynamics (resource income is captured more by elites)
+        base = G - res_inc
+        elite_inc = self.E * base + p.phi_R * res_inc + p.phi * rent_in
+        mass_inc = ((1 - self.E) * base + (1 - p.phi_R) * res_inc + (1 - p.phi) * rent_in
+                    - rent_out + a["w"] * G)
+        mass_inc = np.maximum(mass_inc, 0.05 * Gs)
+        mass_pc = mass_inc / L
+        v = elite_inc / mass_inc                                     # elite / mass income ratio
         grow = np.clip(p.beta_e * (v / self.v0 - self.ne) - 0.15 * self.conf, -0.5, 0.5)
         self.ne = np.where(act, np.clip(self.ne * np.exp(grow), 0.1, 10.0), self.ne)
         mmp = (self.mass_ma / np.maximum(mass_pc, 1e-9)) ** 2
         emp = self.ne / np.maximum(v / self.v0, 1e-3)
         sfd = 1.5 - self.asab
-        psi = np.where(act, mmp * emp * sfd, np.nan)
+        psi_idx = np.where(act, mmp * emp * sfd, np.nan)
         self.mass_ma = 0.9 * self.mass_ma + 0.1 * mass_pc
-        rent_share = p.phi * rent_in / np.maximum(Y, 1e-9)
+        rent_share = (p.phi * rent_in + (p.phi_R - self.E) * res_inc) / Gs
         self.E = np.clip(self.E + p.eps_r * rent_share * 0.1 - p.eps_w * a["w"] * 0.1
                          + p.eps_0 * (0.5 - self.E) * 0.1 - 0.02 * self.conf, 0.05, 0.95)
 
         # -- instability
-        lp = np.log(np.maximum(psi, 1e-6))
+        lp = np.log(np.maximum(psi_idx, 1e-6))
         p_on = _sigmoid(p.b0 + p.b1 * lp + p.b2 * (np.nan_to_num(ly) - 9.0) + p.b3 * (self.asab - 0.5))
         p_stay = _sigmoid(p.bp + p.b1 * lp * 0.5)
         hazard = np.where(self.conf > 0, p_stay, p_on)
@@ -353,22 +473,29 @@ class Simulator:
         self.hazard_onset = np.where(act, p_on, np.nan)
         self.hazard = np.where(act, hazard, np.nan)
 
-        # -- asabiya: grows at the metaethnic frontier (exposure to a draining core), decays in the core
-        frontier = o * (1 - core) + 4.0 * (drain + p.mu * foreign_m + profits_out) / np.maximum(Y, 1e-9)
+        # -- asabiya: grows at the metaethnic frontier (a core that drains the country, including
+        #    foreign resource concessions), decays in the core
+        frontier = o * (1 - core) + 4.0 * (drain + p.mu * foreign_m + res_out) / Gs
         self.asab = np.clip(self.asab + p.r_a * self.asab * (1 - self.asab) * frontier
                             - p.d_a * self.asab * core * np.maximum(self.ne, 0.5)
                             - 0.03 * self.conf * self.asab, 0.02, 0.98)
         self.asab = np.where(act, self.asab, p.s0)
 
-        cons = (1 - sum(a[c] for c in CHANNELS)) * gni + mspend * 0.5 + a["w"] * Y * 0.5
-        rec = dict(ly=ly, core=core, E=self.E.copy(), ne=self.ne.copy(), psi=psi, asab=self.asab.copy(),
-                   conflict=self.conf.copy(), gni_pc=np.where(act, gni / L, np.nan),
-                   rent_in=np.where(act, (rent_in - rent_out) / np.maximum(Y, 1e-9), np.nan),
-                   drain=np.where(act, drain / np.maximum(Y, 1e-9), np.nan),
-                   jump=np.where(act, jsize, np.nan),
-                   cons_pc=np.where(act, np.maximum(cons, 1e-6) / L, np.nan),
-                   **{c: np.where(act, a[c], np.nan) for c in CHANNELS})
+        # -- import dependence for next year's resource markup
+        self.mR = np.where(act, 1 + p.zeta * ims, 1.0)
+        self.price = price
+
+        cons = (1 - sum(a[c] for c in CHANNELS)) * gni + mspend * 0.5 + a["w"] * G * 0.5
+        nz = lambda v: np.where(act, v, np.nan)
+        rec = dict(ly=ly, core=core, E=self.E.copy(), ne=self.ne.copy(), psi=psi_idx, asab=self.asab.copy(),
+                   conflict=self.conf.copy(), gni_pc=nz(gni / L),
+                   rent_in=nz((rent_in - rent_out) / Gs), drain=nz(drain / Gs), jump=nz(jsize),
+                   cons_pc=nz(np.maximum(cons, 1e-6) / L),
+                   res_share=nz(rev / Gs), reserves=nz(1 - np.clip(self.X / np.maximum(self.U, 1e-12), 0, 1)),
+                   fshare=nz(1 - sd), ims=nz(ims), res_out=nz((res_in - res_out) / Gs),
+                   **{c: nz(a[c]) for c in CHANNELS})
         self.last = rec
+        self.last_price = price[:, 0].copy()
         self.conf = np.where(act, newconf, 0.0)
         self.t += 1
         if self.t < w.T:
@@ -376,12 +503,15 @@ class Simulator:
         return rec
 
     def run(self, t0=0, t1=None, policy="hist", freeze_from=None, assimilate_at=None, record=True):
-        """Run from year index t0 to t1 (exclusive). Returns dict of (R, N, T) arrays."""
+        """Run from year index t0 to t1 (exclusive). Returns dict of (R, N, T) arrays
+        plus 'price' (R, T)."""
         w = self.w
         t1 = w.T if t1 is None else t1
         self.reset(t0)
+        self.psi_freeze = freeze_from
         out = {k: np.full((self.R, w.N, t1 - t0), np.nan) for k in self.REC}
         out["hazard"] = np.full((self.R, w.N, t1 - t0), np.nan)
+        out["price"] = np.full((self.R, t1 - t0), np.nan)
         for t in range(t0, t1):
             if assimilate_at is not None and t == assimilate_at:
                 self.assimilate(t)
@@ -394,4 +524,5 @@ class Simulator:
                 for k in self.REC:
                     out[k][:, :, t - t0] = rec[k]
                 out["hazard"][:, :, t - t0] = self.hazard
+                out["price"][:, t - t0] = self.last_price
         return out

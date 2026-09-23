@@ -5,7 +5,7 @@ but each one conditions on its own state, so heterogeneous strategies can emerge
 (core vs periphery, stable vs unstable, cohesive vs fragmented...).
 
 Decision: every 5 years each nation splits a discretionary budget of SIGMA*GDP over the
-five channels [k, r, m, f, w] (softmax of Gaussian logits).
+six channels [k, r, m, x, f, w] (softmax of Gaussian logits).
 Algorithm: PPO (clipped surrogate) + GAE, implemented with numpy/autograd.
 
 Reward schemes (one policy is trained per scheme):
@@ -28,9 +28,9 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
 SIGMA = 0.40
 STEP = 5
-N_OBS = 15
+N_OBS = 20
 N_ACT = len(CHANNELS)
-HIST_DEFAULT = np.array([0.20, 0.02, 0.10, 0.02, 0.06]) / 0.40  # budget shares of a typical historical country
+HIST_DEFAULT = np.array([0.19, 0.02, 0.10, 0.015, 0.015, 0.06]) / 0.40  # budget shares of a typical historical country
 
 
 # ----------------------------------------------------------------------------- network
@@ -86,13 +86,14 @@ def observe(sim, t):
     if not last:
         z = np.zeros((R, N))
         last = dict(ly=np.log(np.maximum(sim.w.Y[:, max(t, 0)], 1) / L[:, t])[None].repeat(R, 0),
-                    core=z, psi=z + 1, rent_in=z)
+                    core=z, psi=z + 1, rent_in=z, res_share=z, ims=z, res_out=z)
     ly = np.nan_to_num(last["ly"], nan=0.0)
     act = sim.active
     mean_ly = np.sum(ly * act, 1, keepdims=True) / np.maximum(act.sum(1, keepdims=True), 1)
     tprev = max(t - STEP, 0)
     popg = np.log(L[:, t] / L[:, tprev]) / max(t - tprev, 1)
     Y = np.exp(ly) * L[:, t]
+    _, _, _, res_sd, _ = sim._extraction()
     feats = [
         ly - mean_ly,
         np.nan_to_num(last["core"]),
@@ -104,7 +105,13 @@ def observe(sim, t):
         np.nan_to_num(last["rent_in"]) * 10,
         np.log(np.maximum(sim.K, 1e-6) / np.maximum(Y, 1e-6)) - 1.0,
         np.minimum(sim.claims / np.maximum(Y, 1e-6), 5),
-        np.minimum(sim.Kf / np.maximum(sim.K, 1e-6), 1) * 3,
+        # natural resources: what is left, who extracts it, how dependent on imports
+        1 - np.clip(sim.X / np.maximum(sim.U, 1e-12), 0, 1),
+        1 - res_sd,
+        np.nan_to_num(last["res_share"]) * 10,
+        np.nan_to_num(last["ims"]),
+        np.nan_to_num(last["res_out"]) * 10,
+        np.broadcast_to(np.log(np.maximum(sim.price, 1e-6)), (R, N)),
         np.broadcast_to(popg * 30, (R, N)),
         np.broadcast_to(sim.w.open_[:, t], (R, N)),
         np.full((R, N), (t - 35) / 35),
@@ -127,6 +134,8 @@ def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0
     R, N = sim.R, w.N
     buf = dict(obs=[], z=[], mask=[], rew=[])
     rec = {k: np.full((R, N, T - t0), np.nan) for k in sim.REC} if record else None
+    if record:
+        rec["price"] = np.full((R, T - t0), np.nan)
     shares = np.broadcast_to(HIST_DEFAULT, (R, N, N_ACT)).copy()
     for s, t_dec in enumerate(steps):
         obs = observe(sim, t_dec)
@@ -146,6 +155,7 @@ def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0
             if record:
                 for k in sim.REC:
                     rec[k][:, :, t - t0] = out[k]
+                rec["price"][:, t - t0] = sim.last_price
         end = _metrics(sim, mode)
         r = (end - start) * 10.0
         if mode == "bienestar":

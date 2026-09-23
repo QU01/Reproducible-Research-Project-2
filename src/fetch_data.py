@@ -14,6 +14,10 @@ SOURCES = {
 }
 
 
+WDI_RENTS = ("https://raw.githubusercontent.com/hdesaioecd/oecd-sof-2022-public/HEAD/data/"
+             "2020%20sfr%20model%20data/API_NY-2/API_NY.GDP.TOTL.RT.ZS_DS2_en_csv_v2_3470550.csv")
+
+
 def main():
     RAW.mkdir(parents=True, exist_ok=True)
     for name, url in SOURCES.items():
@@ -25,6 +29,9 @@ def main():
         csv = "pwt1001.csv" if name.startswith("pwt") else name.replace(".rda", ".csv")
         df.to_csv(RAW / csv, index=False)
         print(name, df.shape)
+    if not (RAW / "wdi_resource_rents.csv").exists():
+        # World Bank WDI "Total natural resources rents (% of GDP)", bulk CSV (Dec 2021 release)
+        urllib.request.urlretrieve(WDI_RENTS, RAW / "wdi_resource_rents.csv")
     if not (RAW / "countries-110m.json").exists():
         # Natural Earth 110m boundaries from the world-atlas npm package
         subprocess.run(["npm", "pack", "world-atlas@2", "--pack-destination", str(RAW)], check=True)

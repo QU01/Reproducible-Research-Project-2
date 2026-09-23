@@ -2,3 +2,4 @@
 __pycache__/
 data/raw/*.csv
 *.log
+!data/raw/wdi_resource_rents.csv

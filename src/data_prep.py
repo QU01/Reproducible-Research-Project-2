@@ -6,6 +6,7 @@ Sources (downloaded to data/raw, see README):
       labour share (labsh), investment / export / import shares (csh_i, csh_x, csh_m).
   * UCDP/PRIO Armed Conflict Dataset, via CRAN `peacesciencer`: intrastate conflict years.
   * V-Dem polyarchy + Polity2, via CRAN `peacesciencer` (gwcode_democracy).
+  * World Bank WDI NY.GDP.TOTL.RT.ZS: total natural resources rents (% of GDP), 1970-2019.
 Output: data/processed/panel.csv (iso3, year, ...), 1950-2019.
 """
 from pathlib import Path
@@ -56,6 +57,14 @@ def main():
     dem = dem.groupby(["iso3", "year"])[["v2x_polyarchy", "polity2"]].mean().reset_index()
     dem["year"] = dem.year.astype(int)
 
+    wdi = pd.read_csv(RAW / "wdi_resource_rents.csv", skiprows=4)
+    wdi = wdi.melt(id_vars=["Country Code"], value_vars=[c for c in wdi.columns if c.isdigit()],
+                   var_name="year", value_name="res_rents")
+    wdi = wdi.rename(columns={"Country Code": "iso3"}).dropna()
+    wdi["year"] = wdi.year.astype(int)
+    wdi["res_rents"] = wdi.res_rents / 100.0
+
+    p = p.merge(wdi, on=["iso3", "year"], how="left")
     p = p.merge(conf, on=["iso3", "year"], how="left").merge(onset, on=["iso3", "year"], how="left")
     p = p.merge(dem, on=["iso3", "year"], how="left")
     p["conflict"] = (p.conflict.fillna(0) > 0).astype(int)
@@ -64,17 +73,20 @@ def main():
     # Fill slow-moving covariates within country (hc, labsh, shares) so every
     # observed country-year has a value; remaining gaps get cross-country medians by year.
     p = p.sort_values(["iso3", "year"])
-    for c in ["hc", "labsh", "csh_i", "csh_x", "csh_m", "delta", "v2x_polyarchy"]:
+    p["res_rents_obs"] = p.res_rents  # unfilled copy for validation
+    for c in ["hc", "labsh", "csh_i", "csh_x", "csh_m", "delta", "v2x_polyarchy", "res_rents"]:
         p[c] = p.groupby("iso3")[c].transform(lambda s: s.interpolate(limit_direction="both"))
         p[c] = p[c].fillna(p.groupby("year")[c].transform("median"))
     p["csh_x"] = p.csh_x.clip(0, 1.5)
     p["csh_m"] = (-p.csh_m).clip(0, 1.5)  # PWT reports imports as negative share
     p["csh_i"] = p.csh_i.clip(0.01, 0.7)
+    p["res_rents"] = p.res_rents.clip(0.001, 0.6)
 
     p["isonum"] = coco.convert(p.iso3.tolist(), src="ISO3", to="ISOnumeric", not_found=None)
     p.to_csv(OUT / "panel.csv", index=False)
     print(p.shape, p.iso3.nunique(), "countries;",
-          "conflict-years:", int(p.conflict.sum()), "onsets:", int(p.onset.sum()))
+          "conflict-years:", int(p.conflict.sum()), "onsets:", int(p.onset.sum()),
+          "resource-rent obs:", int(p.res_rents_obs.notna().sum()))
 
 
 if __name__ == "__main__":
