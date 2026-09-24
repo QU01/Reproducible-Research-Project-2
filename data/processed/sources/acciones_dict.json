@@ -1,0 +1,1130 @@
+{
+ "k_gfcf_wdi": {
+  "description": "Gross fixed capital formation, share of GDP (current LCU)",
+  "source": "World Bank WDI NE.GDI.FTOT.ZS",
+  "files": [
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/NE.GDI.FTOT.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 6867,
+   "n_countries": 188,
+   "year_min": 1960,
+   "year_max": 2012,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 74,
+    "1970": 110,
+    "1980": 150,
+    "1990": 178,
+    "2000": 184,
+    "2010": 167
+   }
+  }
+ },
+ "k_gcf_wdi": {
+  "description": "Gross capital formation (GFCF + inventories), share of GDP",
+  "source": "World Bank WDI NE.GDI.TOTL.ZS",
+  "files": [
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/NE.GDI.TOTL.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 7317,
+   "n_countries": 189,
+   "year_min": 1960,
+   "year_max": 2012,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 94,
+    "1970": 120,
+    "1980": 154,
+    "1990": 179,
+    "2000": 185,
+    "2010": 171
+   }
+  }
+ },
+ "r_rd_gerd": {
+  "description": "Gross domestic expenditure on R&D (GERD, all sectors), share of GDP",
+  "source": "World Bank WDI GB.XPD.RSDV.GD.ZS",
+  "files": [
+   "IlyaMich/country-compare/HEAD/data/raw/rnd_expenditure_pct_gdp/wb_rnd_expenditure_pct_gdp.csv",
+   "zjleee/Data-Analysis-and-Visualization-CA1/HEAD/Datasets/API_GB.XPD.RSDV.GD.ZS_DS2_en_csv_v2_85148.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/GB.XPD.RSDV.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 2148,
+   "n_countries": 157,
+   "year_min": 1996,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 0,
+    "1980": 0,
+    "1990": 85,
+    "2000": 138,
+    "2010": 141
+   }
+  }
+ },
+ "r_edu_pub": {
+  "description": "Government expenditure on education, share of GDP",
+  "source": "World Bank WDI SE.XPD.TOTL.GD.ZS",
+  "files": [
+   "hayrullahalper/NumPie/HEAD/Dataset/API_SE.XPD.TOTL.GD.ZS_DS2_en_csv_v2_216037.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/SE.XPD.TOTL.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 4720,
+   "n_countries": 211,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 106,
+    "1980": 112,
+    "1990": 169,
+    "2000": 180,
+    "2010": 191
+   }
+  }
+ },
+ "r_hitech_share_mexp": {
+  "description": "High-technology exports, share of manufactured exports (OUTCOME of upgrading, not budget)",
+  "source": "World Bank WDI TX.VAL.TECH.MF.ZS",
+  "files": [
+   "thanhqtran/tohoku_bootcamp/HEAD/2023_spring/computation/Day01/Data01/API_TX.VAL.TECH.MF.ZS_DS2_en_csv_v2_4771883.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/TX.VAL.TECH.MF.ZS_WDI.csv"
+  ],
+  "units": "fraction",
+  "coverage": {
+   "n_obs": 4243,
+   "n_countries": 193,
+   "year_min": 1988,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 0,
+    "1980": 44,
+    "1990": 158,
+    "2000": 184,
+    "2010": 178
+   }
+  }
+ },
+ "m_imports_wdi": {
+  "description": "Imports of goods and services, share of GDP",
+  "source": "World Bank WDI NE.IMP.GNFS.ZS",
+  "files": [
+   "SaptakBhoumik/stat_assignment/HEAD/data/import_percent/API_NE.IMP.GNFS.ZS_DS2_en_csv_v2_192.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/NE.IMP.GNFS.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 9449,
+   "n_countries": 212,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 110,
+    "1970": 131,
+    "1980": 157,
+    "1990": 193,
+    "2000": 208,
+    "2010": 208
+   }
+  }
+ },
+ "m_manuf_share_imp": {
+  "description": "Manufactures imports, share of merchandise imports",
+  "source": "World Bank WDI TM.VAL.MANF.ZS.UN",
+  "files": [
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/TM.VAL.MANF.ZS.UN_WDI.csv"
+  ],
+  "units": "fraction",
+  "coverage": {
+   "n_obs": 6113,
+   "n_countries": 195,
+   "year_min": 1962,
+   "year_max": 2012,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 104,
+    "1970": 143,
+    "1980": 138,
+    "1990": 172,
+    "2000": 184,
+    "2010": 156
+   }
+  }
+ },
+ "x_exports_wdi": {
+  "description": "Exports of goods and services, share of GDP",
+  "source": "World Bank WDI NE.EXP.GNFS.ZS",
+  "files": [
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/NE.EXP.GNFS.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 7716,
+   "n_countries": 194,
+   "year_min": 1960,
+   "year_max": 2012,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 105,
+    "1970": 126,
+    "1980": 153,
+    "1990": 186,
+    "2000": 191,
+    "2010": 181
+   }
+  }
+ },
+ "x_fuel_share_exp": {
+  "description": "Fuel exports, share of merchandise exports",
+  "source": "World Bank WDI TX.VAL.FUEL.ZS.UN",
+  "files": [
+   "pehls/gp27_techchallenge_4/HEAD/data/raw/fuel_exports/API_TX.VAL.FUEL.ZS.UN_DS2_en_csv_v2_6302702.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/TX.VAL.FUEL.ZS.UN_WDI.csv"
+  ],
+  "units": "fraction",
+  "coverage": {
+   "n_obs": 7088,
+   "n_countries": 203,
+   "year_min": 1962,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 101,
+    "1970": 134,
+    "1980": 129,
+    "1990": 170,
+    "2000": 187,
+    "2010": 187
+   }
+  }
+ },
+ "x_ores_share_exp": {
+  "description": "Ores and metals exports, share of merchandise exports",
+  "source": "World Bank WDI TX.VAL.MMTL.ZS.UN",
+  "files": [
+   "QMSS-G5063-2022/Group_J_Climate_Economics/HEAD/data_prep/worldbank/original_from_wb/ore_metal_exports_perc_merchexport.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/TX.VAL.MMTL.ZS.UN_WDI.csv"
+  ],
+  "units": "fraction",
+  "coverage": {
+   "n_obs": 7330,
+   "n_countries": 203,
+   "year_min": 1962,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 104,
+    "1970": 143,
+    "1980": 136,
+    "1990": 174,
+    "2000": 189,
+    "2010": 185
+   }
+  }
+ },
+ "x_resource_rents": {
+  "description": "Total natural resource rents (oil, gas, coal, minerals, forest), share of GDP",
+  "source": "World Bank WDI NY.GDP.TOTL.RT.ZS",
+  "files": [
+   "hdesaioecd/oecd-sof-2022-public/HEAD/data/2020 sfr model data/API_NY-2/API_NY.GDP.TOTL.RT.ZS_DS2_en_csv_v2_3470550.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/NY.GDP.TOTL.RT.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 9195,
+   "n_countries": 222,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 2,
+    "1970": 146,
+    "1980": 176,
+    "1990": 206,
+    "2000": 218,
+    "2010": 215
+   }
+  }
+ },
+ "f_fdi_out": {
+  "description": "Foreign direct investment, net outflows (BoP), share of GDP (can be negative)",
+  "source": "World Bank WDI BM.KLT.DINV.WD.GD.ZS",
+  "files": [
+   "dufourlorenzo/replication-fdi-growth-panel/HEAD/data/API_BM.KLT.DINV.WD.GD.ZS_DS2_en_csv_v2_316.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/BM.KLT.DINV.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 6404,
+   "n_countries": 202,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 111,
+    "1980": 141,
+    "1990": 146,
+    "2000": 178,
+    "2010": 185
+   }
+  }
+ },
+ "f_fdi_in": {
+  "description": "Foreign direct investment, net inflows (BoP), share of GDP (foreign extraction/ownership pressure)",
+  "source": "World Bank WDI BX.KLT.DINV.WD.GD.ZS",
+  "files": [
+   "dufourlorenzo/replication-fdi-growth-panel/HEAD/data/API_BX.KLT.DINV.WD.GD.ZS_DS2_en_csv_v2_397.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/BX.KLT.DINV.WD.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 8531,
+   "n_countries": 208,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 142,
+    "1980": 162,
+    "1990": 193,
+    "2000": 202,
+    "2010": 207
+   }
+  }
+ },
+ "w_gov_cons_wdi": {
+  "description": "General government final consumption expenditure, share of GDP",
+  "source": "World Bank WDI NE.CON.GOVT.ZS",
+  "files": [
+   "ilovecaffeine/country-data-fingerprint/HEAD/data/raw/API_NE.CON.GOVT.ZS_DS2_en_csv_v2_38789/API_NE.CON.GOVT.ZS_DS2_en_csv_v2_38789.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/NE.CON.GOVT.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 9073,
+   "n_countries": 207,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 104,
+    "1970": 125,
+    "1980": 158,
+    "1990": 183,
+    "2000": 202,
+    "2010": 203
+   }
+  }
+ },
+ "w_tax_wdi": {
+  "description": "Tax revenue (central government), share of GDP",
+  "source": "World Bank WDI GC.TAX.TOTL.GD.ZS",
+  "files": [
+   "SaptakBhoumik/stat_assignment/HEAD/data/tax_percent/API_GC.TAX.TOTL.GD.ZS_DS2_en_csv_v2_962.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/GC.TAX.TOTL.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 4533,
+   "n_countries": 176,
+   "year_min": 1972,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 48,
+    "1980": 55,
+    "1990": 129,
+    "2000": 153,
+    "2010": 166
+   }
+  }
+ },
+ "w_gov_exp_wdi": {
+  "description": "Central government expense, share of GDP",
+  "source": "World Bank WDI GC.XPN.TOTL.GD.ZS",
+  "files": [
+   "QMSS-G5063-2022/Group_J_Climate_Economics/HEAD/data_prep/worldbank/original_from_wb/expense_perc_gdp.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/GC.XPN.TOTL.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 4186,
+   "n_countries": 173,
+   "year_min": 1972,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 42,
+    "1980": 51,
+    "1990": 119,
+    "2000": 152,
+    "2010": 158
+   }
+  }
+ },
+ "w_transfers_share_exp": {
+  "description": "Subsidies and other transfers, share of central government expense",
+  "source": "World Bank WDI GC.XPN.TRFT.ZS",
+  "files": [
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/GC.XPN.TRFT.ZS_WDI.csv"
+  ],
+  "units": "fraction",
+  "coverage": {
+   "n_obs": 1841,
+   "n_countries": 147,
+   "year_min": 1990,
+   "year_max": 2012,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 0,
+    "1980": 0,
+    "1990": 92,
+    "2000": 136,
+    "2010": 112
+   }
+  }
+ },
+ "mil_exp_wdi": {
+  "description": "Military expenditure, share of GDP (WDI, from SIPRI)",
+  "source": "World Bank WDI MS.MIL.XPND.GD.ZS",
+  "files": [
+   "S1attaro/Fighting-Illini/HEAD/Final-Project-Military-Spending-Conflict/data/API_MS.MIL.XPND.GD.ZS_DS2_en_csv_v2_211.csv",
+   "ronnywang/worldbank/HEAD/WDI_bundle/parsed/MS.MIL.XPND.GD.ZS_WDI.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 7286,
+   "n_countries": 170,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 83,
+    "1970": 107,
+    "1980": 133,
+    "1990": 159,
+    "2000": 166,
+    "2010": 166
+   }
+  }
+ },
+ "mil_exp_sipri": {
+  "description": "Military expenditure, % of GDP",
+  "source": "SIPRI Military Expenditure Database via OWID",
+  "files": [
+   "morettogSonova/archimedes/HEAD/data/in/victor/military-spending-as-a-share-of-gdp-sipri.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 7469,
+   "n_countries": 164,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 46,
+    "1960": 83,
+    "1970": 108,
+    "1980": 129,
+    "1990": 155,
+    "2000": 160,
+    "2010": 160
+   }
+  }
+ },
+ "w_gov_exp_hist": {
+  "description": "General government total expenditure, % of GDP (long run)",
+  "source": "IMF Public Finances in Modern History (Mauro et al. 2015) via OWID",
+  "files": [
+   "mikepsinn/economic-data/HEAD/data/historical-gov-spending-gdp.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 5190,
+   "n_countries": 164,
+   "year_min": 1950,
+   "year_max": 2011,
+   "n_countries_by_decade": {
+    "1950": 47,
+    "1960": 52,
+    "1970": 52,
+    "1980": 71,
+    "1990": 135,
+    "2000": 164,
+    "2010": 164
+   }
+  }
+ },
+ "w_tax_ictd": {
+  "description": "Total tax revenue incl. social contributions, % of GDP",
+  "source": "ICTD/UNU-WIDER Government Revenue Dataset 2021 via OWID",
+  "files": [
+   "DataScienceLiam/DataScienceLiam.github.io/HEAD/total-tax-revenues-gdp.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 5700,
+   "n_countries": 191,
+   "year_min": 1980,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 0,
+    "1980": 104,
+    "1990": 167,
+    "2000": 183,
+    "2010": 182
+   }
+  }
+ },
+ "w_social_exp": {
+  "description": "Public social expenditure (cash + in-kind: pensions, health, family, unemployment...), % of GDP",
+  "source": "OECD SOCX (1980-) + Lindert (2004) historical series via OWID",
+  "files": [
+   "AMGrobelnik/ai-invention-90d6bf-the-triple-shield-revisited-education-we/HEAD/round-2/dataset-1/src/owid_social_spending.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 1660,
+   "n_countries": 42,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 16,
+    "1970": 17,
+    "1980": 25,
+    "1990": 36,
+    "2000": 39,
+    "2010": 42
+   }
+  }
+ },
+ "r_edu_pub_hist": {
+  "description": "Public expenditure on education, share of GDP (historical)",
+  "source": "Tanzi & Schuknecht (2000) via OWID",
+  "files": [
+   "Sriharsha-Pamidi/Programming-for-Data-Analysis/HEAD/project/untitled folder/public-education-expenditure-as-share-of-gdp.csv"
+  ],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 50,
+   "n_countries": 17,
+   "year_min": 1960,
+   "year_max": 1993,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 17,
+    "1970": 0,
+    "1980": 16,
+    "1990": 17,
+    "2000": 0,
+    "2010": 0
+   }
+  }
+ },
+ "w_redist_abs": {
+  "description": "SWIID absolute redistribution (Gini market - Gini disposable)/100, only where SWIID reports it",
+  "source": "SWIID 9.92 (Solt 2020)",
+  "files": [
+   "aaravgupta10/Neutrosophic-human-development-index/HEAD/data/inputs/swiid9_92_summary.csv"
+  ],
+  "units": "Gini points / 100",
+  "coverage": {
+   "n_obs": 2466,
+   "n_countries": 72,
+   "year_min": 1975,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 18,
+    "1980": 47,
+    "1990": 71,
+    "2000": 72,
+    "2010": 72
+   }
+  }
+ },
+ "w_redist_abs_all": {
+  "description": "Gini market - Gini disposable (/100), all SWIID imputations",
+  "source": "SWIID 9.92 (Solt 2020)",
+  "files": [
+   "aaravgupta10/Neutrosophic-human-development-index/HEAD/data/inputs/swiid9_92_summary.csv"
+  ],
+  "units": "Gini points / 100",
+  "coverage": {
+   "n_obs": 6131,
+   "n_countries": 196,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 35,
+    "1970": 59,
+    "1980": 108,
+    "1990": 150,
+    "2000": 190,
+    "2010": 182
+   }
+  }
+ },
+ "w_redist_rel": {
+  "description": "SWIID relative redistribution (abs_red / gini_mkt)",
+  "source": "SWIID 9.92 (Solt 2020)",
+  "files": [
+   "aaravgupta10/Neutrosophic-human-development-index/HEAD/data/inputs/swiid9_92_summary.csv"
+  ],
+  "units": "fraction of market Gini",
+  "coverage": {
+   "n_obs": 2466,
+   "n_countries": 72,
+   "year_min": 1975,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 18,
+    "1980": 47,
+    "1990": 71,
+    "2000": 72,
+    "2010": 72
+   }
+  }
+ },
+ "gini_mkt": {
+  "description": "SWIID Gini of market income (0-1)",
+  "source": "SWIID 9.92 (Solt 2020)",
+  "files": [
+   "aaravgupta10/Neutrosophic-human-development-index/HEAD/data/inputs/swiid9_92_summary.csv"
+  ],
+  "units": "Gini points / 100",
+  "coverage": {
+   "n_obs": 6131,
+   "n_countries": 196,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 35,
+    "1970": 59,
+    "1980": 108,
+    "1990": 150,
+    "2000": 190,
+    "2010": 182
+   }
+  }
+ },
+ "gini_disp": {
+  "description": "SWIID Gini of disposable income (0-1)",
+  "source": "SWIID 9.92 (Solt 2020)",
+  "files": [
+   "aaravgupta10/Neutrosophic-human-development-index/HEAD/data/inputs/swiid9_92_summary.csv"
+  ],
+  "units": "Gini points / 100",
+  "coverage": {
+   "n_obs": 6131,
+   "n_countries": 196,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 35,
+    "1970": 59,
+    "1980": 108,
+    "1990": 150,
+    "2000": 190,
+    "2010": 182
+   }
+  }
+ },
+ "k_csh_i_pwt": {
+  "description": "Share of gross capital formation at current PPPs (PWT csh_i)",
+  "source": "Penn World Table 10.01 (Feenstra et al. 2015)",
+  "files": [
+   "data/raw/pwt1001.csv"
+  ],
+  "units": "fraction of CGDPo",
+  "coverage": {
+   "n_obs": 10399,
+   "n_countries": 183,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 114,
+    "1970": 157,
+    "1980": 158,
+    "1990": 181,
+    "2000": 183,
+    "2010": 183
+   }
+  }
+ },
+ "w_csh_g_pwt": {
+  "description": "Government consumption share at current PPPs (PWT csh_g)",
+  "source": "Penn World Table 10.01 (Feenstra et al. 2015)",
+  "files": [
+   "data/raw/pwt1001.csv"
+  ],
+  "units": "fraction of CGDPo",
+  "coverage": {
+   "n_obs": 10399,
+   "n_countries": 183,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 114,
+    "1970": 157,
+    "1980": 158,
+    "1990": 181,
+    "2000": 183,
+    "2010": 183
+   }
+  }
+ },
+ "m_csh_m_pwt": {
+  "description": "Imports share at current PPPs (PWT -csh_m)",
+  "source": "Penn World Table 10.01 (Feenstra et al. 2015)",
+  "files": [
+   "data/raw/pwt1001.csv"
+  ],
+  "units": "fraction of CGDPo",
+  "coverage": {
+   "n_obs": 10399,
+   "n_countries": 183,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 114,
+    "1970": 157,
+    "1980": 158,
+    "1990": 181,
+    "2000": 183,
+    "2010": 183
+   }
+  }
+ },
+ "x_csh_x_pwt": {
+  "description": "Exports share at current PPPs (PWT csh_x)",
+  "source": "Penn World Table 10.01 (Feenstra et al. 2015)",
+  "files": [
+   "data/raw/pwt1001.csv"
+  ],
+  "units": "fraction of CGDPo",
+  "coverage": {
+   "n_obs": 10399,
+   "n_countries": 183,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 114,
+    "1970": 157,
+    "1980": 158,
+    "1990": 181,
+    "2000": 183,
+    "2010": 183
+   }
+  }
+ },
+ "m_manuf_imports": {
+  "description": "DERIVED: imports of manufactures, share of GDP = m_imports_wdi * m_manuf_share_imp (share carried forward <=6y)",
+  "source": "derived (see description)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 7286,
+   "n_countries": 188,
+   "year_min": 1962,
+   "year_max": 2018,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 89,
+    "1970": 120,
+    "1980": 130,
+    "1990": 170,
+    "2000": 181,
+    "2010": 174
+   }
+  }
+ },
+ "x_primary_exports": {
+  "description": "DERIVED: fuel+ores exports, share of GDP = exports/GDP (WDI spliced with rescaled PWT csh_x) * (fuel+ores share of merchandise exports)",
+  "source": "derived (see description)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 7137,
+   "n_countries": 196,
+   "year_min": 1962,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 95,
+    "1970": 134,
+    "1980": 130,
+    "1990": 169,
+    "2000": 182,
+    "2010": 179
+   }
+  }
+ },
+ "w_transfers": {
+  "description": "DERIVED: subsidies & transfers, share of GDP = w_gov_exp_wdi * w_transfers_share_exp",
+  "source": "derived (see description)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 1821,
+   "n_countries": 145,
+   "year_min": 1990,
+   "year_max": 2012,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 0,
+    "1980": 0,
+    "1990": 90,
+    "2000": 134,
+    "2010": 111
+   }
+  }
+ },
+ "w_civil_cons": {
+  "description": "DERIVED: non-military government consumption = gov. consumption (WDI, else PWT) - military spending",
+  "source": "derived (see description)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 11280,
+   "n_countries": 214,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 127,
+    "1970": 165,
+    "1980": 180,
+    "1990": 198,
+    "2000": 211,
+    "2010": 211
+   }
+  }
+ },
+ "acc_k": {
+  "description": "COMPOSITE action k: GFCF (WDI), gaps filled with PWT csh_i rescaled to WDI level (country median ratio)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 10937,
+   "n_countries": 204,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 124,
+    "1970": 165,
+    "1980": 177,
+    "1990": 197,
+    "2000": 200,
+    "2010": 196
+   }
+  }
+ },
+ "acc_r": {
+  "description": "COMPOSITE action r: R&D (interp., missing->0) + public education (WDI else historical; interp. gaps<=10y and carried +-10y)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 9528,
+   "n_countries": 211,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 17,
+    "1960": 98,
+    "1970": 132,
+    "1980": 182,
+    "1990": 197,
+    "2000": 210,
+    "2010": 204
+   }
+  }
+ },
+ "acc_m": {
+  "description": "COMPOSITE action m: imports/GDP (WDI, spliced with rescaled PWT csh_m) x manufactures share of imports (carried forward, else country median)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 11479,
+   "n_countries": 218,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 130,
+    "1970": 167,
+    "1980": 176,
+    "1990": 203,
+    "2000": 216,
+    "2010": 216
+   }
+  }
+ },
+ "acc_x": {
+  "description": "COMPOSITE action x: X_THETA(=0.3) x natural resource rents/GDP (assumed re-investment in extraction)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 9223,
+   "n_countries": 222,
+   "year_min": 1960,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 2,
+    "1970": 146,
+    "1980": 176,
+    "1990": 206,
+    "2000": 218,
+    "2010": 215
+   }
+  }
+ },
+ "acc_f": {
+  "description": "COMPOSITE action f: max(FDI net outflows/GDP, 0)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 6373,
+   "n_countries": 202,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 111,
+    "1980": 141,
+    "1990": 146,
+    "2000": 177,
+    "2010": 185
+   }
+  }
+ },
+ "acc_w": {
+  "description": "COMPOSITE action w: social expenditure (OECD/Lindert, interp.) else central-gov subsidies & transfers else civil (non-military) gov. consumption",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 11272,
+   "n_countries": 214,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 75,
+    "1960": 127,
+    "1970": 165,
+    "1980": 180,
+    "1990": 198,
+    "2000": 212,
+    "2010": 211
+   }
+  }
+ },
+ "budget_total": {
+  "description": "Sum of the six composite actions, share of GDP",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of GDP",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "a_k": {
+  "description": "Budget share of k among the six composite actions (row sums to 1 when all six present)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of budget",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "a_r": {
+  "description": "Budget share of r",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of budget",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "a_m": {
+  "description": "Budget share of m",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of budget",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "a_x": {
+  "description": "Budget share of x",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of budget",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "a_f": {
+  "description": "Budget share of f",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of budget",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "a_w": {
+  "description": "Budget share of w",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "fraction of budget",
+  "coverage": {
+   "n_obs": 5735,
+   "n_countries": 183,
+   "year_min": 1970,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 0,
+    "1960": 0,
+    "1970": 87,
+    "1980": 131,
+    "1990": 142,
+    "2000": 165,
+    "2010": 166
+   }
+  }
+ },
+ "n_acc_obs": {
+  "description": "Number of composite actions observed (0-6)",
+  "source": "composite (see docs/research/acciones.md)",
+  "files": [],
+  "units": "count",
+  "coverage": {
+   "n_obs": 12285,
+   "n_countries": 226,
+   "year_min": 1950,
+   "year_max": 2019,
+   "n_countries_by_decade": {
+    "1950": 81,
+    "1960": 143,
+    "1970": 186,
+    "1980": 206,
+    "1990": 214,
+    "2000": 226,
+    "2010": 222
+   }
+  }
+ }
+}

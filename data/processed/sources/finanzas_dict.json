@@ -1,0 +1,498 @@
+{
+ "panel": {
+  "debt_gdp": {
+   "desc": "Deuda publica bruta / PIB (serie combinada GMD: gobierno general, si no central)",
+   "n": 9802,
+   "countries": 197,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "debt_gdp_gen": {
+   "desc": "Deuda bruta del gobierno general / PIB",
+   "n": 9576,
+   "countries": 195,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "debt_gdp_cgov": {
+   "desc": "Deuda del gobierno central / PIB",
+   "n": 8519,
+   "countries": 185,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "gov_rev_gdp": {
+   "desc": "Ingresos publicos / PIB (combinado)",
+   "n": 10134,
+   "countries": 198,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "gov_exp_gdp": {
+   "desc": "Gasto publico / PIB (combinado)",
+   "n": 10375,
+   "countries": 199,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "gov_tax_gdp": {
+   "desc": "Ingresos tributarios del gobierno general / PIB",
+   "n": 3489,
+   "countries": 148,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "gov_balance_gdp": {
+   "desc": "Saldo fiscal / PIB (negativo = deficit)",
+   "n": 9962,
+   "countries": 198,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "ca_gdp": {
+   "desc": "Saldo de cuenta corriente / PIB",
+   "n": 9296,
+   "countries": 207,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "ltrate": {
+   "desc": "Tipo de interes a largo plazo (bono ~10 anios), nominal",
+   "n": 3053,
+   "countries": 83,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "strate": {
+   "desc": "Tipo de interes a corto plazo, nominal",
+   "n": 5350,
+   "countries": 134,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "cbrate": {
+   "desc": "Tipo oficial del banco central, nominal",
+   "n": 6792,
+   "countries": 167,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "infl": {
+   "desc": "Inflacion IPC anual",
+   "n": 12469,
+   "countries": 216,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "reer": {
+   "desc": "Tipo de cambio efectivo real (indice 2015=100; sube = apreciacion)",
+   "n": 10235,
+   "countries": 180,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "usdfx": {
+   "desc": "Unidades de moneda local por USD",
+   "n": 15568,
+   "countries": 235,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "ngdp_usd": {
+   "desc": "PIB nominal en millones de USD (ponderaciones)",
+   "n": 13781,
+   "countries": 229,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "crisis_bank": {
+   "desc": "Inicio de crisis bancaria (GMD: Laeven-Valencia, relleno Reinhart-Rogoff)",
+   "n": 9293,
+   "countries": 163,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "crisis_currency": {
+   "desc": "Inicio de crisis cambiaria (GMD: Laeven-Valencia, relleno Reinhart-Rogoff)",
+   "n": 9096,
+   "countries": 160,
+   "years": [
+    1950,
+    2019
+   ]
+  },
+  "crisis_sovdebt": {
+   "desc": "Inicio de crisis de deuda soberana (impago/reestructuracion; GMD: LV + RR)",
+   "n": 9023,
+   "countries": 160,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "ext_debt_gni": {
+   "desc": "Deuda externa total / INB (WDI DT.DOD.DECT.GN.ZS)",
+   "n": 5537,
+   "countries": 121,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "debt_service_gni": {
+   "desc": "Servicio total de la deuda externa / INB (DT.TDS.DECT.GN.ZS)",
+   "n": 5523,
+   "countries": 121,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "debt_service_exports": {
+   "desc": "Servicio de la deuda externa / exportaciones+renta primaria (DT.TDS.DECT.EX.ZS)",
+   "n": 4784,
+   "countries": 121,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "st_debt_reserves": {
+   "desc": "Deuda externa a corto plazo / reservas (DT.DOD.DSTC.IR.ZS)",
+   "n": 4812,
+   "countries": 113,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "reserves_months": {
+   "desc": "Reservas totales en meses de importaciones (FI.RES.TOTL.MO)",
+   "n": 6978,
+   "countries": 179,
+   "years": [
+    1960,
+    2024
+   ]
+  },
+  "reserves_usd": {
+   "desc": "Reservas totales incl. oro, USD corrientes (FI.RES.TOTL.CD)",
+   "n": 9340,
+   "countries": 182,
+   "years": [
+    1960,
+    2024
+   ]
+  },
+  "fdi_in_gdp": {
+   "desc": "Entradas netas de IED / PIB (BX.KLT.DINV.WD.GD.ZS)",
+   "n": 9201,
+   "countries": 201,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "credit_priv_gdp": {
+   "desc": "Credito interno al sector privado / PIB (FS.AST.PRVT.GD.ZS)",
+   "n": 7486,
+   "countries": 186,
+   "years": [
+    1960,
+    2024
+   ]
+  },
+  "interest_rev": {
+   "desc": "Pagos de intereses / ingresos del gobierno (GC.XPN.INTP.RV.ZS)",
+   "n": 4484,
+   "countries": 160,
+   "years": [
+    1972,
+    2024
+   ]
+  },
+  "debt_gdp_cgov_wdi": {
+   "desc": "Deuda del gobierno central / PIB (GC.DOD.TOTL.GD.ZS)",
+   "n": 1638,
+   "countries": 109,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "real_rate_wdi": {
+   "desc": "Tipo de interes real (prestamos, deflactor PIB) (FR.INR.RINR)",
+   "n": 4694,
+   "countries": 148,
+   "years": [
+    1961,
+    2024
+   ]
+  },
+  "ca_gdp_wdi": {
+   "desc": "Cuenta corriente / PIB (BN.CAB.XOKA.GD.ZS)",
+   "n": 7608,
+   "countries": 199,
+   "years": [
+    1960,
+    2024
+   ]
+  },
+  "g_real_wdi": {
+   "desc": "Crecimiento del PIB real (NY.GDP.MKTP.KD.ZG)",
+   "n": 11092,
+   "countries": 210,
+   "years": [
+    1961,
+    2024
+   ]
+  },
+  "debt_gdp_hpdd": {
+   "desc": "Deuda bruta gobierno / PIB, IMF Historical Public Debt Database (1800-2015)",
+   "n": 7570,
+   "countries": 189,
+   "years": [
+    1950,
+    2015
+   ]
+  },
+  "lv_output_loss": {
+   "desc": "Laeven-Valencia 2018: perdida de producto acumulada del episodio bancario (fraccion PIB tendencial), en el anio de inicio",
+   "n": 133,
+   "countries": 103,
+   "years": [
+    1976,
+    2014
+   ]
+  },
+  "lv_fiscal_cost": {
+   "desc": "Laeven-Valencia 2018: coste fiscal bruto directo (fraccion PIB), anio de inicio",
+   "n": 90,
+   "countries": 72,
+   "years": [
+    1977,
+    2014
+   ]
+  },
+  "lv_peak_npl": {
+   "desc": "Laeven-Valencia 2018: morosidad maxima (fraccion de prestamos), anio de inicio",
+   "n": 110,
+   "countries": 91,
+   "years": [
+    1977,
+    2014
+   ]
+  },
+  "lv_debt_increase": {
+   "desc": "Laeven-Valencia 2018: aumento de deuda publica asociado (fraccion PIB), anio de inicio",
+   "n": 135,
+   "countries": 104,
+   "years": [
+    1976,
+    2014
+   ]
+  },
+  "lv_bank_onset": {
+   "desc": "Laeven-Valencia 2026 (1970-2025): 1 en el anio de inicio de crisis bancaria sistemica",
+   "n": 12850,
+   "countries": 240,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "lv_bank_active": {
+   "desc": "Laeven-Valencia 2026 (1970-2025): 1 si crisis bancaria sistemica en curso",
+   "n": 12850,
+   "countries": 240,
+   "years": [
+    1970,
+    2024
+   ]
+  },
+  "credit_gdp_jst": {
+   "desc": "JST R6: prestamos bancarios totales al sector no financiero / PIB (18 economias avanzadas)",
+   "n": 1275,
+   "countries": 18,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "debt_gdp_jst": {
+   "desc": "JST R6: deuda publica / PIB",
+   "n": 1269,
+   "countries": 18,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "ltrate_jst": {
+   "desc": "JST R6: tipo a largo plazo nominal",
+   "n": 1278,
+   "countries": 18,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "stir_jst": {
+   "desc": "JST R6: tipo a corto plazo nominal",
+   "n": 1270,
+   "countries": 18,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "crisis_jst": {
+   "desc": "JST R6: inicio de crisis financiera sistemica",
+   "n": 1278,
+   "countries": 18,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "g_real": {
+   "desc": "Crecimiento del PIB real: PWT 10.01 rgdpna (1951-2019), WDI en huecos y 2020+",
+   "n": 12562,
+   "countries": 215,
+   "years": [
+    1951,
+    2024
+   ]
+  },
+  "r_real_lt": {
+   "desc": "Tipo real a largo ex post = (1+ltrate)/(1+infl)-1",
+   "n": 3053,
+   "countries": 83,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "r_minus_g": {
+   "desc": "Diferencial r-g = r_real_lt - g_real",
+   "n": 3023,
+   "countries": 83,
+   "years": [
+    1951,
+    2024
+   ]
+  },
+  "implicit_rate": {
+   "desc": "Tipo implicito sobre la deuda = intereses/PIB / deuda_{t-1} (WDI x GMD)",
+   "n": 4372,
+   "countries": 158,
+   "years": [
+    1972,
+    2024
+   ]
+  },
+  "r_minus_g_eff": {
+   "desc": "r-g con tipo implicito efectivo: (1+implicit_rate)/(1+infl)-1-g_real (cubre emergentes)",
+   "n": 4369,
+   "countries": 158,
+   "years": [
+    1972,
+    2024
+   ]
+  },
+  "fx_depr": {
+   "desc": "Depreciacion log frente al USD (d ln usdfx; >0 = depreciacion)",
+   "n": 15401,
+   "countries": 235,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "debt_gdp_change": {
+   "desc": "Variacion anual de debt_gdp",
+   "n": 9617,
+   "countries": 197,
+   "years": [
+    1950,
+    2024
+   ]
+  },
+  "crisis_any": {
+   "desc": "Inicio de alguna crisis (bancaria, cambiaria o soberana) segun GMD",
+   "n": 9324,
+   "countries": 163,
+   "years": [
+    1950,
+    2020
+   ]
+  },
+  "crisis_twin": {
+   "desc": "Inicio simultaneo de >=2 tipos de crisis (GMD)",
+   "n": 9324,
+   "countries": 163,
+   "years": [
+    1950,
+    2020
+   ]
+  }
+ },
+ "world": {
+  "us_ltrate": "EE.UU. tipo a largo nominal (bono 10 anios, GMD)",
+  "us_strate": "EE.UU. tipo a corto nominal (letras 3 meses, GMD)",
+  "us_policy_rate": "EE.UU. tipo oficial de la Fed (descuento/objetivo fondos federales, GMD cbrate)",
+  "us_infl": "EE.UU. inflacion IPC",
+  "us_real_ltrate": "EE.UU. tipo real largo ex post (tipo mundial libre de riesgo, proxy)",
+  "us_real_strate": "EE.UU. tipo real corto ex post (ciclo financiero global / politica monetaria)",
+  "us_reer": "EE.UU. tipo de cambio efectivo real (GMD, 2015=100)",
+  "us_debt_gdp": "EE.UU. deuda publica / PIB",
+  "share_bank_onset": "Fraccion de paises con inicio de crisis bancaria (GMD)",
+  "share_bank_onset_gdpw": "Fraccion de paises con inicio de crisis bancaria (GMD), ponderada por PIB en USD",
+  "share_currency_onset": "Fraccion de paises con inicio de crisis cambiaria (GMD)",
+  "share_currency_onset_gdpw": "Fraccion de paises con inicio de crisis cambiaria (GMD), ponderada por PIB en USD",
+  "share_sovdebt_onset": "Fraccion de paises con inicio de crisis soberana (GMD)",
+  "share_sovdebt_onset_gdpw": "Fraccion de paises con inicio de crisis soberana (GMD), ponderada por PIB en USD",
+  "share_bank_active_lv": "Fraccion de paises con crisis bancaria sistemica activa (LV 2026)",
+  "share_bank_active_lv_gdpw": "Fraccion de paises con crisis bancaria sistemica activa (LV 2026), ponderada por PIB en USD",
+  "world_debt_gdp_gdpw": "Deuda publica / PIB mundial ponderada por PIB en USD",
+  "world_debt_gdp_median": "Mediana de deuda publica / PIB",
+  "world_r_minus_g_median": "Mediana de r-g entre paises",
+  "world_r_minus_g_eff_median": "Mediana de r-g efectivo (tipo implicito) entre paises",
+  "n_countries_debt": "Numero de paises con dato de deuda",
+  "usd_index_major": "Indice nominal del dolar vs. monedas principales (FRED DTWEXM, media anual, 1973-2019)",
+  "usd_index_broad": "Indice nominal amplio del dolar (FRED DTWEXBGS, media anual, 2006-)"
+ },
+ "notes": "Ratios en fracciones (0.6 = 60%). Dummies de crisis GMD = anio de inicio. Ver docs/research/finanzas.md."
+}

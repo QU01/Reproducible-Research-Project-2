@@ -1,0 +1,717 @@
+{
+ "wpp_projection": {
+  "descripcion": "1 si el anio es proyeccion WPP 2024 variante media (2024-2030)",
+  "unidad": "0/1",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "pop_wpp": {
+  "descripcion": "Poblacion total 1 julio",
+  "unidad": "millones",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "share_0_14": {
+  "descripcion": "Proporcion 0-14 anios",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "share_15_24": {
+  "descripcion": "Proporcion 15-24 anios sobre poblacion total",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "share_15_29": {
+  "descripcion": "Proporcion 15-29 anios sobre poblacion total",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "share_15_64": {
+  "descripcion": "Proporcion en edad de trabajar 15-64",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "share_65p": {
+  "descripcion": "Proporcion 65+",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "youth_bulge_15_24_adult": {
+  "descripcion": "Bulto juvenil de Urdal (2006): 15-24 / poblacion 15+",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "youth_bulge_15_29_adult": {
+  "descripcion": "15-29 / poblacion 15+",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "male_share_15_29": {
+  "descripcion": "Varones 15-29 / poblacion total",
+  "unidad": "fraccion",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "dependency_ratio": {
+  "descripcion": "(0-14 + 65+) / 15-64",
+  "unidad": "ratio",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "median_age": {
+  "descripcion": "Edad mediana (interpolada por edad simple)",
+  "unidad": "anios",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19115
+ },
+ "tfr": {
+  "descripcion": "Tasa global de fecundidad",
+  "unidad": "hijos/mujer",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "life_expectancy": {
+  "descripcion": "Esperanza de vida al nacer, ambos sexos",
+  "unidad": "anios",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "net_migration": {
+  "descripcion": "Migrantes netos en el anio",
+  "unidad": "millones de personas",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "crude_birth_rate": {
+  "descripcion": "Tasa bruta de natalidad",
+  "unidad": "por persona-anio",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "crude_death_rate": {
+  "descripcion": "Tasa bruta de mortalidad",
+  "unidad": "por persona-anio",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "pop_growth": {
+  "descripcion": "Tasa de crecimiento poblacional",
+  "unidad": "fraccion anual",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "net_migration_rate": {
+  "descripcion": "Tasa neta de migracion",
+  "unidad": "por persona-anio",
+  "fuente": "WPP2024",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "pop_wpp_lo80": {
+  "descripcion": "Proyeccion probabilistica: limite inferior 80%",
+  "unidad": "millones",
+  "fuente": "WPP2024 (solo 2024+)",
+  "cobertura_anios": [
+   2024,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 1652
+ },
+ "pop_wpp_hi80": {
+  "descripcion": "Proyeccion probabilistica: limite superior 80%",
+  "unidad": "millones",
+  "fuente": "WPP2024 (solo 2024+)",
+  "cobertura_anios": [
+   2024,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 1652
+ },
+ "pop_wpp_low_var": {
+  "descripcion": "Variante baja (-0.5 hijos)",
+  "unidad": "millones",
+  "fuente": "WPP2024 (solo 2024+)",
+  "cobertura_anios": [
+   2024,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 1652
+ },
+ "pop_wpp_high_var": {
+  "descripcion": "Variante alta (+0.5 hijos)",
+  "unidad": "millones",
+  "fuente": "WPP2024 (solo 2024+)",
+  "cobertura_anios": [
+   2024,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 1652
+ },
+ "urban_share": {
+  "descripcion": "Poblacion urbana / total",
+  "unidad": "fraccion",
+  "fuente": "WDI SP.URB.TOTL.IN.ZS (UN WUP); 1950-59 y 2024+ extrapolacion logit-lineal",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 216,
+  "n_obs": 17496
+ },
+ "urban_share_imputed": {
+  "descripcion": "1 si urban_share es extrapolado (fuera de 1960-2023) o falta",
+  "unidad": "0/1",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "urban_pop_growth": {
+  "descripcion": "Crecimiento log de la poblacion urbana",
+  "unidad": "log-dif anual",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1951,
+   2030
+  ],
+  "n_paises": 216,
+  "n_obs": 17280
+ },
+ "creg_ethfrac": {
+  "descripcion": "Fraccionalizacion etnica CREG (ffill tras 2013)",
+  "unidad": "0-1",
+  "fuente": "CREG via peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 156,
+  "n_obs": 10987
+ },
+ "creg_ethpol": {
+  "descripcion": "Polarizacion etnica CREG (Montalvo-Reynal-Querol)",
+  "unidad": "0-1",
+  "fuente": "CREG via peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 156,
+  "n_obs": 10987
+ },
+ "creg_relfrac": {
+  "descripcion": "Fraccionalizacion religiosa CREG",
+  "unidad": "0-1",
+  "fuente": "CREG via peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 159,
+  "n_obs": 11198
+ },
+ "creg_relpol": {
+  "descripcion": "Polarizacion religiosa CREG",
+  "unidad": "0-1",
+  "fuente": "CREG via peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 159,
+  "n_obs": 11198
+ },
+ "hief_efindex": {
+  "descripcion": "Indice de fraccionalizacion etnica historica HIEF (Drazanova) (ffill tras 2013)",
+  "unidad": "0-1",
+  "fuente": "HIEF via peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 155,
+  "n_obs": 10906
+ },
+ "epr_excluded_share": {
+  "descripcion": "Poblacion en grupos etnicos excluidos (powerless+discriminated+self-exclusion)",
+  "unidad": "fraccion",
+  "fuente": "EPR 2021 (ffill tras 2021)",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 174,
+  "n_obs": 12010
+ },
+ "epr_discriminated_share": {
+  "descripcion": "Poblacion en grupos discriminados",
+  "unidad": "fraccion",
+  "fuente": "EPR 2021",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 174,
+  "n_obs": 12010
+ },
+ "epr_monopoly_dominant": {
+  "descripcion": "1 si un grupo tiene monopolio o dominancia",
+  "unidad": "0/1",
+  "fuente": "EPR 2021",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 174,
+  "n_obs": 12010
+ },
+ "epr_n_groups": {
+  "descripcion": "Numero de grupos politicamente relevantes",
+  "unidad": "n",
+  "fuente": "EPR 2021",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 174,
+  "n_obs": 12010
+ },
+ "epr_largest_group": {
+  "descripcion": "Tamanio del grupo mayor",
+  "unidad": "fraccion",
+  "fuente": "EPR 2021",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 174,
+  "n_obs": 12010
+ },
+ "v2stfisccap": {
+  "descripcion": "Capacidad fiscal del estado (V-Dem, escala latente ~-3..3)",
+  "unidad": "z",
+  "fuente": "V-Dem v14 (ffill)",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 12780
+ },
+ "v2svstterr": {
+  "descripcion": "Territorio bajo control estatal",
+  "unidad": "fraccion",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 174,
+  "n_obs": 12013
+ },
+ "v2clrspct": {
+  "descripcion": "Administracion rigurosa e imparcial",
+  "unidad": "z",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13261
+ },
+ "v2stcritrecadm": {
+  "descripcion": "Criterios de reclutamiento meritocratico de la administracion",
+  "unidad": "z",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 12729
+ },
+ "v2x_rule": {
+  "descripcion": "Indice de estado de derecho",
+  "unidad": "0-1",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13235
+ },
+ "v2cacamps": {
+  "descripcion": "Polarizacion politica (campos antagonicos)",
+  "unidad": "z",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13169
+ },
+ "v2pepwrsoc": {
+  "descripcion": "Poder distribuido por grupo social (alto=igualitario)",
+  "unidad": "z",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13261
+ },
+ "v2xpe_exlsocgr": {
+  "descripcion": "Exclusion por grupo social",
+  "unidad": "0-1",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13193
+ },
+ "v2exl_legit_nationalist": {
+  "descripcion": "Legitimacion ideologica nacionalista del regimen (proxy de asabiya ideologica)",
+  "unidad": "0-1",
+  "fuente": "V-Dem v14",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13261
+ },
+ "rivalries_active": {
+  "descripcion": "Rivalidades estrategicas activas (Thompson-Dreyer; las vigentes en 2010 se suponen en curso hasta 2030)",
+  "unidad": "n",
+  "fuente": "peacesciencer td_rivalries",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "rivalries_spatial": {
+  "descripcion": "Rivalidades territoriales (espaciales) activas",
+  "unidad": "n",
+  "fuente": "peacesciencer td_rivalries",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "rivalry_years_cum": {
+  "descripcion": "Anios-rivalidad acumulados desde 1816 (exposicion historica a frontera)",
+  "unidad": "anios",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 236,
+  "n_obs": 19116
+ },
+ "trust_wvs": {
+  "descripcion": "Confianza generalizada observada ('se puede confiar en la mayoria')",
+  "unidad": "fraccion",
+  "fuente": "WVS/EVS via OWID",
+  "cobertura_anios": [
+   1984,
+   2022
+  ],
+  "n_paises": 115,
+  "n_obs": 419
+ },
+ "trust_wvs_interp": {
+  "descripcion": "Confianza interpolada entre olas, constante fuera",
+  "unidad": "fraccion",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 115,
+  "n_obs": 9315
+ },
+ "trust_wvs_mean": {
+  "descripcion": "Media por pais de las olas WVS",
+  "unidad": "fraccion",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 115,
+  "n_obs": 9315
+ },
+ "al_ethnic": {
+  "descripcion": "Fraccionalizacion etnica Alesina et al. 2003",
+  "unidad": "0-1",
+  "fuente": "Alesina et al. 2003",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 210,
+  "n_obs": 17010
+ },
+ "al_language": {
+  "descripcion": "Fraccionalizacion linguistica Alesina et al. 2003",
+  "unidad": "0-1",
+  "fuente": "Alesina et al. 2003",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 210,
+  "n_obs": 17010
+ },
+ "al_religion": {
+  "descripcion": "Fraccionalizacion religiosa Alesina et al. 2003",
+  "unidad": "0-1",
+  "fuente": "Alesina et al. 2003",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 210,
+  "n_obs": 17010
+ },
+ "colonial_ruler": {
+  "descripcion": "ISO3 de la principal metropoli colonial ('none' si ninguna)",
+  "unidad": "codigo",
+  "fuente": "ICOW Colonial History 1.1",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 194,
+  "n_obs": 15714
+ },
+ "indep_year": {
+  "descripcion": "Anio de independencia",
+  "unidad": "anio",
+  "fuente": "ICOW",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 194,
+  "n_obs": 15714
+ },
+ "indep_violent": {
+  "descripcion": "1 si la independencia fue violenta",
+  "unidad": "0/1",
+  "fuente": "ICOW",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 194,
+  "n_obs": 15714
+ },
+ "former_colony": {
+  "descripcion": "1 si tuvo metropoli colonial o imperial (ColRuler>0; incluye otomana, rusa)",
+  "unidad": "0/1",
+  "fuente": "ICOW",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 194,
+  "n_obs": 15714
+ },
+ "rugged": {
+  "descripcion": "Indice de terreno rugoso (Nunn-Puga)",
+  "unidad": "indice",
+  "fuente": "peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 190,
+  "n_obs": 15390
+ },
+ "log_mountainous": {
+  "descripcion": "log % terreno montanioso (Fearon-Laitin)",
+  "unidad": "log",
+  "fuente": "peacesciencer",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 190,
+  "n_obs": 15390
+ },
+ "years_since_indep": {
+  "descripcion": "Anios desde la independencia (negativo = antes)",
+  "unidad": "anios",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 194,
+  "n_obs": 15714
+ },
+ "state_age": {
+  "descripcion": "Anios en el sistema de estados Gleditsch-Ward (desde 1816; extendido tras 2017)",
+  "unidad": "anios",
+  "fuente": "ds-external-data",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 195,
+  "n_obs": 13232
+ },
+ "state_capacity_index": {
+  "descripcion": "Media de z-scores de v2stfisccap, v2svstterr, v2clrspct (base 1950-2019)",
+  "unidad": "z",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 13261
+ },
+ "cohesion_index": {
+  "descripcion": "Media de z-scores de 1-frac.etnica (HIEF/CREG), 1-excluidos EPR, confianza",
+  "unidad": "z",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 179,
+  "n_obs": 13483
+ },
+ "asabiya_proxy": {
+  "descripcion": "Proxy compuesto de asabiya en [0.2,0.8]: 0.2+0.6*Phi(media(cohesion,capacidad)/sd)",
+  "unidad": "0-1",
+  "fuente": "calculado",
+  "cobertura_anios": [
+   1950,
+   2030
+  ],
+  "n_paises": 176,
+  "n_obs": 12393
+ }
+}

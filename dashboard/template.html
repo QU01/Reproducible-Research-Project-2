@@ -155,7 +155,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
 <div class="wrap">
   <header class="top">
     <div>
-      <div class="eyebrow">Modelo agéntico · 180 países · 1950–2019</div>
+      <div class="eyebrow">Modelo agéntico · 180 países · 1950–2019 · proyección a 2030</div>
       <h1>Atlas del Sistema-Mundo</h1>
       <p class="lede">El excedente fluye de la periferia al centro; allí lo capturan las élites y crece el estrés político. Cada nación decide si invierte en sí misma, compra al centro, explota sus recursos o sale a buscar los de otros. Primero calibramos contra 70 años de datos; después dejamos que aprendan por refuerzo.</p>
     </div>
@@ -164,6 +164,9 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
       <span class="tag">Demografía estructural · Goldstone/Turchin</span>
       <span class="tag">Frontera metaétnica · Turchin</span>
       <span class="tag">Agotamiento logístico · Hubbert</span>
+      <span class="tag">Deuda y crisis</span>
+      <span class="tag">Clima · Burke-Hsiang-Miguel</span>
+      <span class="tag">Problema inverso · IRL</span>
     </div>
   </header>
 
@@ -186,39 +189,61 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
       <div class="legend" id="legend"></div>
       <div class="timebar">
         <button class="play" id="play" aria-label="Reproducir"><svg viewBox="0 0 14 14" id="playicon"><path d="M3 1.5v11l9-5.5z"/></svg></button>
-        <input type="range" id="yr" min="1950" max="2019" step="1" value="1950" aria-label="Año">
+        <input type="range" id="yr" min="1950" max="2030" step="1" value="1950" aria-label="Año">
       </div>
-      <div class="ticks"><span>1950</span><span>1970</span><span>1990</span><span>2010</span><span>2019</span></div>
+      <div class="ticks"><span>1950</span><span>1970</span><span>1990</span><span>2010</span><span>2030</span></div>
       <div class="strip" id="strip"></div>
     </div>
     <aside class="panel side" id="side"></aside>
   </div>
 
+  <section class="block" id="inverso">
+    <div class="bhead">
+      <div class="eyebrow">1 · Problema inverso</div>
+      <h2>Cómo deciden realmente los países</h2>
+      <p class="lede">Primero se estima de los datos la regla con la que cada país reparte su presupuesto (clonación de conducta). Después se busca la recompensa con la que esa conducta observada resulta mejor que pequeñas desviaciones (estimador de Bajari, Benkard y Levin).</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Reglas de decisión estimadas</h3>
+        <p class="hint" style="margin-top:2px">Ajuste parcial en escala logit: z<sub>t</sub> = ρ·z<sub>t−1</sub> + β·estado + efecto país. Error fuera de muestra relativo a suponer que el país no cambia (&lt; 1 = mejor).</p>
+        <div class="tablewrap" style="margin-top:8px"><table id="bcTable"></table></div>
+      </div>
+      <div class="card">
+        <h3>Recompensa revelada</h3>
+        <p class="hint" style="margin-top:2px">Pesos estandarizados (norma 1) con intervalo del 90 % por bootstrap de países.</p>
+        <div id="irlChart"></div>
+        <p class="note" id="irlNote"></p>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>¿Distintos países, distintas metas?</h3><div class="tablewrap" style="margin-top:8px"><table id="irlGroups"></table></div></div>
+      <div class="card"><h3>¿Qué cambiarían si pudieran?</h3><p class="hint" style="margin-top:2px">Parte de las desviaciones simuladas que habrían mejorado la recompensa estimada, por canal y dirección.</p><div class="bars" id="devBars" style="margin-top:6px"></div></div>
+    </div>
+  </section>
+
   <section class="block" id="validacion">
     <div class="bhead">
-      <div class="eyebrow">1 · Ajuste y predicción</div>
+      <div class="eyebrow">2 · Validación</div>
       <h2>¿Qué tan bien predice?</h2>
       <p class="lede" id="valLede"></p>
     </div>
     <div class="card">
-      <h3>Pronóstico fuera de muestra del log PIB per cápita (origen 1990)</h3>
-      <div class="tablewrap" style="margin-top:8px"><table id="btTable"></table></div>
-      <p class="note" id="btNote"></p>
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
+        <h3>Pronóstico desde 49 orígenes (1970–2018) a 1, 5 y 10 años</h3>
+        <div class="seg" id="valVar"></div>
+      </div>
+      <div class="tablewrap" style="margin-top:8px"><table id="valTable"></table></div>
+      <p class="note" id="valNote"></p>
     </div>
     <div class="grid2" style="margin-top:16px">
-      <div class="card"><h3>Conflicto interno 1991–2019 (UCDP)</h3><div class="tablewrap" style="margin-top:8px"><table id="cfTable"></table></div><p class="note">AUC: capacidad de ordenar país-años con conflicto por encima de los que no lo tienen (0,5 = azar). Brier: error cuadrático de la probabilidad (menor es mejor).</p></div>
-      <div class="card"><h3>Ajuste dentro de muestra (1950–1990)</h3><dl class="kv" id="fitKV" style="margin-top:10px"></dl><p class="note">Parámetros estimados por evolución diferencial sobre trayectorias simuladas (método de momentos simulados + ajuste de trayectorias + verosimilitud del conflicto).</p></div>
-    </div>
-    <div class="grid2" style="margin-top:16px">
-      <div class="card"><h3>Rentas de recursos naturales (% del PIB, Banco Mundial)</h3><div class="tablewrap" style="margin-top:8px"><table id="rrTable"></table></div><p class="note">Pronóstico desde 1990 de la participación de las rentas de recursos en el PIB de cada país. La participación mundial se toma de los datos (Cobb-Douglas la fija); el modelo explica cómo se reparte entre países según el agotamiento, la inversión extractiva y las concesiones extranjeras.</p></div>
-      <div class="card"><h3>Precio mundial de los recursos</h3>
-        <div class="keyrow" id="priceKey" style="margin:6px 0"></div><div id="priceChart"></div>
-        <p class="note">Índice 1970 = 1 (antes de 1970 no hay datos de rentas). Sube cuando la demanda (el crecimiento mundial) va por delante de una capacidad de extracción que ya declina, y con la participación mundial de las rentas observada (choques petroleros de 1973 y 1979). Sin descubrimientos ni sustitución, el modelo tiende a exagerar la subida.</p></div>
+      <div class="card"><h3>¿Qué aporta cada teoría?</h3><p class="hint" style="margin-top:2px">Cambio del error al apagar cada módulo, con los mismos parámetros (positivo = el módulo mejora el pronóstico).</p><div id="ablChart"></div></div>
+      <div class="card"><h3>Ajuste dentro de muestra (calibración final 1950–2019)</h3><dl class="kv" id="fitKV" style="margin-top:10px"></dl><p class="note">Etapa 1: golpes, transiciones de régimen, crisis, reacción fiscal y nacionalizaciones se estiman directamente con los datos. Etapa 2: los parámetros estructurales se ajustan por evolución diferencial sobre trayectorias simuladas.</p></div>
     </div>
     <div class="card" style="margin-top:16px">
       <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
-        <h3>Trayectorias: datos vs. modelo</h3>
-        <div class="keyrow"><span><i style="background:var(--s-data)"></i>Datos PWT</span><span><i style="background:var(--s-model)"></i>Modelo desde 1950</span><span><i style="background:var(--s-fc)"></i>Pronóstico desde 1990 (banda p10–p90)</span></div>
+        <h3>Trayectorias: datos, pronóstico desde 1990 y proyección a 2030</h3>
+        <div class="keyrow"><span><i style="background:var(--s-data)"></i>Datos PWT</span><span><i style="background:var(--s-model)"></i>Modelo (acciones observadas)</span><span><i style="background:var(--s-fc)"></i>Pronóstico desde 1990 (p10–p90)</span><span><i style="background:var(--c-f)"></i>Proyección 2020–2030</span></div>
       </div>
       <div class="grid4" id="multiples" style="margin-top:10px"></div>
     </div>
@@ -226,11 +251,11 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
 
   <section class="block" id="politicas">
     <div class="bhead">
-      <div class="eyebrow">2 · Aprendizaje por refuerzo</div>
+      <div class="eyebrow">3 · Aprendizaje por refuerzo</div>
       <h2>Políticas que emergen</h2>
-      <p class="lede">Una red de política compartida (PPO) para las 180 naciones; cada una ve su propio estado y cada cinco años reparte un 40 % de su PIB entre seis canales. Entrenamos tres sistemas de recompensa distintos y comparamos lo que aprenden.</p>
+      <p class="lede">Una red de política compartida (PPO) para las 180 naciones; cada una ve su propio estado y cada cinco años reparte un 35 % de su PIB entre seis canales. Entrenamos cuatro sistemas de recompensa: tres teóricos (bienestar, poder, élite) y la recompensa revelada por la conducta observada.</p>
     </div>
-    <div class="grid3" id="rewardCards"></div>
+    <div class="grid4" id="rewardCards"></div>
     <div class="grid2" style="margin-top:16px">
       <div class="card">
         <h3>Asignación del presupuesto por zona</h3>
@@ -263,9 +288,29 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div class="card prose" style="margin-top:16px" id="findings"></div>
   </section>
 
+  <section class="block" id="clima">
+    <div class="bhead">
+      <div class="eyebrow">4 · Clima, ecología y recursos</div>
+      <h2>El techo físico</h2>
+      <p class="lede" id="climaLede"></p>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>Temperatura global (°C sobre el preindustrial)</h3><div class="keyrow" id="tgKey" style="margin:6px 0"></div><div id="tgChart"></div>
+        <p class="note">El pronóstico desde 1990 no usa ningún dato posterior: las emisiones salen de la extracción fósil simulada y la temperatura de la respuesta transitoria a las emisiones acumuladas (0,46 °C por 1000 GtCO₂).</p></div>
+      <div class="card"><h3>Emisiones mundiales de CO₂ fósil (Gt)</h3><div class="keyrow" id="co2Key" style="margin:6px 0"></div><div id="co2Chart"></div>
+        <p class="note">Las emisiones se reparten por quién extrae los combustibles; la responsabilidad por consumo y el intercambio ecológico desigual se registran aparte.</p></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>Precio mundial de los recursos</h3>
+        <div class="keyrow" id="priceKey" style="margin:6px 0"></div><div id="priceChart"></div>
+        <p class="note">Índice 1970 = 1. Sube cuando la demanda va por delante de una capacidad de extracción que ya declina, y con la participación mundial de las rentas observada (choques petroleros de 1973 y 1979).</p></div>
+      <div class="card prose" id="climaProse"></div>
+    </div>
+  </section>
+
   <section class="block" id="mecanica">
     <div class="bhead">
-      <div class="eyebrow">3 · Mecánica</div>
+      <div class="eyebrow">5 · Mecánica</div>
       <h2>Cómo está hecho el modelo</h2>
     </div>
     <div class="grid2">
@@ -273,7 +318,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
       <div class="card prose" id="mech"></div>
     </div>
     <div class="grid2" style="margin-top:16px">
-      <div class="card"><h3>Parámetros calibrados</h3><dl class="kv" id="paramKV" style="margin-top:10px"></dl></div>
+      <div class="card"><h3>Parámetros calibrados</h3><dl class="kv" id="paramKV" style="margin-top:10px;grid-template-columns:minmax(0,1fr) auto"></dl></div>
       <div class="card prose" id="limits"></div>
     </div>
   </section>
@@ -295,9 +340,11 @@ const SCN = [
   {id:"datos", name:"Datos observados"},
   {id:"modelo_hist", name:"Modelo · políticas históricas"},
   {id:"pronostico", name:"Pronóstico desde 1990"},
+  {id:"proyeccion", name:"Proyección 2020–2030"},
   {id:"rl_bienestar", name:"RL · Bienestar"},
   {id:"rl_poder", name:"RL · Poder"},
   {id:"rl_elite", name:"RL · Élite"},
+  {id:"rl_irl", name:"RL · Recompensa revelada"},
 ].filter(s => D.scenarios[s.id]);
 const LAYERS = [
   {id:"ly", name:"PIB per cápita", desc:"Dólares PPA de 2017 por persona (escala logarítmica).", kind:"seq", ramp:"blue"},
@@ -310,6 +357,12 @@ const LAYERS = [
   {id:"reserves", name:"Reservas restantes", desc:"Fracción de los recursos recuperables que aún no se ha extraído. La capacidad de extracción sigue una logística: sube al abrir el yacimiento y cae al agotarlo.", kind:"seq", ramp:"green"},
   {id:"fshare", name:"Extracción extranjera", desc:"Parte de la extracción del país en manos de capital extranjero: compite con la extracción nacional y acelera el agotamiento.", kind:"seq", ramp:"magenta"},
   {id:"ims", name:"Dependencia de recursos", desc:"Parte de los recursos que usa el país y que no controla (ni en casa ni en concesiones fuera): paga un sobrecosto por importarlos.", kind:"seq", ramp:"blue"},
+  {id:"debt", name:"Deuda pública", desc:"Deuda pública / PIB. Sube con tasas por encima del crecimiento, primas de riesgo periféricas y crisis; los intereses de la periferia fluyen hacia sus acreedores del centro.", kind:"seq", ramp:"violet"},
+  {id:"demo", name:"Democracia", desc:"Democracia (V-Dem, régimen ≥ democracia electoral). En los escenarios del modelo, probabilidad de serlo: transiciones y quiebres dependen del ingreso, el crecimiento y los golpes.", kind:"seq", ramp:"blue"},
+  {id:"temp", name:"Temperatura", desc:"Temperatura media anual del país (°C). Histórica observada; en pronósticos, escalada desde la temperatura global simulada.", kind:"seq", ramp:"orange"},
+  {id:"dclim", name:"Daño climático", desc:"Efecto acumulado del clima sobre la productividad (log), con la curva de Burke-Hsiang-Miguel (óptimo ≈ 13 °C) y persistencia 0,8.", kind:"div"},
+  {id:"natcap", name:"Capital natural", desc:"Stock de capital natural (1 = estado inicial): se regenera lentamente y se degrada con la huella ecológica por encima de la biocapacidad y con el calentamiento local.", kind:"seq", ramp:"green"},
+  {id:"co2", name:"Emisiones de CO₂", desc:"Emisiones anuales de CO₂ fósil (Mt), asignadas por extracción en el modelo y territoriales en los datos (Global Carbon Project).", kind:"seq", ramp:"amber", log:true},
   {id:"conflict", name:"Conflicto interno", desc:"Probabilidad anual de conflicto armado interno (en datos: conflicto UCDP activo).", kind:"seq", ramp:"orange"},
   {id:"alloc", name:"Asignación del presupuesto", desc:"Porción del presupuesto discrecional que el país dedica al canal elegido.", kind:"seq", ramp:"chan"},
 ];
@@ -382,13 +435,14 @@ const DOM = {
   psi: [Math.log(0.2), Math.log(20)],
   asab: [0.05, 0.95], E: [0.2, 0.8], conflict: [0, 0.6], rent_in: [-0.12, 0.12], alloc:[0, 0.6],
   res_share: [0, 0.3], reserves: [0, 1], fshare: [0, 0.8], ims: [0, 1],
+  debt: [0, 1.5], demo: [0, 1], temp: [0, 30], dclim: [-0.15, 0.15], natcap: [0.5, 1], co2: [Math.log(1), Math.log(10000)],
 };
 function colorFor(lay){
   const L = LAYERS.find(l=>l.id===lay);
   if (L.kind === "div"){
     const dk = isDark();
     const neg = css("--s-fc"), pos = css("--s-model"), mid = dk ? "#383835" : "#eceae6";
-    const s = d3.scaleLinear().domain([DOM.rent_in[0],0,DOM.rent_in[1]]).range([neg,mid,pos]).clamp(true);
+    const s = d3.scaleLinear().domain([DOM[lay][0],0,DOM[lay][1]]).range([neg,mid,pos]).clamp(true);
     return v => s(v);
   }
   const r = ramp(L.ramp), dom = DOM[lay];
@@ -423,7 +477,7 @@ function renderMap(){
     return v == null ? css("--nodata") : col(v);
   }).classed("sel", f => idxByNum.get(f.id) === st.sel)
     .classed("dim", f => members ? !members.has(M.iso3[idxByNum.get(f.id)]) : false);
-  document.getElementById("yearlbl").textContent = st.year;
+  document.getElementById("yearlbl").textContent = st.year + (st.year > (M.last_data_year||2019) ? "*" : "");
   renderStrip();
 }
 function showTip(ev, f){
@@ -451,7 +505,10 @@ function fmtLayer(lay, v){
   if (lay === "psi") return f2(v);
   if (lay === "conflict") return pct(v);
   if (lay === "rent_in") return (v>0?"+":"") + pct1(v);
-  if (["alloc","E","res_share","reserves","fshare","ims"].includes(lay)) return pct(v);
+  if (["alloc","E","res_share","reserves","fshare","ims","debt","demo"].includes(lay)) return pct(v);
+  if (lay === "temp") return d3.format(".1f")(v) + " °C";
+  if (lay === "dclim") return (v>0?"+":"") + pct1(v);
+  if (lay === "co2") return d3.format(",.0f")(v) + " Mt";
   return f2(v);
 }
 
@@ -471,6 +528,10 @@ function renderLegend(){
   if (lay === "ly"){ lo = fmt$(Math.exp(dom[0])); hi = fmt$(Math.exp(dom[1])); mid = fmt$(Math.exp((dom[0]+dom[1])/2)); }
   else if (lay === "psi"){ lo = f2(Math.exp(dom[0])); hi = f2(Math.exp(dom[1])); mid = "1"; }
   else if (lay === "rent_in"){ lo = pct(dom[0]) + " drenado"; hi = "+" + pct(dom[1]) + " recibido"; mid = "0"; }
+  else if (lay === "dclim"){ lo = pct(dom[0]) + " daño"; hi = "+" + pct(dom[1]) + " ganancia"; mid = "0"; }
+  else if (lay === "temp"){ lo = dom[0] + " °C"; hi = dom[1] + " °C"; }
+  else if (lay === "debt"){ lo = "0 %"; hi = pct(dom[1]) + " del PIB"; }
+  else if (lay === "co2"){ lo = "1 Mt"; hi = "10 000 Mt"; }
   else { lo = (lay==="asab")? f2(dom[0]) : pct(dom[0]); hi = (lay==="asab")? f2(dom[1]) : pct(dom[1]); }
   el.innerHTML = `<span class="v" style="font-family:var(--mono);font-size:11px">${lo}</span><span style="flex:1 1 120px;max-width:260px;height:10px;border-radius:3px;background:linear-gradient(90deg,${grad})"></span><span style="font-family:var(--mono);font-size:11px">${hi}</span>${mid?`<span class="hint">centro de la escala: ${mid}</span>`:""}<span class="sw"><i style="background:var(--nodata)"></i>Sin datos</span>`;
 }
@@ -502,7 +563,7 @@ function weightedGini(x, w){
 // ---------- side panel
 function lineChart(el, series, opts={}){
   const W = opts.w || 320, H = opts.h || 150, m = {l:40,r:8,t:8,b:20};
-  const xs = d3.scaleLinear().domain([1950,2019]).range([m.l, W-m.r]);
+  const xs = d3.scaleLinear().domain(opts.xdom || [1950, M.years[M.years.length-1]]).range([m.l, W-m.r]);
   const all = series.flatMap(s => s.pts.map(p=>p[1]).concat(s.band? s.band.flatMap(b=>[b[1],b[2]]):[])).filter(v=>v!=null);
   if (!all.length){ el.innerHTML = `<p class="hint">Sin datos para este país.</p>`; return; }
   let dom = opts.dom || d3.extent(all); if (dom[0]===dom[1]) dom=[dom[0]-1,dom[1]+1];
@@ -512,7 +573,7 @@ function lineChart(el, series, opts={}){
   const ticks = ys.ticks(4);
   let s = `<svg class="mini" viewBox="0 0 ${W} ${H}">`;
   for (const tk of ticks) s += `<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${ys(tk)}" y2="${ys(tk)}"/><text x="${m.l-5}" y="${ys(tk)+3}" text-anchor="end">${opts.tf? opts.tf(tk): tk}</text>`;
-  for (const yr of [1950,1970,1990,2010]) s += `<text x="${xs(yr)}" y="${H-5}" text-anchor="middle">${yr}</text>`;
+  for (const yr of (opts.xticks || [1950,1970,1990,2010,2030])) s += `<text x="${xs(yr)}" y="${H-5}" text-anchor="middle">${yr}</text>`;
   if (opts.split) s += `<line x1="${xs(opts.split)}" x2="${xs(opts.split)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--axis)" stroke-dasharray="3 3"/>`;
   for (const se of series){ if (se.band) s += `<path d="${ar(se.band)}" fill="${se.color}" opacity=".16"/>`; }
   for (const se of series){ s += `<path d="${lg(se.pts)}" fill="none" stroke="${se.color}" stroke-width="${se.w||2}" ${se.dash?`stroke-dasharray="${se.dash}"`:""} stroke-linejoin="round"/>`; }
@@ -536,13 +597,17 @@ function renderSide(){
   if (arr(sc,"res_share")) kv.push(["Rentas de recursos / PIB", g(sc,"res_share")==null?"—":pct1(g(sc,"res_share"))]);
   if (arr(sc,"reserves")) kv.push(["Reservas restantes", g(sc,"reserves")==null?"—":pct(g(sc,"reserves"))]);
   if (arr(sc,"fshare")) kv.push(["Extracción extranjera", g(sc,"fshare")==null?"—":pct(g(sc,"fshare"))]);
+  if (arr(sc,"debt")) kv.push(["Deuda pública / PIB", g(sc,"debt")==null?"—":pct(g(sc,"debt"))]);
+  if (arr(sc,"demo")) kv.push([sc==="datos"?"Democracia":"Prob. democracia", g(sc,"demo")==null?"—":(sc==="datos"?(g(sc,"demo")?"Sí":"No"):pct(g(sc,"demo")))]);
+  if (arr(sc,"temp")) kv.push(["Temperatura", g(sc,"temp")==null?"—":d3.format(".1f")(g(sc,"temp"))+" °C"]);
+  if (arr(sc,"dclim")) kv.push(["Daño climático (log PTF)", g(sc,"dclim")==null?"—":((g(sc,"dclim")>0?"+":"")+pct1(g(sc,"dclim")))]);
   if (arr(sc,"conflict")) kv.push([sc==="datos"?"Conflicto (UCDP)":"Prob. conflicto", g(sc,"conflict")==null?"—":(sc==="datos"? (g(sc,"conflict")? "Sí":"No") : pct(g(sc,"conflict")))]);
   el.innerHTML = `
     <div><div class="eyebrow">País seleccionado · ${st.year}</div><div class="cname">${M.names[i]}</div>
     ${z!=null?`<span class="chip"><i style="background:var(${ZC[z]})"></i>${ZN[z]}</span>`:""}</div>
     <dl class="kv">${kv.map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join("")}</dl>
     <div><h3 style="font-size:14px">PIB per cápita</h3>
-      <div class="keyrow" style="margin:4px 0"><span><i style="background:var(--s-data)"></i>Datos</span><span><i style="background:var(--s-model)"></i>Modelo</span><span><i style="background:var(--s-fc)"></i>Pronóstico</span>${D.scenarios[rl]?`<span><i style="background:var(--s-rl)"></i>${SCN.find(s=>s.id===rl).name}</span>`:""}</div>
+      <div class="keyrow" style="margin:4px 0"><span><i style="background:var(--s-data)"></i>Datos</span><span><i style="background:var(--s-model)"></i>Modelo</span><span><i style="background:var(--s-fc)"></i>Pronóstico 1990</span><span><i style="background:var(--c-f)"></i>Proyección</span>${D.scenarios[rl]?`<span><i style="background:var(--s-rl)"></i>${SCN.find(s=>s.id===rl).name}</span>`:""}</div>
       <div id="sideLine"></div></div>
     <div id="sideAllocWrap"><h3 style="font-size:14px">Asignación aprendida · ${SCN.find(s=>s.id===rl)?.name||""}</h3>
       <div class="keyrow" style="margin:4px 0">${CH.map(c=>`<span><i class="sq" style="background:var(--c-${c})"></i>${CHN[c]}</span>`).join("")}</div>
@@ -555,6 +620,7 @@ function renderSide(){
     {pts:S("modelo_hist","ly"), color:css("--s-model")},
     {pts:S("pronostico","ly"), color:css("--s-fc"), band: arr("pronostico","ly_p10") ? yrs.map((y,k)=>[y, arr("pronostico","ly_p10")[i][k], arr("pronostico","ly_p90")[i][k]]) : null},
   ];
+  if (D.scenarios.proyeccion) series.push({pts:S("proyeccion","ly"), color:css("--c-f"), band: yrs.map((y,k)=>[y, arr("proyeccion","ly_p10")[i][k], arr("proyeccion","ly_p90")[i][k]])});
   if (D.scenarios[rl]) series.push({pts:S(rl,"ly"), color:css("--s-rl"), dash:"5 3"});
   lineChart(document.getElementById("sideLine"), series, {tf:logTicks, split:1990, cursor:st.year});
   if (D.scenarios[rl]) stackChart(document.getElementById("sideAlloc"), rl, i);
@@ -562,7 +628,7 @@ function renderSide(){
 }
 function stackChart(el, scn, i){
   const W = 320, H = 110, m={l:30,r:8,t:6,b:18};
-  const xs = d3.scaleLinear().domain([1950,2019]).range([m.l,W-m.r]);
+  const xs = d3.scaleLinear().domain([1950, M.years[M.years.length-1]]).range([m.l,W-m.r]);
   const ys = d3.scaleLinear().domain([0,1]).range([H-m.b,m.t]);
   const rows = M.years.map((y,k)=>{ const o={y}; for (const c of CH) o[c] = arr(scn,c)[i][k]; return o; }).filter(o=>o.k!=null);
   if (!rows.length){ el.innerHTML = `<p class="hint">Sin datos.</p>`; return; }
@@ -579,7 +645,7 @@ function stackChart(el, scn, i){
 // ---------- controls
 function buildControls(){
   const scn = d3.select("#scn").selectAll("button").data(SCN).join("button").text(d=>d.name)
-    .on("click", (e,d)=>{ st.scn = d.id; if (!has(st.scn, st.lay)) st.lay = "ly"; if (d.id==="pronostico" && st.year < 1990) setYear(1990); syncControls(); renderAll(); });
+    .on("click", (e,d)=>{ st.scn = d.id; if (!has(st.scn, st.lay)) st.lay = "ly"; if (d.id==="pronostico" && st.year < 1990) setYear(1990); if (d.id==="proyeccion" && st.year < 2019) setYear(2019); if (d.id!=="proyeccion" && st.year > 2019) setYear(2019); syncControls(); renderAll(); });
   d3.select("#lay").selectAll("button").data(LAYERS).join("button").text(d=>d.name)
     .on("click", (e,d)=>{ st.lay = d.id; syncControls(); renderAll(); });
   d3.select("#chan").selectAll("button").data(CH).join("button").text(c=>CHN[c])
@@ -599,83 +665,160 @@ yr.addEventListener("input", ()=>{ st.year = +yr.value; renderMap(); renderSide(
 let timer = null;
 document.getElementById("play").addEventListener("click", ()=>{
   if (timer){ stop(); return; }
-  if (st.year >= 2019) setYear(st.scn==="pronostico" ? 1990 : 1950);
+  if (st.year >= M.years[M.years.length-1]) setYear(st.scn==="pronostico" ? 1990 : st.scn==="proyeccion" ? 2019 : 1950);
   document.getElementById("playicon").innerHTML = `<path d="M3 1.5h3v11H3zM8 1.5h3v11H8z"/>`;
   document.getElementById("play").setAttribute("aria-label","Pausar");
-  timer = setInterval(()=>{ if (st.year >= 2019){ stop(); return; } setYear(st.year+1); renderMap(); renderSide(); }, 260);
+  timer = setInterval(()=>{ if (st.year >= M.years[M.years.length-1]){ stop(); return; } setYear(st.year+1); renderMap(); renderSide(); }, 260);
 });
 function stop(){ clearInterval(timer); timer=null; document.getElementById("playicon").innerHTML = `<path d="M3 1.5v11l9-5.5z"/>`; document.getElementById("play").setAttribute("aria-label","Reproducir"); }
 function renderAll(){ renderLegend(); renderMap(); renderSide(); }
 
 // ---------- validation section
+// ---------- inverse problem: estimated decision rules + revealed reward
+const FEATN = {bienestar:"Bienestar (consumo)", poder:"Poder (cuota del ingreso mundial)", elite:"Ingreso por miembro de la élite", paz:"Paz (menos conflicto)", autonomia:"Autonomía en recursos", inercia:"Inercia (costo de ajuste)"};
+const PROXN = {acc_k:"Formación bruta de capital", acc_m:"Importaciones de manufacturas", res_rents:"Rentas de recursos", acc_r:"I+D + educación pública", acc_f:"IED saliente", acc_w:"Gasto social / transferencias", csh_i:"Inversión (PWT)", csh_m:"Importaciones (PWT)"};
+function buildInverse(){
+  const C = D.conducta;
+  if (C){
+    let h = `<thead><tr><th>Canal</th><th>Indicador observado</th><th>ρ</th><th>R²</th><th>1 año</th><th>5 años</th><th>9 años</th></tr></thead><tbody>`;
+    for (const c of CH){
+      const r = C.reglas[c]; if (!r) continue;
+      const e = C.error_relativo[c] || {};
+      const cell = v => v==null ? "<td>—</td>" : `<td class="${v<1?"best":""}">${f2(v)}</td>`;
+      h += `<tr><td><span class="chip" style="gap:5px"><i style="background:var(--c-${c})"></i>${CHN[c]}</span></td><td style="font-family:var(--body)">${PROXN[r.column]||r.column}</td><td>${f2(r.rho)}</td><td>${f2(r.r2)}</td>${cell(e["1"])}${cell(e["5"])}${cell(e["9"])}</tr>`;
+    }
+    document.getElementById("bcTable").innerHTML = h + "</tbody>";
+  }
+  const I = D.irl; if (!I) return;
+  const feats = Object.keys(I.theta_std);
+  const W = 560, H = 36*feats.length + 30, m = {l:210, r:40, t:8, b:22};
+  const xs = d3.scaleLinear().domain([-1,1]).range([m.l, W-m.r]);
+  let s = `<svg class="mini" viewBox="0 0 ${W} ${H}">`;
+  for (const tk of [-1,-.5,0,.5,1]) s += `<line class="gl" x1="${xs(tk)}" x2="${xs(tk)}" y1="${m.t}" y2="${H-m.b}"/><text x="${xs(tk)}" y="${H-6}" text-anchor="middle">${tk}</text>`;
+  feats.forEach((f,k)=>{
+    const y = m.t + k*36 + 10, v = I.theta_std[f], ci = I.theta_std_ic90[f];
+    s += `<text x="${m.l-8}" y="${y+12}" text-anchor="end" style="font-family:var(--body);font-size:12px;fill:var(--ink2)">${FEATN[f]||f}</text>`;
+    s += `<rect x="${Math.min(xs(0),xs(v))}" y="${y}" width="${Math.abs(xs(v)-xs(0))}" height="16" rx="3" fill="${v>=0?css("--s-model"):css("--s-fc")}"/>`;
+    s += `<line x1="${xs(ci[0])}" x2="${xs(ci[1])}" y1="${y+8}" y2="${y+8}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    s += `<text x="${xs(v)+(v>=0?6:-6)}" y="${y+12}" text-anchor="${v>=0?"start":"end"}" style="font-size:11px">${f2(v)}</text>`;
+  });
+  document.getElementById("irlChart").innerHTML = s + `</svg>`;
+  const A = I.racionalidad_alternativas;
+  document.getElementById("irlNote").innerHTML = `Con esta recompensa, la conducta observada supera al ${pct(I.racionalidad)} de ${d3.format(",")(I.n)} desviaciones simuladas (índice de racionalidad). Con las recompensas teóricas: bienestar ${pct(A.bienestar)}, poder ${pct(A.poder)}, élite ${pct(A.elite)}; con pesos al azar, ${pct(A.aleatoria_media)} en promedio.`;
+  let g = `<thead><tr><th>Grupo</th>${feats.map(f=>`<th>${(FEATN[f]||f).split(" ")[0]}</th>`).join("")}<th>Racionalidad</th><th>n</th></tr></thead><tbody>`;
+  const groups = [["Todos", {theta_std:I.theta_std, racionalidad:I.racionalidad, n:I.n}]]
+    .concat(Object.entries(I.por_zona||{}).map(([k,v])=>[k[0].toUpperCase()+k.slice(1), v]))
+    .concat(Object.entries(I.por_regimen||{}).map(([k,v])=>[k[0].toUpperCase()+k.slice(1), v]))
+    .concat(Object.entries(I.por_decada||{}).map(([k,v])=>[`Desde ${k}`, v]));
+  for (const [name, v] of groups){
+    g += `<tr><td>${name}</td>${feats.map(f=>{ const x = v.theta_std[f]; return `<td style="color:${x>0.25?"var(--s-model)":x<-0.25?"var(--s-fc)":"var(--ink2)"}">${f2(x)}</td>`; }).join("")}<td>${pct(v.racionalidad)}</td><td>${d3.format(",")(v.n)}</td></tr>`;
+  }
+  document.getElementById("irlGroups").innerHTML = g + "</tbody>";
+  const dv = I.desvios_rentables || {};
+  document.getElementById("devBars").innerHTML = CH.map(c=>{
+    const up = dv[c+"+"], dn = dv[c+"-"];
+    const bar = (v, lab) => v==null?"":`<div class="brow" style="grid-template-columns:150px 1fr 44px"><div class="blab">${CHN[c]} ${lab}</div><div style="height:12px;background:var(--surface2);border-radius:3px"><div style="width:${100*v}%;height:100%;background:var(--c-${c});border-radius:3px"></div></div><div class="blab" style="font-family:var(--mono)">${pct(v)}</div></div>`;
+    return bar(up,"↑") + bar(dn,"↓");
+  }).join("");
+}
+
+// ---------- rolling validation
+const METN = {completo:"Modelo híbrido (regla estimada)", politica_congelada:"Modelo con política congelada", persistencia:"Persistencia", deriva_propia:"Deriva propia (10 años)", deriva_global:"Deriva global", ar1_crecimiento:"AR(1) del crecimiento", panel_directo:"Regresión panel directa", frecuencia_pasada:"Frecuencia pasada", logit_historico:"Logit histórico", tendencia_10a:"Tendencia de 10 años",
+  sin_sistema_mundo:"· sin sistema-mundo", sin_demografia_estructural:"· sin demografía estructural", sin_frontera_metaetnica:"· sin frontera metaétnica", sin_politica_de_recursos:"· sin política de recursos", sin_deuda_crisis:"· sin deuda y crisis", sin_instituciones:"· sin instituciones", sin_clima_ecologia:"· sin clima y ecología"};
+const VALV = [
+  {id:"gdp", name:"PIB per cápita", metrics:[["rmse","RMSE",1],["crps","CRPS",1],["corr_crecimiento","Corr. crec.",0],["cobertura_80","Cob. 80 %",2]]},
+  {id:"conf", name:"Conflicto", metrics:[["brier","Brier",1],["auc","AUC",0]]},
+  {id:"debt", name:"Deuda", metrics:[["rmse","RMSE",1],["mae","MAE",1]]},
+  {id:"demo", name:"Democracia", metrics:[["brier","Brier",1],["auc","AUC",0]]},
+  {id:"rr", name:"Rentas de recursos", metrics:[["rmse","RMSE",1],["mae","MAE",1]]},
+  {id:"temp", name:"Temperatura global", metrics:[["rmse","RMSE",1],["mae","MAE",1]]},
+];
 function buildValidation(){
-  const bt = D.calibration.backtest, H = bt.horizons, yrs = Object.keys(H);
-  const models = [["modelo","Modelo híbrido"],["persistencia","Persistencia (sin crecimiento)"],["deriva_propia","Deriva propia 1970–90"],["deriva_global","Deriva global"],["convergencia_beta","Convergencia β"]];
-  const metrics = [["rmse","RMSE",true],["corr_growth","Corr. crecimiento",false],["spearman_level","Spearman nivel",false],["zone_acc","Acierto de zona",false]];
-  let h = `<thead><tr><th>Método</th>${yrs.map(y=>metrics.map(m=>`<th>${m[1]} ${y}</th>`).join("")).join("")}</tr></thead><tbody>`;
-  for (const [k,n] of models){
-    h += `<tr class="${k==="modelo"?"ours":""}"><td>${n}</td>`;
-    for (const y of yrs) for (const [mk,,low] of metrics){
-      const vals = models.map(([kk])=>H[y][kk][mk]).filter(v=>v!=null);
-      const v = H[y][k][mk]; const best = v!=null && (low ? v===d3.min(vals) : v===d3.max(vals));
-      h += `<td class="${best?"best":""}">${v==null?"—":f2(v)}</td>`;
-    }
-    h += `</tr>`;
-  }
-  document.getElementById("btTable").innerHTML = h + "</tbody>";
-  const n19 = H[yrs[yrs.length-1]];
-  document.getElementById("btNote").innerHTML = `Todo lo que usan el modelo y las referencias proviene de datos hasta 1990 (las políticas se congelan en el promedio 1981–1990 de cada país). Población y capital humano se toman como exógenos. ${n19.n} países evaluados en 2019. Cobertura de la banda p10–p90 del modelo: ${yrs.map(y=>`${y}: ${pct(H[y].cobertura_80)}`).join(" · ")} (ideal 80 %). En verde, el mejor valor de cada columna. Referencia β: ${bt.baselines_def.convergencia_beta}.`;
-  const C = bt.conflicto;
-  document.getElementById("cfTable").innerHTML = `<thead><tr><th>Método</th><th>AUC</th><th>Brier</th><th>Tasa predicha</th></tr></thead><tbody>
-    <tr class="ours"><td>Modelo (PSI + ingreso + asabiya)</td><td class="${C.modelo.auc>=C.frecuencia_pasada.auc?"best":""}">${f2(C.modelo.auc)}</td><td class="${C.modelo.brier<=C.frecuencia_pasada.brier?"best":""}">${f3(C.modelo.brier)}</td><td>${pct1(C.modelo.tasa_pred)}</td></tr>
-    <tr><td>Frecuencia pasada del país (1970–90)</td><td class="${C.frecuencia_pasada.auc>C.modelo.auc?"best":""}">${f2(C.frecuencia_pasada.auc)}</td><td class="${C.frecuencia_pasada.brier<C.modelo.brier?"best":""}">${f3(C.frecuencia_pasada.brier)}</td><td>${pct1(C.frecuencia_pasada.tasa_pred)}</td></tr>
-    <tr><td>Observado</td><td>—</td><td>—</td><td>${pct1(C.tasa_obs)}</td></tr></tbody>`;
-  const RRb = bt.recursos;
-  if (RRb){
-    const yy = Object.keys(RRb);
-    let h2 = `<thead><tr><th>Método</th>${yy.map(y=>`<th>RMSE ${y}</th><th>Spearman ${y}</th>`).join("")}</tr></thead><tbody>`;
-    for (const [k,n] of [["modelo","Modelo híbrido"],["persistencia","Persistencia de 1990"]]){
-      h2 += `<tr class="${k==="modelo"?"ours":""}"><td>${n}</td>`;
-      for (const y of yy){
-        const o = k==="modelo" ? "persistencia" : "modelo";
-        h2 += `<td class="${RRb[y][k].rmse<=RRb[y][o].rmse?"best":""}">${f3(RRb[y][k].rmse)}</td><td class="${RRb[y][k].spearman>=RRb[y][o].spearman?"best":""}">${f2(RRb[y][k].spearman)}</td>`;
+  const V = D.validacion; if (!V) return;
+  let cur = "gdp";
+  const seg = d3.select("#valVar").selectAll("button").data(VALV).join("button").text(d=>d.name).on("click",(e,d)=>{ cur=d.id; draw(); });
+  function draw(){
+    seg.attr("aria-pressed", d=>d.id===cur);
+    const spec = VALV.find(v=>v.id===cur), hs = ["1","5","10"];
+    const methods = Object.keys(V[cur]["1"]||{}).filter(m=>!m.startsWith("sin_"));
+    methods.sort((a,b)=> (a==="completo"?-1:b==="completo"?1:0));
+    let h = `<thead><tr><th>Método</th>${hs.map(hh=>spec.metrics.map(mm=>`<th>${mm[1]} ${hh}a</th>`).join("")).join("")}</tr></thead><tbody>`;
+    for (const m of methods){
+      h += `<tr class="${m==="completo"?"ours":""}"><td>${METN[m]||m}</td>`;
+      for (const hh of hs) for (const [mk,,low] of spec.metrics){
+        const col = methods.map(mm=>V[cur][hh]?.[mm]?.[mk]).filter(v=>v!=null);
+        const v = V[cur][hh]?.[m]?.[mk];
+        const best = v!=null && col.length>1 && (low===2 ? Math.abs(v-0.8)===d3.min(col.map(x=>Math.abs(x-0.8))) : low ? v===d3.min(col) : v===d3.max(col));
+        h += `<td class="${best?"best":""}">${v==null?"—":(mk==="cobertura_80"?pct(v):f3(v))}</td>`;
       }
-      h2 += `</tr>`;
+      h += `</tr>`;
     }
-    document.getElementById("rrTable").innerHTML = h2 + `</tbody>`;
+    document.getElementById("valTable").innerHTML = h + "</tbody>";
+    const n = V[cur]["5"]?.completo?.n;
+    document.getElementById("valNote").innerHTML = `Cada origen usa parámetros calibrados solo con datos anteriores (cortes ${(V.meta?.cutoffs||[]).join(", ")}) y la regla de decisión estimada hasta ese año; después de cada origen, golpes, regímenes, crisis, clima y desastres son endógenos. ${n?`${d3.format(",")(n)} país-origen a 5 años.`:""} En verde, el mejor de cada columna (para la cobertura, el más cercano al 80 %). CRPS evalúa toda la distribución pronosticada (para las referencias puntuales equivale al error absoluto).`;
+    drawAbl();
   }
-  if (D.precio){
-    const PS = [["modelo_hist","Modelo histórico","--s-model"],["rl_bienestar","RL · Bienestar","--s-rl"],["rl_poder","RL · Poder","--c-x"],["rl_elite","RL · Élite","--c-f"]].filter(p=>D.precio[p[0]]);
-    document.getElementById("priceKey").innerHTML = PS.map(p=>`<span><i style="background:var(${p[2]})"></i>${p[1]}</span>`).join("");
-    lineChart(document.getElementById("priceChart"), PS.map(p=>({pts:M.years.map((y,k)=>[y, y<1970 ? null : D.precio[p[0]][k] / D.precio[p[0]][20]]), color:css(p[2])})), {tf:v=>d3.format(".1f")(v), h:260, w:560});
+  function drawAbl(){
+    const spec = VALV.find(v=>v.id===cur), mk = spec.metrics[0][0], hs = ["1","5","10"];
+    const abl = Object.keys(V[cur]["5"]||{}).filter(m=>m.startsWith("sin_") || m==="politica_congelada");
+    const rows = abl.map(a => ({a, v: hs.map(hh => { const b = V[cur][hh]?.completo?.[mk], x = V[cur][hh]?.[a]?.[mk]; return (b!=null && x!=null) ? (mk==="auc" ? b - x : x - b) : null; })}));
+    const all = rows.flatMap(r=>r.v).filter(v=>v!=null);
+    if (!all.length){ document.getElementById("ablChart").innerHTML = ""; return; }
+    const ext = d3.max(all.map(Math.abs)) || 1e-6;
+    const W = 560, rh = 16, gap = 10, H = rows.length*(3*rh+gap) + 30, m = {l:200, r:50, t:8, b:22};
+    const xs = d3.scaleLinear().domain([-ext, ext]).nice().range([m.l, W-m.r]);
+    const hc = [css("--s-model"), css("--s-rl"), css("--c-x")];
+    let s = `<svg class="mini" viewBox="0 0 ${W} ${H}">`;
+    for (const tk of xs.ticks(4)) s += `<line class="gl" x1="${xs(tk)}" x2="${xs(tk)}" y1="${m.t}" y2="${H-m.b}"/><text x="${xs(tk)}" y="${H-6}" text-anchor="middle">${d3.format("+.3~f")(tk)}</text>`;
+    rows.forEach((r,k)=>{
+      const y0 = m.t + k*(3*rh+gap);
+      s += `<text x="${m.l-8}" y="${y0+rh*1.5+4}" text-anchor="end" style="font-family:var(--body);font-size:11.5px;fill:var(--ink2)">${(METN[r.a]||r.a).replace("· ","")}</text>`;
+      r.v.forEach((v,j)=>{ if (v==null) return; const y = y0 + j*rh + 2;
+        s += `<rect x="${Math.min(xs(0),xs(v))}" y="${y}" width="${Math.max(1,Math.abs(xs(v)-xs(0)))}" height="${rh-4}" rx="2" fill="${hc[j]}"/>`; });
+    });
+    s += `</svg>`;
+    document.getElementById("ablChart").innerHTML = `<div class="keyrow" style="margin:6px 0">${["1 año","5 años","10 años"].map((l,j)=>`<span><i class="sq" style="background:${hc[j]}"></i>${l}</span>`).join("")}</div>` + s;
   }
-  const F = D.calibration.fit_1950_1990;
-  document.getElementById("fitKV").innerHTML = [
-    ["RMSE log PIB pc (país-año)", f3(F.rmse)],
-    ["Dispersión crecimiento decenal · modelo", f3(F.sd_sim)],
-    ["Dispersión crecimiento decenal · datos", f3(F.sd_obs)],
-    ["Entropía cruzada del conflicto", f3(F.ce)],
-    ["RMSE rentas de recursos / PIB (1970–1990)", F.rr_rmse!=null ? f3(F.rr_rmse) : "—"],
-  ].map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join("");
-  const r19 = H[yrs[yrs.length-1]];
-  const bestRmse = d3.min(models.map(([k])=>r19[k].rmse));
-  document.getElementById("valLede").textContent = `Calibrado solo con 1950–1990 y lanzado a ciegas hasta 2019: RMSE de ${f2(r19.modelo.rmse)} en log PIB per cápita a 29 años (la mejor referencia logra ${f2(bestRmse)}), correlación ${f2(r19.modelo.corr_growth)} entre crecimiento predicho y observado.`;
+  draw();
+  const F = D.calibration.fit || D.calibration.fit_1950_1990 || {};
+  const FN = [["rmse","RMSE log PIB pc (país-año)"],["sd_sim","Dispersión crecimiento decenal · modelo"],["sd_obs","Dispersión crecimiento decenal · datos"],["ce","Entropía cruzada del conflicto"],["cobertura_80","Cobertura de la banda p10–p90"],["rr_rmse","RMSE rentas de recursos / PIB"],["debt_rmse","RMSE deuda / PIB"],["elite_rmse","RMSE participación del 10 % más rico"]];
+  document.getElementById("fitKV").innerHTML = FN.filter(([k])=>F[k]!=null).map(([k,n])=>`<dt>${n}</dt><dd>${k==="cobertura_80"?pct(F[k]):f3(F[k])}</dd>`).join("");
+  const g5 = V.gdp?.["5"] || {}, g10 = V.gdp?.["10"] || {};
+  const best5 = Object.entries(g5).filter(([k])=>!k.startsWith("sin_")&&k!=="completo").sort((a,b)=>a[1].crps-b[1].crps)[0];
+  if (g5.completo) document.getElementById("valLede").textContent = `Validación en varios cortes, sin ver el futuro: a 5 años el modelo tiene un CRPS de ${f3(g5.completo.crps)} en log PIB per cápita (la mejor referencia, ${METN[best5?.[0]]?.toLowerCase()||"—"}: ${best5?f3(best5[1].crps):"—"}); a 10 años, ${f3(g10.completo?.crps)}. Su banda p10–p90 contiene el ${pct(g5.completo.cobertura_80)} de los resultados a 5 años.`;
   // multiples
   const box = document.getElementById("multiples");
   for (const iso of D.showcase){
     const i = M.iso3.indexOf(iso); const d = document.createElement("div");
     d.innerHTML = `<div style="font-weight:600;font-size:13px">${M.names[i]}</div><div></div>`; box.appendChild(d);
-    const yrs2 = M.years, S=(s,v)=>yrs2.map((y,k)=>[y, arr(s,v)[i][k]]);
-    lineChart(d.lastChild, [
+    const yrs2 = M.years, S=(s,v)=>yrs2.map((y,k)=>[y, arr(s,v)?.[i]?.[k] ?? null]);
+    const ser = [
       {pts:S("datos","ly"), color:css("--s-data"), w:2.2},
       {pts:S("modelo_hist","ly"), color:css("--s-model")},
       {pts:S("pronostico","ly"), color:css("--s-fc"), band: yrs2.map((y,k)=>[y, arr("pronostico","ly_p10")[i][k], arr("pronostico","ly_p90")[i][k]])},
-    ], {tf:logTicks, split:1990, h:130});
+    ];
+    if (D.scenarios.proyeccion) ser.push({pts:S("proyeccion","ly"), color:css("--c-f"), band: yrs2.map((y,k)=>[y, arr("proyeccion","ly_p10")[i][k], arr("proyeccion","ly_p90")[i][k]])});
+    lineChart(d.lastChild, ser, {tf:logTicks, split:1990, h:130});
   }
 }
 
+// ---------- climate, ecology and resources
+function buildClimate(){
+  const Mu = D.mundo || {};
+  const yrs = M.years;
+  const TS = [["tg_obs","Observada (HadCRUT/GISTEMP)","--s-data"],["tg_pronostico_1990","Pronóstico desde 1990","--s-fc"],["tg_proyeccion","Proyección 2020–2030","--c-f"]].filter(p=>Mu[p[0]]);
+  document.getElementById("tgKey").innerHTML = TS.map(p=>`<span><i style="background:var(${p[2]})"></i>${p[1]}</span>`).join("");
+  lineChart(document.getElementById("tgChart"), TS.map(p=>({pts:yrs.map((y,k)=>[y, Mu[p[0]][k]]), color:css(p[2]), w:p[0]==="tg_obs"?2.2:2})), {tf:v=>d3.format(".1f")(v), h:220, w:560, split:1990});
+  const CS = [["co2_obs","Observadas (Global Carbon Project)","--s-data"],["co2_modelo_hist","Modelo (extracción simulada)","--s-model"]].filter(p=>Mu[p[0]]);
+  document.getElementById("co2Key").innerHTML = CS.map(p=>`<span><i style="background:var(${p[2]})"></i>${p[1]}</span>`).join("");
+  lineChart(document.getElementById("co2Chart"), CS.map(p=>({pts:yrs.map((y,k)=>[y, Mu[p[0]][k]==null?null:Mu[p[0]][k]/1000]), color:css(p[2])})), {tf:v=>d3.format(".0f")(v), h:220, w:560});
+  const PS = [["precio_modelo_hist","Modelo histórico","--s-model"],["precio_rl_bienestar","RL · Bienestar","--s-rl"],["precio_rl_poder","RL · Poder","--c-x"],["precio_rl_elite","RL · Élite","--c-f"],["precio_rl_irl","RL · Recompensa revelada","--c-w"]].filter(p=>Mu[p[0]]);
+  document.getElementById("priceKey").innerHTML = PS.map(p=>`<span><i style="background:var(${p[2]})"></i>${p[1]}</span>`).join("");
+  lineChart(document.getElementById("priceChart"), PS.map(p=>({pts:yrs.map((y,k)=>[y, (y<1970||y>2019||Mu[p[0]][k]==null) ? null : Mu[p[0]][k] / Mu[p[0]][20]]), color:css(p[2])})), {tf:v=>d3.format(".1f")(v), h:220, w:560});
+}
+
 // ---------- policy section
-const MODES = [["bienestar","Bienestar","Crecimiento del consumo per cápita, penalizando años de conflicto interno."],["poder","Poder","Crecimiento de la cuota nacional del ingreso mundial: juego de suma cero."],["elite","Élite","Crecimiento del ingreso por miembro de la élite: un Estado capturado."]];
+const MODES = [["bienestar","Bienestar","Crecimiento del consumo per cápita, penalizando años de conflicto interno."],["poder","Poder","Crecimiento de la cuota nacional del ingreso mundial: juego de suma cero."],["elite","Élite","Crecimiento del ingreso por miembro de la élite: un Estado capturado."],["irl","Recompensa revelada","La recompensa estimada a partir de la conducta observada (sección 1)."]];
 function buildPolicies(){
   const R = D.resumen.rl || {};
   const modes = MODES.filter(m=>R[m[0]]);
@@ -699,7 +842,7 @@ function buildPolicies(){
   // zone bars
   document.getElementById("chanKey").innerHTML = CH.map(c=>`<span><i class="sq" style="background:var(--c-${c})"></i>${CHN[c]}</span>`).join("");
   const zb = document.getElementById("zoneBars");
-  const groups = [["Histórico implícito", D.resumen.modelo_hist.asignacion_por_zona], ...modes.map(m=>[`RL · ${m[1]}`, R[m[0]].asignacion_por_zona])];
+  const groups = [["Datos observados", D.resumen.datos_asignacion_por_zona], ["Modelo con acciones observadas", D.resumen.modelo_hist.asignacion_por_zona], ...modes.map(m=>[`RL · ${m[1]}`, R[m[0]].asignacion_por_zona])];
   let h = "";
   for (const [g, az] of groups){
     if (!az) continue;
@@ -719,7 +862,7 @@ function buildPolicies(){
   // response curves
   let rm = modes.length ? modes[0][0] : null;
   const rs = d3.select("#respMode").selectAll("button").data(modes).join("button").text(d=>d[1]).on("click",(e,d)=>{ rm=d[0]; drawResp(); });
-  const FEAT = {ly_rel:["Ingreso relativo (log vs. media)", f2], reservas:["Reservas propias restantes", pct], extranjera:["Extracción propia en manos extranjeras", pct], asabiya:["Asabiya", f2], log_psi:["log PSI", f2], elite_E:["Captura de élites", pct]};
+  const FEAT = {ly_rel:["Ingreso relativo (log vs. media)", f2], reservas:["Reservas propias restantes", pct], extranjera:["Extracción propia en manos extranjeras", pct], log_psi:["log PSI", f2], deuda:["Deuda pública / PIB", pct], democracia:["Democracia (polyarchy)", f2]};
   function drawResp(){
     rs.attr("aria-pressed", d=>d[0]===rm);
     const box = document.getElementById("respCharts"); box.innerHTML = "";
@@ -749,10 +892,14 @@ function buildPolicies(){
     ["Países que ascienden de zona 1970→2019", "movilidad_ascendente", pct], ["Países que descienden", "movilidad_descendente", pct],
     ["Captura de élites media 2019", "elite_share_2019", pct],
     ["PSI mediano del centro 2019", "psi_centro_2019", f2], ["PSI mediano de la periferia 2019", "psi_periferia_2019", f2],
+    ["Deuda pública mediana 2019", "deuda_mediana_2019", pct],
+    ["Proporción de democracias 2019", "democracias_2019", pct],
+    ["Temperatura global 2019 (°C)", "temperatura_global_2019", v=>d3.format(".2f")(v)],
+    ["Daño climático mediano a la PTF 2019", "dano_climatico_mediano_2019", pct1],
+    ["Capital natural mediano 2019", "capital_natural_mediano_2019", pct],
     ["Precio mundial de los recursos 2019 (1970 = 1)", "precio_recursos_2019", v=>d3.format(".1f")(v)],
     ["Reservas restantes (mediana) 2019", "reservas_restantes_2019", pct],
     ["Extracción extranjera en la periferia 2019", "extraccion_extranjera_periferia_2019", pct],
-    ["Extracción extranjera en el centro 2019", "extraccion_extranjera_centro_2019", pct],
     ["Dependencia de recursos importados del centro 2019", "dependencia_importacion_centro_2019", pct],
   ];
   let t = `<thead><tr><th>Indicador</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>`;
@@ -819,13 +966,18 @@ function buildMech(){
     <p><strong>Demografía estructural.</strong> Las élites capturan una parte E de la producción y φ de toda renta que entra al país. Cuando el ingreso por miembro de la élite es alto, el número de élites crece (sobreproducción); si el ingreso de las masas se estanca, sube su potencial de movilización. PSI = MMP × EMP × SFD determina el riesgo de conflicto interno, que destruye producto y poda a la élite.</p>
     <p><strong>Frontera metaétnica.</strong> La asabiya crece logísticamente donde hay una frontera: periferias abiertas que el centro drena. Decae en los centros ricos, más rápido con élites sobreproducidas. Aumenta la capacidad estatal: eficiencia de la inversión, éxito de la innovación y resistencia a la inestabilidad.</p>
     <p><strong>Recursos naturales.</strong> Cada país tiene unos recursos recuperables últimos U. Su capacidad bruta de extracción es logística en lo ya extraído (curva de Hubbert): crece mientras se abre el yacimiento y cae al agotarlo. El capital extractivo nacional y el extranjero compiten por esa misma capacidad: una concesión extranjera se lleva su parte, acelera el agotamiento y reduce lo que el país puede explotar por sí mismo; el anfitrión solo conserva una regalía. Los recursos son un insumo de la producción con precio mundial de equilibrio, y quien los importa paga un sobrecosto. Por eso, cuando un país agota los suyos, le conviene asegurarse recursos fuera. Las élites capturan más renta de recursos que de otros ingresos (maldición de los recursos), y la extracción extranjera alimenta la frontera metaétnica.</p>
+    <p><strong>Deuda y crisis.</strong> La deuda pública evoluciona con d′ = d(1+r)/(1+g) − saldo primario. La tasa r es la tasa real de EE. UU. más una prima periférica y una prima por deuda sobre el umbral de intolerancia. La regla fiscal, estimada con datos, responde a la deuda y al crecimiento. Las crisis financieras (logit estimado: deuda, tasa mundial, crecimiento y contagio) cuestan 4,5 % de producto de forma permanente y suben la deuda. Los intereses que paga la periferia fluyen hacia sus acreedores del centro. La tensión fiscal alimenta el SFD del PSI.</p>
+    <p><strong>Instituciones y geopolítica.</strong> Golpes de Estado, con trampa del golpe y efecto de la Guerra Fría, y transiciones entre democracia y autocracia, estimados con Powell-Thyne y V-Dem. La democracia da un impulso a la productividad (Acemoglu et al. 2019, ≈ +20 % a largo plazo) y un golpe exitoso cuesta 0,8 puntos de crecimiento al año durante 5 años. La ayuda oficial suma crecimiento con rendimientos decrecientes. Las democracias parciales son las más inestables.</p>
+    <p><strong>Clima y ecología.</strong> La extracción fósil genera emisiones. La temperatura global responde a las emisiones acumuladas (0,46 °C por 1000 GtCO₂) y la de cada país la sigue con su propio factor de escala. El daño a la productividad sigue la curva de Burke-Hsiang-Miguel (óptimo ≈ 13 °C) con persistencia 0,8. Además, los desastres destruyen capital con más frecuencia a medida que se calienta el planeta, las anomalías de temperatura suben levemente el riesgo de conflicto, y un stock de capital natural se degrada con la huella ecológica por encima de la biocapacidad.</p>
     <p><strong>Tecnología.</strong> La PTF difunde hacia una frontera que avanza (más rápido con importaciones de alto valor e IED) y da saltos estocásticos con tasa de Poisson creciente en el esfuerzo de mejora y la asabiya; los saltos son mayores cuanto más lejos se está de la frontera.</p>`;
-  const P = D.calibration.params;
-  const PN = {g0:"Deriva de la frontera tecnológica (g₀)", kappa:"Velocidad de difusión (κ)", kappa_m:"Difusión incorporada: importaciones/IED (κₘ)", lam0:"Tasa de saltos tecnológicos (λ₀)", j0:"Tamaño medio del salto (j₀)", sig_a:"Ruido de PTF (σ)", tau:"Intercambio desigual (τ)", b0:"Conflicto: intercepto", b1:"Conflicto: sensibilidad a log PSI", b2:"Conflicto: efecto del ingreso", bp:"Persistencia del conflicto (logit)", b3:"Conflicto: efecto de la asabiya", r_R:"Pendiente logística de la capacidad extractiva (r_R)", x0:"Fracción ya extraída al entrar (x₀)", x_hist:"Rentas reinvertidas en extracción (histórico)"};
-  document.getElementById("paramKV").innerHTML = Object.entries(P).map(([k,v])=>`<dt>${PN[k]||k}</dt><dd>${f3(v)}</dd>`).join("");
+  const P = D.calibration.libres || D.calibration.params;
+  const E1N = {golpes:"Golpes (logit)", transicion_ad:"Autocracia → democracia", transicion_da:"Democracia → autocracia", crisis:"Crisis financieras", fiscal:"Reacción fiscal", nacionalizacion:"Nacionalizaciones"};
+  const PN = {kappa_f:"Difusión por IED (κ_f)", theta_d:"Escala del intercambio desigual (θ)", b4:"Conflicto: rentas de recursos", m_scale:"Escala: importaciones de manufacturas", r_scale:"Escala: I+D + educación", w_scale:"Escala: gasto social", eps_w:"Redistribución → captura de élites", g0:"Deriva de la frontera tecnológica (g₀)", kappa:"Velocidad de difusión (κ)", kappa_m:"Difusión incorporada: importaciones/IED (κₘ)", lam0:"Tasa de saltos tecnológicos (λ₀)", j0:"Tamaño medio del salto (j₀)", sig_a:"Ruido de PTF (σ)", tau:"Intercambio desigual (τ)", b0:"Conflicto: intercepto", b1:"Conflicto: sensibilidad a log PSI", b2:"Conflicto: efecto del ingreso", bp:"Persistencia del conflicto (logit)", b3:"Conflicto: efecto de la asabiya", r_R:"Pendiente logística de la capacidad extractiva (r_R)", x0:"Fracción ya extraída al entrar (x₀)", x_hist:"Rentas reinvertidas en extracción (histórico)"};
+  document.getElementById("paramKV").innerHTML = `<dt style="grid-column:1/-1;font-weight:600;color:var(--ink)">Etapa 2 · por simulación</dt>` + Object.entries(P).map(([k,v])=>`<dt>${PN[k]||k}</dt><dd>${f3(v)}</dd>`).join("")
+    + (D.calibration.etapa1 ? `<dt style="grid-column:1/-1;font-weight:600;color:var(--ink);margin-top:8px">Etapa 1 · estimación directa con datos</dt>` + Object.entries(D.calibration.etapa1).map(([k,v])=>`<dt>${E1N[k]||k} (n = ${d3.format(",")(v.n)})</dt><dd>${Object.entries(v.coef).map(([a,b])=>`${a} ${f2(b)}`).join(" · ")}</dd>`).join("") : "");
 }
 
-buildControls(); renderAll(); buildValidation(); buildPolicies(); buildMech();
+buildControls(); renderAll(); buildInverse(); buildValidation(); buildPolicies(); buildClimate(); buildMech();
 document.getElementById("findings").innerHTML = __FINDINGS__;
 document.getElementById("limits").innerHTML = __LIMITS__;
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>{ renderAll(); });

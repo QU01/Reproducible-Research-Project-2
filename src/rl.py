@@ -12,6 +12,9 @@ Reward schemes (one policy is trained per scheme):
   bienestar : growth of log consumption per capita, minus a penalty for civil conflict
   poder     : growth of the country's log share of world GNI (relative power, zero-sum)
   elite     : growth of log income per member of the elite (captured state)
+  irl       : the reward estimated from observed behaviour (src/irl.py, results/irl.json):
+              theta . phi with phi = [welfare growth, power-share growth, elite-income growth,
+              -conflict probability, -resource dependence, -adjustment cost]
 """
 import json
 import sys
@@ -26,11 +29,11 @@ from model import CHANNELS, Params, Simulator, build_world
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
-SIGMA = 0.40
+SIGMA = 0.35
 STEP = 5
-N_OBS = 20
+N_OBS = 22
 N_ACT = len(CHANNELS)
-HIST_DEFAULT = np.array([0.19, 0.02, 0.10, 0.015, 0.015, 0.06]) / 0.40  # budget shares of a typical historical country
+HIST_DEFAULT = np.array([0.20, 0.018, 0.075, 0.01, 0.01, 0.037]) / 0.35  # typical historical mix (model units)
 
 
 # ----------------------------------------------------------------------------- network
@@ -112,6 +115,8 @@ def observe(sim, t):
         np.nan_to_num(last["ims"]),
         np.nan_to_num(last["res_out"]) * 10,
         np.broadcast_to(np.log(np.maximum(sim.price, 1e-6)), (R, N)),
+        np.clip(sim.debt, 0, 3),
+        sim.poly,
         np.broadcast_to(popg * 30, (R, N)),
         np.broadcast_to(sim.w.open_[:, t], (R, N)),
         np.full((R, N), (t - 35) / 35),
@@ -129,6 +134,7 @@ def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0
     """Play one episode (1950-2019) in R parallel worlds. Returns transitions."""
     w = sim.w
     sim.reset(t0)
+    rollout.a_prev = None
     T = w.T
     steps = list(range(t0, T, STEP))
     R, N = sim.R, w.N
@@ -143,28 +149,67 @@ def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0
         z = mean if deterministic else mean + np.exp(logstd) * rng.standard_normal(mean.shape)
         mask = sim.active.copy()
         shares = np.where(mask[..., None], to_shares(z), shares)
-        start = _metrics(sim, mode)
+        start = _metrics(sim, mode) if mode != "irl" else None
         conf_years = np.zeros((R, N))
+        r_irl = np.zeros((R, N))
         for t in range(t_dec, min(t_dec + STEP, T)):
             newly = ~mask & sim.active   # entrants inside the block use the default mix
             if newly.any():
                 shares = np.where(newly[..., None], HIST_DEFAULT, shares)
             acts = {c: SIGMA * shares[..., j] for j, c in enumerate(CHANNELS)}
+            prev = _irl_state(sim) if mode == "irl" else None
             out = sim.step(acts)
             conf_years += np.nan_to_num(out["conflict"])
+            if mode == "irl":
+                cur = _irl_state(sim)
+                a_now = np.stack([acts[c] for c in CHANNELS], -1)
+                adj = (np.sum((a_now - rollout.a_prev) ** 2, -1) * 100) if getattr(rollout, "a_prev", None) is not None and rollout.a_prev.shape == a_now.shape else 0.0
+                rollout.a_prev = a_now
+                if prev is not None:
+                    f = [cur[0] - prev[0], cur[1] - prev[1], cur[2] - prev[2],
+                         -np.nan_to_num(sim.hazard), -np.nan_to_num(out["ims"]), -adj]
+                    r_irl += np.nan_to_num(sum(th * fk for th, fk in zip(IRL_THETA, f)))
             if record:
                 for k in sim.REC:
                     rec[k][:, :, t - t0] = out[k]
                 rec["price"][:, t - t0] = sim.last_price
-        end = _metrics(sim, mode)
-        r = (end - start) * 10.0
-        if mode == "bienestar":
-            r = r - 0.3 * conf_years
+        if mode == "irl":
+            r = r_irl
+        else:
+            end = _metrics(sim, mode)
+            r = (end - start) * 10.0
+            if mode == "bienestar":
+                r = r - 0.3 * conf_years
         buf["obs"].append(obs); buf["z"].append(z); buf["mask"].append(mask)
         buf["rew"].append(np.where(mask, np.nan_to_num(r), 0.0))
     for k in buf:
         buf[k] = np.stack(buf[k], 2)  # (R, N, S, ...)
     return buf, rec
+
+
+IRL_THETA = None
+
+
+def load_irl_theta():
+    """theta in feature units (theta_std / sd) from results/irl.json."""
+    global IRL_THETA
+    e = json.load(open(OUT / "irl.json"))
+    th = np.array(list(e["theta_std"].values())) / np.array(e["sd"])
+    IRL_THETA = th / np.abs(th).max()
+    return IRL_THETA
+
+
+def _irl_state(sim):
+    """(log consumption pc, log share of world GNI, log income per elite member) or None."""
+    last = sim.last
+    if not last:
+        return None
+    L = sim.w.pop[:, sim.t - 1]
+    g = last["gni_pc"] * L
+    share = g / np.nansum(g, 1, keepdims=True)
+    elite = sim.E * last["gni_pc"] / np.maximum(sim.ne, 1e-3)
+    lg = lambda x: np.log(np.maximum(x, 1e-12))
+    return lg(last["cons_pc"]), lg(share), lg(elite)
 
 
 def _metrics(sim, mode):
@@ -258,8 +303,10 @@ def main():
     OUT.mkdir(exist_ok=True)
     cal = json.load(open(OUT / "calibration.json"))
     params = Params().with_vector(list(cal["params"]), list(cal["params"].values()))
-    modes = sys.argv[1:] or ["bienestar", "poder", "elite"]
+    modes = sys.argv[1:] or ["bienestar", "poder", "elite", "irl"]
     for mode in modes:
+        if mode == "irl":
+            load_irl_theta()
         th, vf, hist = train(mode, params)
         np.save(OUT / f"policy_{mode}.npy",
                 np.array({"pol": th["pol"], "logstd": th["logstd"], "curve": hist}, dtype=object),

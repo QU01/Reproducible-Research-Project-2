@@ -1,0 +1,478 @@
+{
+  "top1_share_ptinc": {
+    "description": "Participación del 1 % superior en la renta nacional antes de impuestos (sptinc992j p99p100)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 8899,
+      "n_countries": 215,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 215,
+      "n_countries_2015": 214
+    }
+  },
+  "top10_share_ptinc": {
+    "description": "Participación del 10 % superior en la renta antes de impuestos (sptinc992j p90p100)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 8899,
+      "n_countries": 215,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 215,
+      "n_countries_2015": 214
+    }
+  },
+  "mid40_share_ptinc": {
+    "description": "Participación del 40 % medio (p50p90) en la renta antes de impuestos",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 8899,
+      "n_countries": 215,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 215,
+      "n_countries_2015": 214
+    }
+  },
+  "bot50_share_ptinc": {
+    "description": "Participación del 50 % inferior en la renta antes de impuestos (sptinc992j p0p50)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 8899,
+      "n_countries": 215,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 215,
+      "n_countries_2015": 214
+    }
+  },
+  "top1_share_wealth": {
+    "description": "Participación del 1 % superior en la riqueza personal neta (shweal992j p99p100)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 5583,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 5,
+      "n_countries_1990": 7,
+      "n_countries_2015": 214
+    }
+  },
+  "top10_share_wealth": {
+    "description": "Participación del 10 % superior en la riqueza personal neta",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 5570,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 4,
+      "n_countries_1990": 7,
+      "n_countries_2015": 214
+    }
+  },
+  "bot50_share_wealth": {
+    "description": "Participación del 50 % inferior en la riqueza personal neta",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 5513,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 2,
+      "n_countries_1990": 6,
+      "n_countries_2015": 214
+    }
+  },
+  "gini_ptinc_wid": {
+    "description": "Gini de la renta antes de impuestos (gptinc992j)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "0-1",
+    "coverage": {
+      "n_obs": 8899,
+      "n_countries": 215,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 215,
+      "n_countries_2015": 214
+    }
+  },
+  "gini_wealth_wid": {
+    "description": "Gini de la riqueza personal neta (ghweal992j)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "0-1",
+    "coverage": {
+      "n_obs": 5513,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 2,
+      "n_countries_1990": 6,
+      "n_countries_2015": 214
+    }
+  },
+  "avg_inc_bot50": {
+    "description": "Renta media antes de impuestos del 50 % inferior por adulto (aptinc992j p0p50) — proxy de renta de masas",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "USD PPA constantes del año de referencia WID",
+    "coverage": {
+      "n_obs": 8888,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "avg_inc_top1": {
+    "description": "Renta media antes de impuestos del 1 % superior por adulto — renta de élite",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "USD PPA constantes (ref. WID)",
+    "coverage": {
+      "n_obs": 8888,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "avg_inc_top10": {
+    "description": "Renta media antes de impuestos del 10 % superior por adulto",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "USD PPA constantes (ref. WID)",
+    "coverage": {
+      "n_obs": 8888,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "avg_inc_all": {
+    "description": "Renta media antes de impuestos por adulto (aptinc992j p0p100)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "USD PPA constantes (ref. WID)",
+    "coverage": {
+      "n_obs": 8888,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "nni_per_adult": {
+    "description": "Renta nacional neta media por adulto (anninc992i)",
+    "source": "World Inequality Database (wid.world), volcado masivo por país; copia en github.com/sandravizz/Global-Inequality-Data. Adultos 20+, reparto igualitario (j).",
+    "units": "USD PPA constantes (ref. WID)",
+    "coverage": {
+      "n_obs": 13615,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 151,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "top1_bot50_income_ratio": {
+    "description": "Cociente renta media top 1 % / 50 % inferior (renta relativa élite/masas)",
+    "source": "Derivado de WID",
+    "units": "ratio",
+    "coverage": {
+      "n_obs": 8888,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "bot50_rel_income": {
+    "description": "Renta media del 50 % inferior / renta media nacional (= 2 * bot50_share); salario relativo alternativo",
+    "source": "Derivado de WID",
+    "units": "ratio",
+    "coverage": {
+      "n_obs": 8888,
+      "n_countries": 214,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 214,
+      "n_countries_2015": 214
+    }
+  },
+  "wid_flat_flag": {
+    "description": "1 si la participación top1 WID es idéntica al año anterior/siguiente (extrapolación plana, baja calidad)",
+    "source": "Derivado de WID",
+    "units": "0/1",
+    "coverage": {
+      "n_obs": 8899,
+      "n_countries": 215,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 48,
+      "n_countries_1990": 215,
+      "n_countries_2015": 214
+    }
+  },
+  "gini_disp": {
+    "description": "Gini de renta disponible (tras impuestos y transferencias), media de 100 imputaciones",
+    "source": "SWIID 9.6 (Solt 2020), swiid9_6_summary.csv",
+    "units": "0-1",
+    "coverage": {
+      "n_obs": 5983,
+      "n_countries": 198,
+      "year_min": 1960,
+      "year_max": 2019,
+      "n_countries_1960": 4,
+      "n_countries_1990": 110,
+      "n_countries_2015": 146
+    }
+  },
+  "gini_disp_se": {
+    "description": "Error estándar de gini_disp",
+    "source": "SWIID 9.6",
+    "units": "0-1",
+    "coverage": {
+      "n_obs": 5983,
+      "n_countries": 198,
+      "year_min": 1960,
+      "year_max": 2019,
+      "n_countries_1960": 4,
+      "n_countries_1990": 110,
+      "n_countries_2015": 146
+    }
+  },
+  "gini_mkt": {
+    "description": "Gini de renta de mercado (antes de impuestos y transferencias)",
+    "source": "SWIID 9.6",
+    "units": "0-1",
+    "coverage": {
+      "n_obs": 5983,
+      "n_countries": 198,
+      "year_min": 1960,
+      "year_max": 2019,
+      "n_countries_1960": 4,
+      "n_countries_1990": 110,
+      "n_countries_2015": 146
+    }
+  },
+  "gini_mkt_se": {
+    "description": "Error estándar de gini_mkt",
+    "source": "SWIID 9.6",
+    "units": "0-1",
+    "coverage": {
+      "n_obs": 5983,
+      "n_countries": 198,
+      "year_min": 1960,
+      "year_max": 2019,
+      "n_countries_1960": 4,
+      "n_countries_1990": 110,
+      "n_countries_2015": 146
+    }
+  },
+  "redist_rel": {
+    "description": "Redistribución relativa (gini_mkt-gini_disp)/gini_mkt",
+    "source": "SWIID 9.6",
+    "units": "fracción",
+    "coverage": {
+      "n_obs": 2419,
+      "n_countries": 70,
+      "year_min": 1975,
+      "year_max": 2019,
+      "n_countries_1960": 0,
+      "n_countries_1990": 48,
+      "n_countries_2015": 68
+    }
+  },
+  "tert_share_2564": {
+    "description": "Proporción de la población 25-64 con algún estudio terciario (lh), interpolado anual",
+    "source": "Barro & Lee (2013) v3 2021 (BL_v3_MF.csv)",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 9636,
+      "n_countries": 146,
+      "year_min": 1950,
+      "year_max": 2015,
+      "n_countries_1960": 146,
+      "n_countries_1990": 146,
+      "n_countries_2015": 146
+    }
+  },
+  "tert_compl_share_2564": {
+    "description": "Proporción 25-64 con estudios terciarios completos (lhc)",
+    "source": "Barro-Lee v3",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 9636,
+      "n_countries": 146,
+      "year_min": 1950,
+      "year_max": 2015,
+      "n_countries_1960": 146,
+      "n_countries_1990": 146,
+      "n_countries_2015": 146
+    }
+  },
+  "tert_share_2534": {
+    "description": "Proporción 25-34 con estudios terciarios (aspirantes a élite jóvenes)",
+    "source": "Barro-Lee v3",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 9636,
+      "n_countries": 146,
+      "year_min": 1950,
+      "year_max": 2015,
+      "n_countries_1960": 146,
+      "n_countries_1990": 146,
+      "n_countries_2015": 146
+    }
+  },
+  "yr_sch_2564": {
+    "description": "Años medios de escolarización, población 25-64",
+    "source": "Barro-Lee v3",
+    "units": "años",
+    "coverage": {
+      "n_obs": 9636,
+      "n_countries": 146,
+      "year_min": 1950,
+      "year_max": 2015,
+      "n_countries_1960": 146,
+      "n_countries_1990": 146,
+      "n_countries_2015": 146
+    }
+  },
+  "youth_share_1524_of_1564": {
+    "description": "Población 15-24 / población 15-64 (youth bulge)",
+    "source": "Barro-Lee v3 (columna pop)",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 9636,
+      "n_countries": 146,
+      "year_min": 1950,
+      "year_max": 2015,
+      "n_countries_1960": 146,
+      "n_countries_1990": 146,
+      "n_countries_2015": 146
+    }
+  },
+  "tert_enrol_gross": {
+    "description": "Tasa bruta de matrícula terciaria (SE.TER.ENRR)",
+    "source": "WDI (vintage 2026-04)",
+    "units": "fracción (puede superar 1)",
+    "coverage": {
+      "n_obs": 4738,
+      "n_countries": 201,
+      "year_min": 1970,
+      "year_max": 2019,
+      "n_countries_1960": 0,
+      "n_countries_1990": 80,
+      "n_countries_2015": 147
+    }
+  },
+  "hh_cons_pc_2015usd": {
+    "description": "Gasto de consumo final de los hogares per cápita (NE.CON.PRVT.PC.KD)",
+    "source": "WDI (vintage 2025-07)",
+    "units": "USD constantes 2015",
+    "coverage": {
+      "n_obs": 6185,
+      "n_countries": 181,
+      "year_min": 1960,
+      "year_max": 2019,
+      "n_countries_1960": 39,
+      "n_countries_1990": 98,
+      "n_countries_2015": 181
+    }
+  },
+  "youth_unemp": {
+    "description": "Desempleo juvenil 15-24, estimación modelada OIT (SL.UEM.1524.ZS)",
+    "source": "WDI (vintage 2023-10)",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 5394,
+      "n_countries": 186,
+      "year_min": 1991,
+      "year_max": 2019,
+      "n_countries_1960": 0,
+      "n_countries_1990": 0,
+      "n_countries_2015": 186
+    }
+  },
+  "urban_share": {
+    "description": "Población urbana / total (SP.URB.TOTL.IN.ZS), componente N_urb/N del MMP",
+    "source": "WDI (vintage 2026-07)",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 12960,
+      "n_countries": 216,
+      "year_min": 1960,
+      "year_max": 2019,
+      "n_countries_1960": 216,
+      "n_countries_1990": 216,
+      "n_countries_2015": 216
+    }
+  },
+  "rel_wage_pwt": {
+    "description": "Salario relativo de Turchin w = (labsh*Y/emp)/(Y/pop) = labsh*pop/emp",
+    "source": "Penn World Table 10.01",
+    "units": "ratio",
+    "coverage": {
+      "n_obs": 7550,
+      "n_countries": 138,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 79,
+      "n_countries_1990": 134,
+      "n_countries_2015": 138
+    }
+  },
+  "wage_per_worker_pwt": {
+    "description": "Salario medio real por trabajador = labsh*rgdpna/emp",
+    "source": "Penn World Table 10.01",
+    "units": "millones USD2017 / millones de trabajadores = USD2017",
+    "coverage": {
+      "n_obs": 7550,
+      "n_countries": 138,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 79,
+      "n_countries_1990": 134,
+      "n_countries_2015": 138
+    }
+  },
+  "emp_pop_ratio": {
+    "description": "Empleo / población",
+    "source": "Penn World Table 10.01",
+    "units": "fracción 0-1",
+    "coverage": {
+      "n_obs": 9529,
+      "n_countries": 182,
+      "year_min": 1950,
+      "year_max": 2019,
+      "n_countries_1960": 91,
+      "n_countries_1990": 175,
+      "n_countries_2015": 177
+    }
+  }
+}

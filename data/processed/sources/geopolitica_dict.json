@@ -1,0 +1,989 @@
+{
+ "panel": "data/processed/sources/geopolitica.csv",
+ "world": "data/processed/sources/geopolitica_world.csv",
+ "years": [
+  1946,
+  2019
+ ],
+ "variables": {
+  "coup_attempts": "Intentos de golpe (exitosos+fallidos), Powell & Thyne 2011 (v2023-09); 1950-2019",
+  "coup_success": "Golpes exitosos (Powell & Thyne)",
+  "coup_failed": "Golpes fallidos (Powell & Thyne)",
+  "coup_any": "1 si hubo >=1 intento de golpe en el anio",
+  "coup_success_any": "1 si hubo >=1 golpe exitoso",
+  "years_since_coup": "Anios desde el ultimo intento (censurado a la izquierda en 1950 o entrada del pais)",
+  "coups_past10": "Intentos de golpe en los 10 anios previos (t-10..t-1) - 'trampa del golpe'",
+  "vdem_polyarchy": "V-Dem v15 indice de democracia electoral (0-1)",
+  "vdem_libdem": "V-Dem indice de democracia liberal (0-1)",
+  "regime_row": "Regimes of the World (0 autocracia cerrada, 1 autoc. electoral, 2 dem. electoral, 3 dem. liberal)",
+  "regime_change": "1 si regime_row cambia respecto de t-1",
+  "dem_transition": "1 si pasa de autocracia (RoW<=1) a democracia (RoW>=2)",
+  "dem_breakdown": "1 si pasa de democracia (RoW>=2) a autocracia (RoW<=1)",
+  "polyarchy_change": "Variacion anual de vdem_polyarchy",
+  "vdem_ex_military": "V-Dem dimension militar del ejecutivo (0-1; alto=regimen militar)",
+  "vdem_neopat": "V-Dem neopatrimonialismo (0-1)",
+  "vdem_corr": "V-Dem corrupcion politica (0-1)",
+  "vdem_rule": "V-Dem estado de derecho (0-1)",
+  "vdem_jucon": "V-Dem restricciones judiciales al ejecutivo (0-1)",
+  "vdem_fisccap": "V-Dem capacidad fiscal del Estado (v2stfisccap, escala latente ~ -3..3)",
+  "vdem_intl_autonomy": "V-Dem autonomia internacional del Estado (v2svinlaut; bajo = dominado por potencia extranjera)",
+  "vdem_civlib": "V-Dem libertades civiles (0-1)",
+  "bmr_democracy": "Boix-Miller-Rosato democracia dicotomica (via V-Dem, hasta 2020)",
+  "bmr_transition": "BMR: +1 transicion a democracia, -1 quiebre, 0 nada",
+  "bmr_breakdowns": "BMR: numero acumulado de quiebres democraticos previos",
+  "cheibub_democracy": "Cheibub-Gandhi-Vreeland democracia dicotomica (hasta 2008)",
+  "polity2": "Polity2 (-10..10) via peacesciencer ccode_democracy",
+  "uds_democracy": "Unified Democracy Scores extendidos (Marquez xm_qudsest)",
+  "leader_entries": "Numero de nuevos lideres que asumen en el anio (Archigos 4.1, hasta 2015)",
+  "leader_irregular_exit": "Salidas irregulares de lideres (golpe, revuelta, asesinato...)",
+  "leader_foreign_removal": "Lideres depuestos por fuerza extranjera",
+  "leader_removed_military": "Lideres removidos por militares (exitcode contiene 'Military')",
+  "leader_removed_protest": "Lideres removidos por protesta popular",
+  "leader_tenure": "Anios en el cargo del lider vigente al 31-dic",
+  "leader_irregular_entry": "1 si el lider vigente llego por via irregular",
+  "cinc": "COW NMC 6.0 Composite Index of National Capability (cuota mundial, hasta 2016)",
+  "log_cinc": "log(cinc)",
+  "milex": "Gasto militar (miles de USD corrientes, COW NMC)",
+  "milper": "Personal militar (miles)",
+  "cinc_rank": "Ranking mundial por CINC",
+  "major_power": "Gran potencia COW (USA, GBR, FRA, RUS, CHN, DEU 1991+, JPN 1991+)",
+  "global_power_maoz": "Potencia global segun Maoz",
+  "regional_power_maoz": "Potencia regional segun Maoz",
+  "n_defense_allies": "Numero de aliados con pacto de defensa (ATOP 5.1, hasta 2018)",
+  "n_allies_any": "Numero de aliados con cualquier tipo de compromiso ATOP",
+  "ally_us_defense": "1 si tiene pacto de defensa con EE.UU.",
+  "ally_rus_defense": "1 si tiene pacto de defensa con URSS/Rusia",
+  "ally_chn_defense": "1 si tiene pacto de defensa con China",
+  "bloc": "Bloque: +1 aliado de defensa de EE.UU., -1 de URSS/Rusia, 0 ninguno (EE.UU.=+1, URSS=-1 hasta 1991)",
+  "cold_war": "1 si 1947-1991",
+  "unga_ideal_point": "Punto ideal AGNU (Bailey, Strezhnev & Voeten 2017; anio = sesion+1945)",
+  "unga_dist_us": "|punto ideal - punto ideal de EE.UU.|",
+  "unga_dist_rus": "|punto ideal - punto ideal de URSS/Rusia|",
+  "unga_dist_chn": "|punto ideal - punto ideal de China|",
+  "mid_ongoing": "1 si participa en >=1 disputa militarizada (GML MID 2.2.1, hasta 2010)",
+  "mid_onset": "1 si alguna MID comienza en el anio",
+  "mid_n": "Numero de MIDs en curso",
+  "mid_n_onsets": "Numero de MIDs iniciadas",
+  "mid_fatal": "1 si alguna MID con muertes del pais",
+  "mid_initiated": "1 si el pais origino una MID nueva del lado A (iniciador)",
+  "mid_hostlev_max": "Nivel maximo de hostilidad (1-5)",
+  "mid_use_force": "1 si hostilidad >=4 (uso de fuerza)",
+  "cow_war_ongoing": "1 si participa en guerra interestatal COW (hasta 2003 en esta version)",
+  "cow_war_onset": "1 si entra en guerra interestatal",
+  "cow_war_batdeaths": "Muertes en combate del pais en la guerra (total, asignado al anio de inicio)",
+  "cow_war_won": "1 si termina una guerra ganada",
+  "cow_war_lost": "1 si termina una guerra perdida",
+  "ucdp_interstate": "Numero de conflictos armados interestatales UCDP (>=25 muertes) en que participa",
+  "ucdp_interstate_war": "1 si algun conflicto interestatal UCDP alcanza >=1000 muertes",
+  "intervention_abroad_n": "Numero de conflictos intraestatales internacionalizados donde interviene como 2do actor",
+  "civil_war_foreign_intervened": "1 si su conflicto interno esta internacionalizado (tropas extranjeras)",
+  "n_rivalries": "Rivalidades estrategicas activas (Thompson & Dreyer 2012; hasta 2010)",
+  "rival_parity_max": "Max. paridad CINC min/max frente a sus rivales estrategicos",
+  "rival_power_share_min": "Min. cuota propia CINC_i/(CINC_i+CINC_rival)",
+  "n_contig_neighbors": "Vecinos contiguos por tierra o agua <=150 millas (COW Direct Contiguity 3.2)",
+  "n_land_neighbors": "Vecinos con frontera terrestre",
+  "neighbor_parity_max": "Max. paridad CINC min/max frente a un vecino contiguo (hasta 2016)",
+  "neighbor_dem_share": "Proporcion de vecinos contiguos democraticos (RoW>=2) - difusion regional",
+  "oda_gni": "AOD neta recibida % del INB (WDI DT.ODA.ODAT.GN.ZS, 1960-2020)",
+  "sanctions_n": "Numero de casos de sancion activos contra el pais (GSDB v4)",
+  "sanctions_onset": "1 si comienza un nuevo caso",
+  "sanctions_us": "1 si EE.UU. es emisor de alguna sancion activa",
+  "sanctions_eu": "1 si la UE/CE es emisora",
+  "sanctions_un": "1 si la ONU es emisora",
+  "sanctions_trade": "1 si alguna sancion comercial activa",
+  "sanctions_financial": "1 si alguna sancion financiera activa"
+ },
+ "world_variables": {
+  "cinc_share_usa": "Cuota de EE.UU. en el CINC mundial (hegemonia material)",
+  "cinc_share_rus": "Cuota URSS/Rusia",
+  "cinc_share_chn": "Cuota China",
+  "cinc_top1_iso": "Estado con mayor CINC",
+  "cinc_top1_share": "Cuota del lider",
+  "cinc_top2_share": "Cuota del segundo",
+  "cinc_lead_ratio": "Cociente lider/segundo (>1)",
+  "cinc_hhi": "Herfindahl de CINC",
+  "cinc_con": "Concentracion de Singer-Bremer-Stuckey (0-1)",
+  "chn_usa_cinc_ratio": "CINC China / CINC EE.UU. (transicion de poder)",
+  "n_poles_10pct": "Numero de estados con >=10% del CINC (polaridad)",
+  "gdp_share_usa": "Cuota de EE.UU. en PIB mundial (Anders et al., PPA 2011, hasta 2015/16)",
+  "gdp_share_chn": "Cuota de China en PIB mundial",
+  "gdp_share_rus": "Cuota URSS/Rusia en PIB mundial",
+  "chn_usa_gdp_ratio": "PIB China / PIB EE.UU.",
+  "cold_war": "1 si 1947-1991",
+  "bipolar": "Indicador de bipolaridad (= guerra fria)",
+  "n_states": "Numero de estados en el panel",
+  "share_democracies_row": "Proporcion de democracias (RoW>=2)",
+  "mean_polyarchy": "Polyarchy promedio (no ponderado)",
+  "coups_world": "Intentos de golpe en el mundo",
+  "coups_success_world": "Golpes exitosos en el mundo",
+  "dem_transitions_world": "Transiciones democraticas (RoW)",
+  "dem_breakdowns_world": "Quiebres democraticos (RoW)",
+  "mid_onsets_world": "MIDs iniciadas (conteo pais-disputa)",
+  "states_in_interstate_conflict": "Estados en conflicto interestatal UCDP",
+  "states_sanctioned": "Estados bajo sanciones (GSDB)",
+  "n_major_powers": "Numero de grandes potencias COW",
+  "mean_oda_gni": "AOD/INB promedio (receptores)"
+ },
+ "sources": {
+  "powell_thyne": "Powell, J. & Thyne, C. (2011) Global instances of coups from 1950 to 2010. JPR 48(2). v2023-09-08.",
+  "vdem": "Coppedge et al. V-Dem Dataset v15 (vdemdata R package, GitHub vdeminstitute/vdemdata).",
+  "peacesciencer": "Miller, S. (2022) peacesciencer: An R package for quantitative peace science research. CMPS.",
+  "cow_nmc": "Singer, Bremer & Stuckey (1972); COW National Material Capabilities v6.0 (Greig & Enterline).",
+  "atop": "Leeds et al. (2002) Alliance Treaty Obligations and Provisions v5.1.",
+  "gml_mid": "Gibler, Miller & Little (2016) GML MID dataset v2.2.1.",
+  "cow_war": "Sarkees & Wayman (2010) Resort to War; COW inter-state war v4.0.",
+  "archigos": "Goemans, Gleditsch & Chiozza (2009) Archigos v4.1.",
+  "td_rivalries": "Thompson & Dreyer (2012) Handbook of International Rivalries.",
+  "unga": "Bailey, Strezhnev & Voeten (2017) Estimating dynamic state preferences from UN voting data. JCR 61(2).",
+  "gsdb": "Felbermayr et al. (2020) The Global Sanctions Data Base. EER; Syropoulos et al. (2023) v3/v4.",
+  "wdi_oda": "World Bank WDI DT.ODA.ODAT.GN.ZS (OECD DAC), release 2021-12-16.",
+  "ucdp_acd": "Gleditsch et al. (2002); Davies et al. UCDP/PRIO Armed Conflict Dataset.",
+  "cow_contdir": "Stinnett et al. (2002) COW Direct Contiguity v3.2 (via peacesciencer).",
+  "sdp_gdp": "Anders, Fariss & Markowitz (2020) Bread before guns or butter. ISQ (PIB/SDP estimado)."
+ },
+ "coverage": {
+  "coup_attempts": {
+   "years": [
+    1950,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12474
+  },
+  "coup_success": {
+   "years": [
+    1950,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12474
+  },
+  "coup_failed": {
+   "years": [
+    1950,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12474
+  },
+  "vdem_polyarchy": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11915
+  },
+  "vdem_libdem": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11802
+  },
+  "regime_row": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11915
+  },
+  "vdem_ex_military": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11916
+  },
+  "vdem_neopat": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11823
+  },
+  "vdem_corr": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11802
+  },
+  "vdem_rule": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11886
+  },
+  "vdem_jucon": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11807
+  },
+  "vdem_fisccap": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11388
+  },
+  "vdem_intl_autonomy": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11916
+  },
+  "vdem_civlib": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11916
+  },
+  "bmr_democracy": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 173,
+   "obs": 10292
+  },
+  "bmr_transition": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 173,
+   "obs": 10292
+  },
+  "bmr_breakdowns": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 173,
+   "obs": 10292
+  },
+  "cheibub_democracy": {
+   "years": [
+    1946,
+    2008
+   ],
+   "countries": 174,
+   "obs": 8488
+  },
+  "regime_change": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11883
+  },
+  "dem_transition": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11883
+  },
+  "dem_breakdown": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11883
+  },
+  "polyarchy_change": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 176,
+   "obs": 11883
+  },
+  "polity2": {
+   "years": [
+    1946,
+    2017
+   ],
+   "countries": 167,
+   "obs": 9523
+  },
+  "uds_democracy": {
+   "years": [
+    1946,
+    2017
+   ],
+   "countries": 195,
+   "obs": 10626
+  },
+  "leader_entries": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 202,
+   "obs": 12300
+  },
+  "leader_irregular_exit": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 202,
+   "obs": 12300
+  },
+  "leader_foreign_removal": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 202,
+   "obs": 12300
+  },
+  "leader_removed_military": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 202,
+   "obs": 12300
+  },
+  "leader_removed_protest": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 202,
+   "obs": 12300
+  },
+  "leader_tenure": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 173,
+   "obs": 9971
+  },
+  "leader_irregular_entry": {
+   "years": [
+    1946,
+    2015
+   ],
+   "countries": 173,
+   "obs": 9971
+  },
+  "cinc": {
+   "years": [
+    1946,
+    2016
+   ],
+   "countries": 195,
+   "obs": 10431
+  },
+  "milex": {
+   "years": [
+    1946,
+    2016
+   ],
+   "countries": 195,
+   "obs": 10431
+  },
+  "milper": {
+   "years": [
+    1946,
+    2016
+   ],
+   "countries": 195,
+   "obs": 10431
+  },
+  "cinc_rank": {
+   "years": [
+    1946,
+    2016
+   ],
+   "countries": 195,
+   "obs": 10431
+  },
+  "major_power": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 195,
+   "obs": 11026
+  },
+  "global_power_maoz": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 195,
+   "obs": 11026
+  },
+  "regional_power_maoz": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 195,
+   "obs": 11026
+  },
+  "n_defense_allies": {
+   "years": [
+    1946,
+    2018
+   ],
+   "countries": 202,
+   "obs": 12891
+  },
+  "n_allies_any": {
+   "years": [
+    1946,
+    2018
+   ],
+   "countries": 202,
+   "obs": 12891
+  },
+  "ally_us_defense": {
+   "years": [
+    1946,
+    2018
+   ],
+   "countries": 202,
+   "obs": 12891
+  },
+  "ally_rus_defense": {
+   "years": [
+    1946,
+    2018
+   ],
+   "countries": 202,
+   "obs": 12891
+  },
+  "ally_chn_defense": {
+   "years": [
+    1946,
+    2018
+   ],
+   "countries": 202,
+   "obs": 12891
+  },
+  "unga_ideal_point": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 194,
+   "obs": 10429
+  },
+  "unga_dist_us": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 194,
+   "obs": 10429
+  },
+  "unga_dist_rus": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 194,
+   "obs": 10429
+  },
+  "unga_dist_chn": {
+   "years": [
+    1971,
+    2019
+   ],
+   "countries": 194,
+   "obs": 8346
+  },
+  "mid_n": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_onset": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_fatal": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_initiated": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_hostlev_max": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_use_force": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_n_onsets": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "mid_ongoing": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "cow_war_ongoing": {
+   "years": [
+    1946,
+    2003
+   ],
+   "countries": 201,
+   "obs": 9943
+  },
+  "cow_war_onset": {
+   "years": [
+    1946,
+    2003
+   ],
+   "countries": 201,
+   "obs": 9943
+  },
+  "cow_war_batdeaths": {
+   "years": [
+    1946,
+    2003
+   ],
+   "countries": 201,
+   "obs": 9943
+  },
+  "cow_war_won": {
+   "years": [
+    1946,
+    2003
+   ],
+   "countries": 201,
+   "obs": 9943
+  },
+  "cow_war_lost": {
+   "years": [
+    1946,
+    2003
+   ],
+   "countries": 201,
+   "obs": 9943
+  },
+  "ucdp_interstate": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  },
+  "ucdp_interstate_war": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  },
+  "intervention_abroad_n": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  },
+  "civil_war_foreign_intervened": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  },
+  "n_rivalries": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 201,
+   "obs": 11315
+  },
+  "rival_parity_max": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 96,
+   "obs": 3592
+  },
+  "rival_power_share_min": {
+   "years": [
+    1946,
+    2010
+   ],
+   "countries": 96,
+   "obs": 3592
+  },
+  "n_contig_neighbors": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  },
+  "n_land_neighbors": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  },
+  "neighbor_parity_max": {
+   "years": [
+    1946,
+    2016
+   ],
+   "countries": 170,
+   "obs": 9262
+  },
+  "neighbor_dem_share": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 165,
+   "obs": 9575
+  },
+  "oda_gni": {
+   "years": [
+    1960,
+    2019
+   ],
+   "countries": 161,
+   "obs": 6831
+  },
+  "sanctions_n": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "sanctions_onset": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "sanctions_us": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "sanctions_eu": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "sanctions_un": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "sanctions_trade": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "sanctions_financial": {
+   "years": [
+    1949,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12629
+  },
+  "coup_any": {
+   "years": [
+    1950,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12474
+  },
+  "coup_success_any": {
+   "years": [
+    1950,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12474
+  },
+  "years_since_coup": {
+   "years": [
+    1950,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12474
+  },
+  "coups_past10": {
+   "years": [
+    1951,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12272
+  },
+  "log_cinc": {
+   "years": [
+    1946,
+    2016
+   ],
+   "countries": 195,
+   "obs": 10431
+  },
+  "bloc": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 12892
+  },
+  "cold_war": {
+   "years": [
+    1946,
+    2019
+   ],
+   "countries": 202,
+   "obs": 13088
+  }
+ },
+ "calibration_targets": {
+  "coup_attempt_rate": 0.0367,
+  "coup_success_share": 0.4856,
+  "coup_rate_by_decade": {
+   "1950": 0.0557,
+   "1960": 0.0698,
+   "1970": 0.0576,
+   "1980": 0.0462,
+   "1990": 0.0278,
+   "2000": 0.0163,
+   "2010": 0.0116
+  },
+  "coup_rate_by_gdppc_quartile": {
+   "q1": 0.0619,
+   "q2": 0.0627,
+   "q3": 0.0174,
+   "q4": 0.0049
+  },
+  "coup_rate_if_coup_past10y": 0.1073,
+  "coup_rate_if_no_coup_past10y": 0.0178,
+  "dem_transition_rate_autocracies": 0.0214,
+  "dem_breakdown_rate_democracies": 0.017,
+  "dem_transition_by_gdppc_quartile": {
+   "q1": 0.0149,
+   "q2": 0.0178,
+   "q3": 0.0424,
+   "q4": 0.0161
+  },
+  "dem_breakdown_by_gdppc_quartile": {
+   "q1": 0.0518,
+   "q2": 0.0449,
+   "q3": 0.0178,
+   "q4": 0.0029
+  },
+  "gdppc_quartile_cutoffs_usd2017": [
+   2725.0,
+   7108.0,
+   16860.0
+  ],
+  "mid_onset_rate": 0.2333,
+  "mid_fatal_rate": 0.1214,
+  "interstate_conflict_rate_ucdp": 0.0204,
+  "interstate_war_onset_rate_cow": 0.0165,
+  "mid_onset_by_rival_parity": {
+   "(0.0, 0.2]": 0.3404,
+   "(0.2, 0.5]": 0.4009,
+   "(0.5, 0.8]": 0.4698,
+   "(0.8, 1.0]": 0.478
+  },
+  "share_sanctioned_country_years": 0.2258,
+  "oda_gni_median_recipients": 2.7251,
+  "irregular_leader_exit_rate": 0.0284,
+  "coup_logit": {
+   "formula": "coup_any ~ lg_l + g_l + past + dem_l + cw",
+   "coef": {
+    "Intercept": -1.802,
+    "lg_l": -0.277,
+    "g_l": -2.658,
+    "past": 1.365,
+    "dem_l": -0.709,
+    "cw": 0.802
+   },
+   "se": {
+    "Intercept": 0.471,
+    "lg_l": 0.055,
+    "g_l": 0.674,
+    "past": 0.121,
+    "dem_l": 0.186,
+    "cw": 0.132
+   },
+   "n": 9537
+  },
+  "coup_logit_full": {
+   "formula": "coup_any ~ lg_l + g_l + past + dem_l + ea_l + cw + vdem_ex_military_l",
+   "coef": {
+    "Intercept": -3.11,
+    "lg_l": -0.23,
+    "g_l": -2.932,
+    "past": 0.827,
+    "dem_l": 0.114,
+    "ea_l": 0.816,
+    "cw": 0.836,
+    "vdem_ex_military_l": 2.048
+   },
+   "se": {
+    "Intercept": 0.516,
+    "lg_l": 0.059,
+    "g_l": 0.691,
+    "past": 0.141,
+    "dem_l": 0.23,
+    "ea_l": 0.142,
+    "cw": 0.137,
+    "vdem_ex_military_l": 0.248
+   },
+   "n": 9113
+  },
+  "dem_transition_logit": {
+   "formula": "dem_transition ~ lg_l + g_l + ea_l + world_dem_share + cw",
+   "coef": {
+    "Intercept": -7.586,
+    "lg_l": 0.246,
+    "g_l": -1.459,
+    "ea_l": 2.077,
+    "world_dem_share": 0.734,
+    "cw": -0.207
+   },
+   "se": {
+    "Intercept": 1.41,
+    "lg_l": 0.092,
+    "g_l": 1.157,
+    "ea_l": 0.315,
+    "world_dem_share": 2.356,
+    "cw": 0.514
+   },
+   "n": 5446
+  },
+  "dem_transition_logit_neighbors": {
+   "formula": "dem_transition ~ lg_l + g_l + ea_l + nbdem + cw",
+   "coef": {
+    "Intercept": -7.365,
+    "lg_l": 0.228,
+    "g_l": -1.289,
+    "ea_l": 1.904,
+    "nbdem": 1.322,
+    "cw": -0.111
+   },
+   "se": {
+    "Intercept": 0.891,
+    "lg_l": 0.092,
+    "g_l": 1.141,
+    "ea_l": 0.317,
+    "nbdem": 0.305,
+    "cw": 0.208
+   },
+   "n": 5446
+  },
+  "dem_breakdown_logit": {
+   "formula": "dem_breakdown ~ lg_l + g_l + world_dem_share + cw",
+   "coef": {
+    "Intercept": 3.413,
+    "lg_l": -0.733,
+    "g_l": -5.187,
+    "world_dem_share": -1.139,
+    "cw": -0.802
+   },
+   "se": {
+    "Intercept": 1.762,
+    "lg_l": 0.104,
+    "g_l": 1.985,
+    "world_dem_share": 3.235,
+    "cw": 0.698
+   },
+   "n": 3667
+  }
+ }
+}

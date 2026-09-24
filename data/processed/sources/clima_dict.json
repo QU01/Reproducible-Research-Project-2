@@ -1,0 +1,1197 @@
+{
+ "clima.csv": {
+  "co2_mt": {
+   "desc": "Emisiones territoriales de CO2 fosil + cemento",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14195,
+   "n_countries": 215
+  },
+  "co2_pc": {
+   "desc": "CO2 territorial per capita",
+   "unit": "tCO2/persona",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14122,
+   "n_countries": 213
+  },
+  "co2_per_gdp": {
+   "desc": "Intensidad de CO2 del PIB",
+   "unit": "kgCO2/$ PPA 2011",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 10745,
+   "n_countries": 164
+  },
+  "co2_incl_luc_mt": {
+   "desc": "CO2 incluyendo cambio de uso del suelo",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 12975,
+   "n_countries": 194
+  },
+  "co2_luc_mt": {
+   "desc": "CO2 por cambio de uso del suelo (deforestacion)",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13790,
+   "n_countries": 197
+  },
+  "co2_coal_mt": {
+   "desc": "CO2 del carbon",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 9822,
+   "n_countries": 179
+  },
+  "co2_oil_mt": {
+   "desc": "CO2 del petroleo",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14103,
+   "n_countries": 215
+  },
+  "co2_gas_mt": {
+   "desc": "CO2 del gas",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 7363,
+   "n_countries": 146
+  },
+  "co2_cement_mt": {
+   "desc": "CO2 del cemento",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13840,
+   "n_countries": 211
+  },
+  "co2_flaring_mt": {
+   "desc": "CO2 por quema en antorcha",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 8578,
+   "n_countries": 215
+  },
+  "co2_cons_mt": {
+   "desc": "CO2 basado en consumo (1990-)",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1990-2019",
+   "n_obs": 3584,
+   "n_countries": 120
+  },
+  "co2_cons_pc": {
+   "desc": "CO2 de consumo per capita",
+   "unit": "tCO2/persona",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1990-2019",
+   "n_obs": 3584,
+   "n_countries": 120
+  },
+  "co2_trade_mt": {
+   "desc": "CO2 neto importado incorporado en comercio (consumo - territorial)",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1990-2019",
+   "n_obs": 3583,
+   "n_countries": 120
+  },
+  "co2_trade_share": {
+   "desc": "CO2 neto importado en % de las territoriales",
+   "unit": "%",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1990-2019",
+   "n_obs": 3583,
+   "n_countries": 120
+  },
+  "co2_cum_mt": {
+   "desc": "CO2 fosil acumulado desde 1750",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14195,
+   "n_countries": 215
+  },
+  "co2_cum_incl_luc_mt": {
+   "desc": "CO2 acumulado incl. uso del suelo (1850-)",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 12975,
+   "n_countries": 194
+  },
+  "co2_cum_luc_mt": {
+   "desc": "CO2 acumulado por uso del suelo",
+   "unit": "MtCO2",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13790,
+   "n_countries": 197
+  },
+  "co2_share_world": {
+   "desc": "Participacion en CO2 mundial",
+   "unit": "%",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14195,
+   "n_countries": 215
+  },
+  "co2_cum_share_world": {
+   "desc": "Participacion en CO2 acumulado mundial",
+   "unit": "%",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14195,
+   "n_countries": 215
+  },
+  "ch4_mtco2e": {
+   "desc": "Emisiones de metano",
+   "unit": "MtCO2e",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13930,
+   "n_countries": 199
+  },
+  "n2o_mtco2e": {
+   "desc": "Emisiones de oxido nitroso",
+   "unit": "MtCO2e",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 14070,
+   "n_countries": 201
+  },
+  "ghg_mtco2e": {
+   "desc": "GEI totales incl. uso del suelo",
+   "unit": "MtCO2e",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13930,
+   "n_countries": 199
+  },
+  "ghg_excl_lucf_mtco2e": {
+   "desc": "GEI totales excl. uso del suelo",
+   "unit": "MtCO2e",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13798,
+   "n_countries": 198
+  },
+  "ghg_pc": {
+   "desc": "GEI per capita",
+   "unit": "tCO2e/persona",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 13930,
+   "n_countries": 199
+  },
+  "dT_from_ghg": {
+   "desc": "Calentamiento global atribuible a GEI del pais (Jones et al. 2023)",
+   "unit": "degC",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 15050,
+   "n_countries": 215
+  },
+  "dT_from_co2": {
+   "desc": "Calentamiento global atribuible al CO2 del pais",
+   "unit": "degC",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 15050,
+   "n_countries": 215
+  },
+  "dT_share_world": {
+   "desc": "Participacion en el calentamiento global",
+   "unit": "%",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1950-2019",
+   "n_obs": 15050,
+   "n_countries": 215
+  },
+  "primary_energy_twh": {
+   "desc": "Consumo de energia primaria",
+   "unit": "TWh",
+   "source": "OWID co2-data (Global Carbon Project 2024, Jones et al. 2023)",
+   "coverage": "1965-2019",
+   "n_obs": 8884,
+   "n_countries": 205
+  },
+  "coal_prod_twh": {
+   "desc": "Produccion de carbon",
+   "unit": "TWh",
+   "source": "OWID energy-data (Energy Institute Statistical Review; EIA)",
+   "coverage": "1950-2019",
+   "n_obs": 9660,
+   "n_countries": 216
+  },
+  "oil_prod_twh": {
+   "desc": "Produccion de petroleo",
+   "unit": "TWh",
+   "source": "OWID energy-data (Energy Institute Statistical Review; EIA)",
+   "coverage": "1950-2019",
+   "n_obs": 9988,
+   "n_countries": 216
+  },
+  "gas_prod_twh": {
+   "desc": "Produccion de gas",
+   "unit": "TWh",
+   "source": "OWID energy-data (Energy Institute Statistical Review; EIA)",
+   "coverage": "1950-2019",
+   "n_obs": 9747,
+   "n_countries": 216
+  },
+  "fossil_cons_twh": {
+   "desc": "Consumo de combustibles fosiles",
+   "unit": "TWh",
+   "source": "OWID energy-data (Energy Institute Statistical Review; EIA)",
+   "coverage": "1965-2019",
+   "n_obs": 4070,
+   "n_countries": 79
+  },
+  "fossil_share_energy": {
+   "desc": "Participacion fosil en energia primaria",
+   "unit": "%",
+   "source": "OWID energy-data (Energy Institute Statistical Review; EIA)",
+   "coverage": "1965-2019",
+   "n_obs": 4064,
+   "n_countries": 79
+  },
+  "fossil_prod_twh": {
+   "desc": "Produccion de combustibles fosiles (carbon+petroleo+gas)",
+   "unit": "TWh",
+   "source": "OWID energy-data",
+   "coverage": "1950-2019",
+   "n_obs": 10691,
+   "n_countries": 216
+  },
+  "tmp_pw_udel": {
+   "desc": "Temperatura media anual ponderada por poblacion",
+   "unit": "degC",
+   "source": "Burke, Hsiang & Miguel (2015) replication data; U. Delaware v3.01, ponderado por poblacion",
+   "coverage": "1960-2010",
+   "n_obs": 7351,
+   "n_countries": 167
+  },
+  "pre_pw_udel": {
+   "desc": "Precipitacion anual ponderada por poblacion",
+   "unit": "mm/anio",
+   "source": "Burke, Hsiang & Miguel (2015) replication data; U. Delaware v3.01, ponderado por poblacion",
+   "coverage": "1960-2010",
+   "n_obs": 7351,
+   "n_countries": 167
+  },
+  "tmp_anom_fao_sd": {
+   "desc": "Desv. estandar climatologica de la anomalia (1951-1980)",
+   "unit": "degC",
+   "source": "FAOSTAT Temperature change on land (NASA GISTEMP), base 1951-1980, anio meteorologico",
+   "coverage": "1961-2019",
+   "n_obs": 11483,
+   "n_countries": 201
+  },
+  "tmp_anom_fao": {
+   "desc": "Anomalia de temperatura terrestre vs 1951-1980 (area)",
+   "unit": "degC",
+   "source": "FAOSTAT Temperature change on land (NASA GISTEMP), base 1951-1980, anio meteorologico",
+   "coverage": "1961-2019",
+   "n_obs": 12495,
+   "n_countries": 239
+  },
+  "tmp_level": {
+   "desc": "Temperatura media anual (nivel) empalmada; ponderada por poblacion salvo src=4",
+   "unit": "degC",
+   "source": "Construida: UDel + FAO + ERA5 (ver tmp_level_src)",
+   "coverage": "1950-2019",
+   "n_obs": 12125,
+   "n_countries": 193
+  },
+  "tmp_level_src": {
+   "desc": "Fuente de tmp_level: 1 UDel; 2 clim. UDel 1981-2010 + anomalia FAO; 3 UDel+ERA5 decadal (1950-60); 4 ERA5 area + FAO",
+   "unit": "codigo",
+   "source": "Construida",
+   "coverage": "1950-2019",
+   "n_obs": 12125,
+   "n_countries": 193
+  },
+  "tmp_era5_decadal": {
+   "desc": "Temperatura media decadal (ERA5, area)",
+   "unit": "degC",
+   "source": "OWID/Copernicus ERA5",
+   "coverage": "1950-2019",
+   "n_obs": 13510,
+   "n_countries": 193
+  },
+  "dis_n_total": {
+   "desc": "Numero de desastres naturales",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_climate": {
+   "desc": "Desastres hidrologicos+meteorologicos+climatologicos",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_flood": {
+   "desc": "Inundaciones",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_storm": {
+   "desc": "Tormentas (incl. ciclones)",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_drought": {
+   "desc": "Sequias",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_extreme_temp": {
+   "desc": "Temperaturas extremas",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_wildfire": {
+   "desc": "Incendios forestales",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_n_geo": {
+   "desc": "Geofisicos (sismos, volcanes; placebo no climatico)",
+   "unit": "eventos",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_deaths": {
+   "desc": "Muertes por desastres naturales",
+   "unit": "personas",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_deaths_climate": {
+   "desc": "Muertes por desastres climaticos",
+   "unit": "personas",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_affected": {
+   "desc": "Personas afectadas",
+   "unit": "personas",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_damage_kusd": {
+   "desc": "Danos totales ajustados por IPC",
+   "unit": "miles USD",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "dis_damage_climate_kusd": {
+   "desc": "Danos por desastres climaticos, ajustados",
+   "unit": "miles USD",
+   "source": "EM-DAT (CRED/UCLouvain) extracto publico, desastres naturales por anio de inicio",
+   "coverage": "1950-2019",
+   "n_obs": 17364,
+   "n_countries": 251
+  },
+  "biocap_pc_2018ed": {
+   "desc": "Biocapacidad per capita",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "biocap_gha": {
+   "desc": "Biocapacidad total",
+   "unit": "gha",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_cons_pc_2018ed": {
+   "desc": "Huella ecologica de consumo per capita",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_cons_gha": {
+   "desc": "Huella ecologica de consumo total",
+   "unit": "gha",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_exports_pc": {
+   "desc": "Huella incorporada en exportaciones per capita",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_exports_gha": {
+   "desc": "Huella en exportaciones total",
+   "unit": "gha",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_imports_pc": {
+   "desc": "Huella incorporada en importaciones per capita",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_imports_gha": {
+   "desc": "Huella en importaciones total",
+   "unit": "gha",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_prod_pc": {
+   "desc": "Huella ecologica de produccion per capita",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_carbon_pc": {
+   "desc": "Componente carbono de la huella de consumo",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 6249,
+   "n_countries": 167
+  },
+  "ef_net_imports_gha": {
+   "desc": "Huella neta importada (proxy de intercambio ecologico desigual)",
+   "unit": "gha",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "ef_cons_pc_2025ed": {
+   "desc": "Huella de consumo per capita (NFA 2025)",
+   "unit": "gha/persona",
+   "source": "GFN NFA 2025",
+   "coverage": "1961-2019",
+   "n_obs": 8261,
+   "n_countries": 160
+  },
+  "biocap_pc_2025ed": {
+   "desc": "Biocapacidad per capita (NFA 2025)",
+   "unit": "gha/persona",
+   "source": "GFN NFA 2025",
+   "coverage": "1961-2019",
+   "n_obs": 8261,
+   "n_countries": 160
+  },
+  "forest_pct": {
+   "desc": "Superficie forestal (% del territorio)",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1990-2019",
+   "n_obs": 6108,
+   "n_countries": 210
+  },
+  "forest_km2": {
+   "desc": "Superficie forestal",
+   "unit": "km2",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1990-2019",
+   "n_obs": 6108,
+   "n_countries": 210
+  },
+  "agri_land_pct": {
+   "desc": "Tierra agricola (% del territorio)",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1961-2019",
+   "n_obs": 11106,
+   "n_countries": 207
+  },
+  "arable_land_pct": {
+   "desc": "Tierra arable (% del territorio)",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1961-2019",
+   "n_obs": 10929,
+   "n_countries": 204
+  },
+  "cereal_yield": {
+   "desc": "Rendimiento de cereales",
+   "unit": "kg/ha",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1961-2019",
+   "n_obs": 9489,
+   "n_countries": 180
+  },
+  "fertilizer_kg_ha": {
+   "desc": "Consumo de fertilizantes",
+   "unit": "kg/ha tierra arable",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1961-2019",
+   "n_obs": 9307,
+   "n_countries": 198
+  },
+  "pre_clim_wdi": {
+   "desc": "Precipitacion media de largo plazo (climatologia, constante)",
+   "unit": "mm/anio",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1961-2019",
+   "n_obs": 9845,
+   "n_countries": 181
+  },
+  "water_stress_pct": {
+   "desc": "Estres hidrico: extraccion/recursos disponibles (ODS 6.4.2)",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1962-2019",
+   "n_obs": 5638,
+   "n_countries": 177
+  },
+  "fw_withdrawal_pct": {
+   "desc": "Extraccion de agua dulce (% recursos internos)",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1962-2019",
+   "n_obs": 5611,
+   "n_countries": 176
+  },
+  "pop_below5m_pct": {
+   "desc": "Poblacion en tierras < 5 m s.n.m.",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1990-2015",
+   "n_obs": 636,
+   "n_countries": 212
+  },
+  "drought_flood_pop_pct": {
+   "desc": "Poblacion afectada por sequias/inundaciones/temperaturas extremas (media 1990-2009)",
+   "unit": "% poblacion",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "2009-2009",
+   "n_obs": 167,
+   "n_countries": 167
+  },
+  "forest_rents_pct": {
+   "desc": "Rentas forestales (% PIB)",
+   "unit": "% PIB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1970-2019",
+   "n_obs": 8779,
+   "n_countries": 210
+  },
+  "depl_forest_pct_gni": {
+   "desc": "Agotamiento neto de bosques (% INB)",
+   "unit": "% INB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1970-2019",
+   "n_obs": 7441,
+   "n_countries": 186
+  },
+  "depl_natres_pct_gni": {
+   "desc": "Agotamiento de recursos naturales (% INB)",
+   "unit": "% INB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1970-2019",
+   "n_obs": 7073,
+   "n_countries": 185
+  },
+  "depl_energy_pct_gni": {
+   "desc": "Agotamiento energetico (% INB)",
+   "unit": "% INB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1970-2019",
+   "n_obs": 7647,
+   "n_countries": 199
+  },
+  "depl_mineral_pct_gni": {
+   "desc": "Agotamiento mineral (% INB)",
+   "unit": "% INB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1970-2019",
+   "n_obs": 8179,
+   "n_countries": 206
+  },
+  "dmg_co2_pct_gni": {
+   "desc": "Dano por emisiones de CO2 (% INB, ahorro ajustado)",
+   "unit": "% INB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1970-2019",
+   "n_obs": 5655,
+   "n_countries": 203
+  },
+  "dmg_pm_pct_gni": {
+   "desc": "Dano por material particulado (% INB)",
+   "unit": "% INB",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1990-2019",
+   "n_obs": 4981,
+   "n_countries": 176
+  },
+  "protected_land_pct": {
+   "desc": "Areas terrestres protegidas",
+   "unit": "%",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "2013-2019",
+   "n_obs": 1448,
+   "n_countries": 209
+  },
+  "pm25": {
+   "desc": "Exposicion media a PM2.5",
+   "unit": "ug/m3",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1990-2019",
+   "n_obs": 5940,
+   "n_countries": 198
+  },
+  "fish_capture_t": {
+   "desc": "Captura pesquera",
+   "unit": "t",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "1960-2019",
+   "n_obs": 12720,
+   "n_countries": 212
+  },
+  "threatened_mammals": {
+   "desc": "Especies de mamiferos amenazadas",
+   "unit": "n",
+   "source": "World Bank WDI via open-numbers DDF",
+   "coverage": "2018-2018",
+   "n_obs": 212,
+   "n_countries": 212
+  },
+  "material_footprint_t": {
+   "desc": "Huella material (extraccion de materias primas atribuida al consumo final; UNEP-IRP)",
+   "unit": "t",
+   "source": "Gapminder fasttrack via open-numbers (UNEP-IRP; Hickel 2020)",
+   "coverage": "1970-2019",
+   "n_obs": 7273,
+   "n_countries": 158
+  },
+  "material_footprint_pc": {
+   "desc": "Huella material per capita",
+   "unit": "t/persona",
+   "source": "Gapminder fasttrack via open-numbers (UNEP-IRP; Hickel 2020)",
+   "coverage": "1970-2019",
+   "n_obs": 7273,
+   "n_countries": 158
+  },
+  "sdi": {
+   "desc": "Sustainable Development Index (Hickel 2020)",
+   "unit": "indice 0-100",
+   "source": "Gapminder fasttrack via open-numbers (UNEP-IRP; Hickel 2020)",
+   "coverage": "1990-2019",
+   "n_obs": 4611,
+   "n_countries": 164
+  },
+  "ndgain_index": {
+   "desc": "ND-GAIN indice (alto = mejor preparado)",
+   "unit": "0-100",
+   "source": "Notre Dame ND-GAIN",
+   "coverage": "1995-2019",
+   "n_obs": 4550,
+   "n_countries": 182
+  },
+  "ndgain_vulnerability": {
+   "desc": "ND-GAIN vulnerabilidad",
+   "unit": "0-1",
+   "source": "Notre Dame ND-GAIN",
+   "coverage": "1995-2019",
+   "n_obs": 4550,
+   "n_countries": 182
+  },
+  "ndgain_readiness": {
+   "desc": "ND-GAIN preparacion",
+   "unit": "0-1",
+   "source": "Notre Dame ND-GAIN",
+   "coverage": "1995-2019",
+   "n_obs": 4800,
+   "n_countries": 192
+  },
+  "ndgain_food": {
+   "desc": "ND-GAIN vulnerabilidad alimentaria",
+   "unit": "0-1",
+   "source": "Notre Dame ND-GAIN",
+   "coverage": "1995-2019",
+   "n_obs": 4725,
+   "n_countries": 189
+  },
+  "ndgain_water": {
+   "desc": "ND-GAIN vulnerabilidad hidrica",
+   "unit": "0-1",
+   "source": "Notre Dame ND-GAIN",
+   "coverage": "1995-2019",
+   "n_obs": 4225,
+   "n_countries": 169
+  },
+  "tmp_pattern_beta": {
+   "desc": "Coeficiente de escalamiento de patron: dT_pais/dT_global (OLS 1961-2019)",
+   "unit": "degC/degC",
+   "source": "Construida: FAO vs GISTEMP",
+   "coverage": "1950-2019",
+   "n_obs": 13930,
+   "n_countries": 199
+  },
+  "ef_cons_pc": {
+   "desc": "Huella de consumo per capita (2025ed, si falta 2018ed)",
+   "unit": "gha/persona",
+   "source": "GFN",
+   "coverage": "1961-2019",
+   "n_obs": 9391,
+   "n_countries": 192
+  },
+  "biocap_pc": {
+   "desc": "Biocapacidad per capita (2025ed, si falta 2018ed)",
+   "unit": "gha/persona",
+   "source": "GFN",
+   "coverage": "1961-2019",
+   "n_obs": 9391,
+   "n_countries": 192
+  },
+  "eco_deficit_pc": {
+   "desc": "Deficit ecologico = huella - biocapacidad",
+   "unit": "gha/persona",
+   "source": "GFN",
+   "coverage": "1961-2019",
+   "n_obs": 9391,
+   "n_countries": 192
+  },
+  "ef_net_imports_pc": {
+   "desc": "Huella neta importada per capita",
+   "unit": "gha/persona",
+   "source": "Global Footprint Network NFA 2018 (1961-2014)",
+   "coverage": "1961-2014",
+   "n_obs": 8503,
+   "n_countries": 191
+  },
+  "forest_loss_pct": {
+   "desc": "Perdida anual de superficie forestal (% del anio previo)",
+   "unit": "%",
+   "source": "WDI",
+   "coverage": "1991-2019",
+   "n_obs": 5782,
+   "n_countries": 206
+  },
+  "tmp_anom_level": {
+   "desc": "tmp_level menos su media 1951-1980",
+   "unit": "degC",
+   "source": "Construida",
+   "coverage": "1950-2019",
+   "n_obs": 11510,
+   "n_countries": 173
+  },
+  "tmp_level_sq": {
+   "desc": "tmp_level al cuadrado (para funcion BHM)",
+   "unit": "degC^2",
+   "source": "Construida",
+   "coverage": "1950-2019",
+   "n_obs": 12125,
+   "n_countries": 193
+  }
+ },
+ "clima_world.csv": {
+  "gmst_hadcrut5": {
+   "desc": "Anomalia global HadCRUT5 (base media siglo XX, NOAA/GCAG etiqueta)",
+   "unit": "degC",
+   "coverage": "1850-2025"
+  },
+  "gmst_gistemp": {
+   "desc": "Anomalia de temperatura media global, NASA GISTEMP v4 (base 1951-1980)",
+   "unit": "degC",
+   "coverage": "1880-2025"
+  },
+  "gmst_preind": {
+   "desc": "HadCRUT5 rebasada a 1850-1900 (preindustrial)",
+   "unit": "degC",
+   "coverage": "1850-2025"
+  },
+  "co2_ppm_mlo": {
+   "desc": "CO2 atmosferico Mauna Loa (NOAA/Scripps)",
+   "unit": "ppm",
+   "coverage": "1959-2025"
+  },
+  "co2_ppm_icecore": {
+   "desc": "CO2 de nucleos de hielo + instrumental (OWID/NOAA)",
+   "unit": "ppm",
+   "coverage": "1850-2018"
+  },
+  "co2_ppm": {
+   "desc": "CO2 atmosferico: Mauna Loa desde 1959, nucleos de hielo interpolados antes",
+   "unit": "ppm",
+   "coverage": "1850-2025"
+  },
+  "co2_mt": {
+   "desc": "Emisiones territoriales de CO2 fosil + cemento",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_pc": {
+   "desc": "CO2 territorial per capita",
+   "unit": "tCO2/persona",
+   "coverage": "1850-2024"
+  },
+  "co2_per_gdp": {
+   "desc": "Intensidad de CO2 del PIB",
+   "unit": "kgCO2/$ PPA 2011",
+   "coverage": "1850-2022"
+  },
+  "co2_incl_luc_mt": {
+   "desc": "CO2 incluyendo cambio de uso del suelo",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_luc_mt": {
+   "desc": "CO2 por cambio de uso del suelo (deforestacion)",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_coal_mt": {
+   "desc": "CO2 del carbon",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_oil_mt": {
+   "desc": "CO2 del petroleo",
+   "unit": "MtCO2",
+   "coverage": "1855-2024"
+  },
+  "co2_gas_mt": {
+   "desc": "CO2 del gas",
+   "unit": "MtCO2",
+   "coverage": "1882-2024"
+  },
+  "co2_cement_mt": {
+   "desc": "CO2 del cemento",
+   "unit": "MtCO2",
+   "coverage": "1880-2024"
+  },
+  "co2_flaring_mt": {
+   "desc": "CO2 por quema en antorcha",
+   "unit": "MtCO2",
+   "coverage": "1950-2024"
+  },
+  "co2_cons_mt": {
+   "desc": "CO2 basado en consumo (1990-)",
+   "unit": "MtCO2",
+   "coverage": "1990-2024"
+  },
+  "co2_cons_pc": {
+   "desc": "CO2 de consumo per capita",
+   "unit": "tCO2/persona",
+   "coverage": "1990-2024"
+  },
+  "co2_trade_mt": {
+   "desc": "CO2 neto importado incorporado en comercio (consumo - territorial)",
+   "unit": "MtCO2",
+   "coverage": "1990-2024"
+  },
+  "co2_trade_share": {
+   "desc": "CO2 neto importado en % de las territoriales",
+   "unit": "%",
+   "coverage": "1990-2024"
+  },
+  "co2_cum_mt": {
+   "desc": "CO2 fosil acumulado desde 1750",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_cum_incl_luc_mt": {
+   "desc": "CO2 acumulado incl. uso del suelo (1850-)",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_cum_luc_mt": {
+   "desc": "CO2 acumulado por uso del suelo",
+   "unit": "MtCO2",
+   "coverage": "1850-2024"
+  },
+  "co2_share_world": {
+   "desc": "Participacion en CO2 mundial",
+   "unit": "%",
+   "coverage": "1850-2024"
+  },
+  "co2_cum_share_world": {
+   "desc": "Participacion en CO2 acumulado mundial",
+   "unit": "%",
+   "coverage": "1850-2024"
+  },
+  "ch4_mtco2e": {
+   "desc": "Emisiones de metano",
+   "unit": "MtCO2e",
+   "coverage": "1850-2024"
+  },
+  "n2o_mtco2e": {
+   "desc": "Emisiones de oxido nitroso",
+   "unit": "MtCO2e",
+   "coverage": "1850-2024"
+  },
+  "ghg_mtco2e": {
+   "desc": "GEI totales incl. uso del suelo",
+   "unit": "MtCO2e",
+   "coverage": "1850-2024"
+  },
+  "ghg_excl_lucf_mtco2e": {
+   "desc": "GEI totales excl. uso del suelo",
+   "unit": "MtCO2e",
+   "coverage": "1850-2024"
+  },
+  "ghg_pc": {
+   "desc": "GEI per capita",
+   "unit": "tCO2e/persona",
+   "coverage": "1850-2024"
+  },
+  "dT_from_ghg": {
+   "desc": "Calentamiento global atribuible a GEI del pais (Jones et al. 2023)",
+   "unit": "degC",
+   "coverage": "1851-2024"
+  },
+  "dT_from_co2": {
+   "desc": "Calentamiento global atribuible al CO2 del pais",
+   "unit": "degC",
+   "coverage": "1851-2024"
+  },
+  "dT_share_world": {
+   "desc": "Participacion en el calentamiento global",
+   "unit": "%",
+   "coverage": "1851-2024"
+  },
+  "primary_energy_twh": {
+   "desc": "Consumo de energia primaria",
+   "unit": "TWh",
+   "coverage": "1965-2024"
+  },
+  "coal_prod_twh": {
+   "desc": "Produccion de carbon",
+   "unit": "TWh",
+   "coverage": "1900-2024"
+  },
+  "oil_prod_twh": {
+   "desc": "Produccion de petroleo",
+   "unit": "TWh",
+   "coverage": "1900-2024"
+  },
+  "gas_prod_twh": {
+   "desc": "Produccion de gas",
+   "unit": "TWh",
+   "coverage": "1900-2024"
+  },
+  "fossil_cons_twh": {
+   "desc": "Consumo de combustibles fosiles",
+   "unit": "TWh",
+   "coverage": "1965-2024"
+  },
+  "fossil_share_energy": {
+   "desc": "Participacion fosil en energia primaria",
+   "unit": "%",
+   "coverage": "1965-2024"
+  },
+  "fossil_prod_twh": {
+   "desc": "Produccion de combustibles fosiles (carbon+petroleo+gas)",
+   "unit": "TWh",
+   "coverage": "1900-2024"
+  },
+  "world_dis_n_total": {
+   "desc": "Numero de desastres naturales",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_climate": {
+   "desc": "Desastres hidrologicos+meteorologicos+climatologicos",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_flood": {
+   "desc": "Inundaciones",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_storm": {
+   "desc": "Tormentas (incl. ciclones)",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_drought": {
+   "desc": "Sequias",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_extreme_temp": {
+   "desc": "Temperaturas extremas",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_wildfire": {
+   "desc": "Incendios forestales",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_n_geo": {
+   "desc": "Geofisicos (sismos, volcanes; placebo no climatico)",
+   "unit": "eventos",
+   "coverage": "1900-2025"
+  },
+  "world_dis_deaths": {
+   "desc": "Muertes por desastres naturales",
+   "unit": "personas",
+   "coverage": "1900-2025"
+  },
+  "world_dis_deaths_climate": {
+   "desc": "Muertes por desastres climaticos",
+   "unit": "personas",
+   "coverage": "1900-2025"
+  },
+  "world_dis_affected": {
+   "desc": "Personas afectadas",
+   "unit": "personas",
+   "coverage": "1900-2025"
+  },
+  "world_dis_damage_kusd": {
+   "desc": "Danos totales ajustados por IPC",
+   "unit": "miles USD",
+   "coverage": "1900-2025"
+  },
+  "world_dis_damage_climate_kusd": {
+   "desc": "Danos por desastres climaticos, ajustados",
+   "unit": "miles USD",
+   "coverage": "1900-2025"
+  },
+  "ef_cons_pc_2025ed": {
+   "desc": "Huella de consumo per capita (NFA 2025)",
+   "unit": "gha/persona",
+   "coverage": "1961-2024"
+  },
+  "biocap_pc_2025ed": {
+   "desc": "Biocapacidad per capita (NFA 2025)",
+   "unit": "gha/persona",
+   "coverage": "1961-2024"
+  },
+  "overshoot_ratio": {
+   "desc": "Huella ecologica mundial / biocapacidad (NFA 2025)",
+   "unit": "ratio",
+   "coverage": "1961-2024"
+  },
+  "lpi": {
+   "desc": "Living Planet Index mundial (1970=100)",
+   "unit": "indice",
+   "coverage": "1970-2018"
+  },
+  "lpi_hi": {
+   "desc": "LPI IC 95% superior",
+   "unit": "indice",
+   "coverage": "1970-2018"
+  },
+  "lpi_lo": {
+   "desc": "LPI IC 95% inferior",
+   "unit": "indice",
+   "coverage": "1970-2018"
+  },
+  "material_footprint_t_sum": {
+   "desc": "Suma de huellas materiales nacionales",
+   "unit": "t",
+   "coverage": "1970-2024"
+  },
+  "co2_gtc": {
+   "desc": "Emisiones fosiles mundiales en carbono",
+   "unit": "GtC",
+   "coverage": "1850-2024"
+  },
+  "co2_cum_incl_luc_gtco2": {
+   "desc": "Emisiones acumuladas incl. uso del suelo desde 1850",
+   "unit": "GtCO2",
+   "coverage": "1850-2024"
+  }
+ },
+ "_estimates": {
+  "bhm_original_udel_1961_2010": {
+   "b1_T": 0.012718347825780463,
+   "b2_T2": -0.00048709025997566765,
+   "se_b1": 0.0037882083156228624,
+   "se_b2": 0.00011840734564531134,
+   "T_opt": 13.055432299565794,
+   "n": 6584,
+   "years": [
+    1961,
+    2010
+   ]
+  },
+  "pwt_panel_tmp_level_1951_2019": {
+   "b1_T": 0.006480219219038639,
+   "b2_T2": -0.0002590725717150781,
+   "se_b1": 0.0031468674925380358,
+   "se_b2": 0.00010909271908802066,
+   "T_opt": 12.506571375231168,
+   "n": 8837,
+   "years": [
+    1951,
+    2019
+   ]
+  },
+  "pattern_scaling_beta_summary": {
+   "count": 199.0,
+   "mean": 1.3732724825808107,
+   "std": 0.4450422075609994,
+   "min": -0.10519352866211258,
+   "25%": 1.1369244617682086,
+   "50%": 1.328371805220601,
+   "75%": 1.6500707247484665,
+   "max": 4.18184653350963
+  }
+ },
+ "_notes": [
+  "Ver docs/research/clima.md",
+  "EM-DAT: ceros = sin eventos registrados; subregistro fuerte antes de ~1990",
+  "OWID emisiones en MtCO2 (no GtC)"
+ ]
+}

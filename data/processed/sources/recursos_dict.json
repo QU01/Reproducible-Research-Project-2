@@ -1,0 +1,1102 @@
+{
+ "descripcion": "Recursos naturales desagregados; ver docs/research/recursos.md",
+ "conversiones": {
+  "TWh_por_bep": 1.7e-06,
+  "TWh_por_tep": 1.163e-05,
+  "tep_por_t_hulla": 0.6,
+  "tep_por_t_lignito": 0.33,
+  "TWh_por_EJ": 277.78
+ },
+ "fuentes": {
+  "owid-energy-data.csv": {
+   "url": "https://raw.githubusercontent.com/owid/energy-data/master/owid-energy-data.csv",
+   "descripcion": "OWID energy-data (Energy Institute Statistical Review + Shift/EIA), produccion TWh 1900-"
+  },
+  "gapminder_oil_proved_reserves_total.csv": {
+   "url": "https://raw.githubusercontent.com/open-numbers/ddf--gapminder--systema_globalis/HEAD/countries-etc-datapoints/ddf--datapoints--oil_proved_reserves_total--by--geo--time.csv",
+   "descripcion": "Reservas probadas de petroleo (tep), Energy Institute via Gapminder, 1980-2020"
+  },
+  "gapminder_natural_gas_proved_reserves_total.csv": {
+   "url": "https://raw.githubusercontent.com/open-numbers/ddf--gapminder--systema_globalis/HEAD/countries-etc-datapoints/ddf--datapoints--natural_gas_proved_reserves_total--by--geo--time.csv",
+   "descripcion": "Reservas probadas de gas (tep), Energy Institute via Gapminder, 1980-2020"
+  },
+  "bp2014_coal_reserves.csv": {
+   "url": "https://raw.githubusercontent.com/kiln/carbonmap.org/HEAD/data/Raw/BP/BP-Statistical_Review_of_world_energy_2014_workbook/Coal%20-%20Reserves.csv",
+   "descripcion": "BP Statistical Review 2014: reservas probadas de carbon a fin de 2013 (Mt)"
+  },
+  "bp2014_oil_prices_since_1861.csv": {
+   "url": "https://raw.githubusercontent.com/kiln/carbonmap.org/HEAD/data/Raw/BP/BP-Statistical_Review_of_world_energy_2014_workbook/Oil%20-%20Crude%20prices%20since%201861.csv",
+   "descripcion": "BP Statistical Review 2014: precio del crudo 1861-2013 (US$ corrientes y de 2013)"
+  },
+  "oil_price_nominal_1861_2021_owid.csv": {
+   "url": "https://raw.githubusercontent.com/malrepos/FirstGroup/HEAD/crude-oil-prices.csv",
+   "descripcion": "OWID (EI Statistical Review): precio del crudo 1861-2021, US$/bbl corrientes"
+  },
+  "giant_fields_2018.csv": {
+   "url": "https://raw.githubusercontent.com/alexis-ribal/giant-oil-and-gas-field-discoveries/HEAD/giant_fields_2018.csv",
+   "descripcion": "Cust, Mihalyi & Rivera-Ballesteros: extension de Horn (2014), campos gigantes 1868-2019"
+  },
+  "gycpi_2011.csv": {
+   "url": "https://raw.githubusercontent.com/christophe-gouel/storage-estimation/HEAD/Data/gycpi-2011-01.csv",
+   "descripcion": "Grilli-Yang commodity price index (actualizacion Pfaffenzeller et al. 2007), 1900-2011"
+  },
+  "jacks2019_real_commodity_prices_1850_2025.xlsx": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/raw/jacks2019/Real-commodity-prices-1850-2025.xlsx",
+   "descripcion": "Jacks (2019) precios reales de 42 materias primas 1850-2025 (1900=100)"
+  },
+  "worldbank_cmo_historical_annual.xlsx": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/raw/worldbank_cmo/CMO-Historical-Data-Annual.xlsx",
+   "descripcion": "Banco Mundial Pink Sheet anual 1960-2025 (nominal y real 2010 US$)"
+  },
+  "gmfd_unep_irp_1970_2019.csv": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/raw/unep_irp/global-material-flows-database.csv",
+   "descripcion": "UN IRP Global Material Flows Database, extraccion domestica (t), 1970-2019"
+  },
+  "usgs_ds140_long.csv": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/interim/b3_usgs_ds140.csv",
+   "descripcion": "USGS Data Series 140 (procesado por Berg & Sorensen 2026): produccion mundial de minerales 1900-2022"
+  },
+  "urr_gea2012_bergsorensen.csv": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/interim/b3_urr.csv",
+   "descripcion": "Rogner et al. (2012) GEA cap. 7 tabla 7.1 + USGS MCS: reservas/recursos mundiales"
+  },
+  "oregrades_bergsorensen.csv": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/interim/b3_oregrades.csv",
+   "descripcion": "Leyes de mineral (Calvo 2016, Mudd 2010)"
+  },
+  "exploration_bergsorensen.csv": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/interim/b3_exploration.csv",
+   "descripcion": "Costes/descubrimientos mineros (Schodde)"
+  },
+  "usgs_mcs2026_bergsorensen.csv": {
+   "url": "https://raw.githubusercontent.com/ChampionApe/BergAndSorensen2026_CE/HEAD/data/interim/b3_usgs_mcs.csv",
+   "descripcion": "USGS Mineral Commodity Summaries 2026 (transcrito)"
+  },
+  "WDIData.csv (large/)": {
+   "url": "https://media.githubusercontent.com/media/tejas-rawal/DATS6101-Project1/HEAD/data/WDIData.csv",
+   "descripcion": "WDI bulk (edicion 2022, 1960-2021), 208 MB, git-lfs"
+  },
+  "nacionalizaciones_curado.csv": {
+   "url": "curado a mano",
+   "descripcion": "Eventos de nacionalizacion petrolera/minera 1937-2012 compilados de Kobrin (1984), Guriev-Kolotilin-Sonin (2011), Mahdavi (2020), Yergin (1991); verificar contra los apendices originales"
+  }
+ },
+ "recursos.csv": {
+  "oil_prod_twh": {
+   "descripcion": "Produccion de petroleo (crudo+LGN), TWh [OWID/EI; 1900-1964 Shift/Etemad-Luciani]",
+   "n": 11125,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 216
+  },
+  "oil_prod_relleno": {
+   "descripcion": "1 si oil_prod_twh 2017-2019 es arrastre del ultimo dato (serie Shift termina en 2016)",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "oil_cum_twh": {
+   "descripcion": "Produccion acumulada de petroleo desde 1900, TWh (pre-1900 omitido: <1% del total mundial)",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "gas_prod_twh": {
+   "descripcion": "Produccion de gas natural, TWh [OWID/EI]",
+   "n": 10892,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 216
+  },
+  "gas_prod_relleno": {
+   "descripcion": "idem gas",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "gas_cum_twh": {
+   "descripcion": "Produccion acumulada de gas desde 1900, TWh",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "coal_prod_twh": {
+   "descripcion": "Produccion de carbon, TWh [OWID/EI]",
+   "n": 10840,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 216
+  },
+  "coal_prod_relleno": {
+   "descripcion": "idem carbon",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "coal_cum_twh": {
+   "descripcion": "Produccion acumulada de carbon desde 1900, TWh (omite ~40 Gt pre-1900, sobre todo GBR/DEU/USA/FRA/BEL)",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "fosil_prod_twh": {
+   "descripcion": "Suma petroleo+gas+carbon, TWh",
+   "n": 11878,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 216
+  },
+  "fosil_cum_twh": {
+   "descripcion": "Acumulada fosil desde 1900, TWh",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "oil_prod_mbep": {
+   "descripcion": "Produccion de petroleo, millones de bep (1 bep = 1,7 MWh)",
+   "n": 11125,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 216
+  },
+  "oil_cum_gbep": {
+   "descripcion": "Acumulada de petroleo, miles de millones de bep",
+   "n": 15330,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 219
+  },
+  "oil_reservas_twh": {
+   "descripcion": "Reservas probadas de petroleo, TWh (EI via Gapminder, 1980-2020; incluye arenas bituminosas CAN y Orinoco VEN)",
+   "n": 1862,
+   "anio_min": 1980,
+   "anio_max": 2019,
+   "paises": 49
+  },
+  "gas_reservas_twh": {
+   "descripcion": "Reservas probadas de gas, TWh (EI via Gapminder, 1980-2020)",
+   "n": 1944,
+   "anio_min": 1980,
+   "anio_max": 2019,
+   "paises": 51
+  },
+  "coal_reservas_2013_mt": {
+   "descripcion": "Reservas probadas de carbon a fin de 2013, Mt (BP 2014 / WEC 2013), invariante en el tiempo",
+   "n": 2240,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 32
+  },
+  "coal_reservas_2013_twh": {
+   "descripcion": "Idem en TWh (0,60 tep/t hulla; 0,33 tep/t lignito)",
+   "n": 2240,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 32
+  },
+  "gigantes_n": {
+   "descripcion": "Numero de descubrimientos de campos gigantes (>=500 Mbep EUR) en el anio [Horn 2014; Cust-Mihalyi]",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "gigantes_eur_mbep": {
+   "descripcion": "EUR descubierto en campos gigantes, Mbep",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "gigantes_eur_petroleo_mbep": {
+   "descripcion": "idem solo campos de petroleo",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "gigantes_npv_pct_pib": {
+   "descripcion": "VPN del descubrimiento, % PIB (1960-2017)",
+   "n": 592,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 77
+  },
+  "gigantes_eur_twh": {
+   "descripcion": "EUR gigantes en TWh",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "gigantes_eur_cum_mbep": {
+   "descripcion": "EUR acumulado de gigantes desde 1868, Mbep",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "agotamiento_forestal_pct_rnb": {
+   "descripcion": "",
+   "n": 7404,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 185
+  },
+  "agotamiento_minerales_pct_rnb": {
+   "descripcion": "",
+   "n": 8090,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 201
+  },
+  "agotamiento_energia_pct_rnb": {
+   "descripcion": "",
+   "n": 7662,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 200
+  },
+  "renta_carbon_pct_pib": {
+   "descripcion": "Rentas del carbon (% PIB) [WDI NY.GDP.COAL.RT.ZS]",
+   "n": 7912,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 199
+  },
+  "renta_forestal_pct_pib": {
+   "descripcion": "Rentas forestales (% PIB) [WDI NY.GDP.FRST.RT.ZS]",
+   "n": 8554,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 204
+  },
+  "renta_minerales_pct_pib": {
+   "descripcion": "Rentas minerales (% PIB) [WDI NY.GDP.MINR.RT.ZS]",
+   "n": 8554,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 204
+  },
+  "pib_usd_corr": {
+   "descripcion": "",
+   "n": 9673,
+   "anio_min": 1960,
+   "anio_max": 2019,
+   "paises": 204
+  },
+  "renta_gas_pct_pib": {
+   "descripcion": "Rentas del gas natural (% PIB) [WDI NY.GDP.NGAS.RT.ZS]",
+   "n": 8060,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 202
+  },
+  "renta_petroleo_pct_pib": {
+   "descripcion": "Rentas del petroleo (% PIB) [WDI NY.GDP.PETR.RT.ZS]",
+   "n": 8076,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 202
+  },
+  "renta_total_pct_pib": {
+   "descripcion": "Rentas totales de recursos naturales (% PIB) [WDI NY.GDP.TOTL.RT.ZS]",
+   "n": 8522,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 204
+  },
+  "export_combustibles_pct_merc": {
+   "descripcion": "",
+   "n": 6645,
+   "anio_min": 1962,
+   "anio_max": 2019,
+   "paises": 195
+  },
+  "export_minerales_metales_pct_merc": {
+   "descripcion": "",
+   "n": 6920,
+   "anio_min": 1962,
+   "anio_max": 2019,
+   "paises": 195
+  },
+  "de_biomasa_t": {
+   "descripcion": "Extraccion domestica de biomasa, t [UN IRP]",
+   "n": 10250,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 205
+  },
+  "de_fosiles_t": {
+   "descripcion": "Extraccion domestica de combustibles fosiles, t [UN IRP GMFD 1970-2019]",
+   "n": 10250,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 205
+  },
+  "de_metales_t": {
+   "descripcion": "Extraccion domestica de minerales metalicos (mena bruta), t [UN IRP]",
+   "n": 10250,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 205
+  },
+  "de_no_metalicos_t": {
+   "descripcion": "Extraccion domestica de minerales no metalicos, t [UN IRP]",
+   "n": 10250,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 205
+  },
+  "nac_mineria_share_post": {
+   "descripcion": "idem mineria (metales)",
+   "n": 12,
+   "anio_min": 1952,
+   "anio_max": 1975,
+   "paises": 10
+  },
+  "nac_petroleo_share_post": {
+   "descripcion": "Evento de nacionalizacion/participacion en petroleo en el anio: participacion estatal posterior (tabla curada)",
+   "n": 46,
+   "anio_min": 1951,
+   "anio_max": 2012,
+   "paises": 26
+  },
+  "nac_evento_petroleo": {
+   "descripcion": "1 si hay evento de nacionalizacion petrolera en el anio",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "nac_evento_mineria": {
+   "descripcion": "1 si hay evento en mineria/carbon en el anio",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "estado_share_petroleo_eventos": {
+   "descripcion": "Participacion estatal en la produccion petrolera implicita por los eventos (ultimo evento; 0 = sin evento registrado, NO implica propiedad extranjera)",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "renta_petroleo_share": {
+   "descripcion": "Participacion en rentas totales: Rentas del petroleo (% PIB)",
+   "n": 7596,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 188
+  },
+  "renta_gas_share": {
+   "descripcion": "Participacion en rentas totales: Rentas del gas natural (% PIB)",
+   "n": 7579,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 188
+  },
+  "renta_carbon_share": {
+   "descripcion": "Participacion en rentas totales: Rentas del carbon (% PIB)",
+   "n": 7490,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 187
+  },
+  "renta_minerales_share": {
+   "descripcion": "Participacion en rentas totales: Rentas minerales (% PIB)",
+   "n": 7997,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 188
+  },
+  "renta_forestal_share": {
+   "descripcion": "Participacion en rentas totales: Rentas forestales (% PIB)",
+   "n": 7997,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 188
+  },
+  "renta_no_renovable_pct_pib": {
+   "descripcion": "Rentas petroleo+gas+carbon+minerales (% PIB)",
+   "n": 8554,
+   "anio_min": 1970,
+   "anio_max": 2019,
+   "paises": 204
+  },
+  "oil_rp_anios": {
+   "descripcion": "Ratio reservas/produccion petroleo (anios)",
+   "n": 1811,
+   "anio_min": 1980,
+   "anio_max": 2019,
+   "paises": 49
+  },
+  "gas_rp_anios": {
+   "descripcion": "Ratio R/P gas (anios)",
+   "n": 1896,
+   "anio_min": 1980,
+   "anio_max": 2019,
+   "paises": 51
+  },
+  "oil_urr_proxy_twh": {
+   "descripcion": "URR proxy = acumulada 1900-2019 + reservas probadas 2019 (cota inferior: sin crecimiento de reservas ni descubrimientos futuros)",
+   "n": 3430,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 49
+  },
+  "gas_urr_proxy_twh": {
+   "descripcion": "idem gas",
+   "n": 3570,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 51
+  },
+  "coal_urr_proxy_twh": {
+   "descripcion": "idem carbon (reservas 2013)",
+   "n": 2240,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 32
+  },
+  "fosil_urr_proxy_twh": {
+   "descripcion": "Suma de URR proxy fosiles",
+   "n": 5040,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 72
+  },
+  "oil_x_proxy": {
+   "descripcion": "Fraccion agotada x = acumulada/URR proxy (petroleo)",
+   "n": 3430,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 49
+  },
+  "gas_x_proxy": {
+   "descripcion": "idem gas",
+   "n": 3570,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 51
+  },
+  "coal_x_proxy": {
+   "descripcion": "idem carbon",
+   "n": 2240,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 32
+  },
+  "fosil_x_proxy": {
+   "descripcion": "idem agregado fosil (TWh)",
+   "n": 5040,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 72
+  },
+  "fosil_valor_urr_proxy_musd2019": {
+   "descripcion": "URR proxy fosil valorado a precios brutos de 2019 (M US$; 37,8/17,1/11,2 M$ por TWh de petroleo/gas/carbon)",
+   "n": 5040,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 72
+  },
+  "fosil_valor_cum_musd2019": {
+   "descripcion": "Produccion fosil acumulada desde 1900 valorada a precios de 2019 (M US$)",
+   "n": 15470,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 221
+  },
+  "fosil_x_valor": {
+   "descripcion": "Fraccion agotada ponderada por valor: candidato directo para x_i del recurso generico del modelo",
+   "n": 5040,
+   "anio_min": 1950,
+   "anio_max": 2019,
+   "paises": 72
+  }
+ },
+ "recursos_world.csv": {
+  "petroleo_precio_nominal_usd_bbl": {
+   "descripcion": "Precio del crudo US$/bbl corrientes (1861-1944 media EE.UU., 1945-1983 Arabian Light, 1984- Brent) [EI Statistical Review via OWID]",
+   "n": 161,
+   "anio_min": 1861,
+   "anio_max": 2021
+  },
+  "deflactor_eeuu_2019": {
+   "descripcion": "Nivel de precios EE.UU. (2019=1): implicito en BP 2014 hasta 2013, IPC WDI despues",
+   "n": 161,
+   "anio_min": 1861,
+   "anio_max": 2021
+  },
+  "petroleo_precio_real_usd2019_bbl": {
+   "descripcion": "Precio real del crudo, US$ de 2019/bbl",
+   "n": 161,
+   "anio_min": 1861,
+   "anio_max": 2021
+  },
+  "jacks_beef": {
+   "descripcion": "Jacks (2019) precio real de beef (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_hides": {
+   "descripcion": "Jacks (2019) precio real de hides (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_lamb": {
+   "descripcion": "Jacks (2019) precio real de lamb (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_pork": {
+   "descripcion": "Jacks (2019) precio real de pork (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_coal": {
+   "descripcion": "Jacks (2019) precio real de coal (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_natural_gas": {
+   "descripcion": "Jacks (2019) precio real de natural_gas (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_petroleum": {
+   "descripcion": "Jacks (2019) precio real de petroleum (1900=100)",
+   "n": 166,
+   "anio_min": 1860,
+   "anio_max": 2025
+  },
+  "jacks_barley": {
+   "descripcion": "Jacks (2019) precio real de barley (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_corn": {
+   "descripcion": "Jacks (2019) precio real de corn (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_rice": {
+   "descripcion": "Jacks (2019) precio real de rice (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_rye": {
+   "descripcion": "Jacks (2019) precio real de rye (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_wheat": {
+   "descripcion": "Jacks (2019) precio real de wheat (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_aluminum": {
+   "descripcion": "Jacks (2019) precio real de aluminum (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_chromium": {
+   "descripcion": "Jacks (2019) precio real de chromium (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_copper": {
+   "descripcion": "Jacks (2019) precio real de copper (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_lead": {
+   "descripcion": "Jacks (2019) precio real de lead (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_manganese": {
+   "descripcion": "Jacks (2019) precio real de manganese (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_nickel": {
+   "descripcion": "Jacks (2019) precio real de nickel (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_steel": {
+   "descripcion": "Jacks (2019) precio real de steel (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_tin": {
+   "descripcion": "Jacks (2019) precio real de tin (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_zinc": {
+   "descripcion": "Jacks (2019) precio real de zinc (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_bauxite": {
+   "descripcion": "Jacks (2019) precio real de bauxite (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_iron_ore": {
+   "descripcion": "Jacks (2019) precio real de iron_ore (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_phosphate": {
+   "descripcion": "Jacks (2019) precio real de phosphate (1900=100)",
+   "n": 146,
+   "anio_min": 1880,
+   "anio_max": 2025
+  },
+  "jacks_potash": {
+   "descripcion": "Jacks (2019) precio real de potash (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_sulfur": {
+   "descripcion": "Jacks (2019) precio real de sulfur (1900=100)",
+   "n": 156,
+   "anio_min": 1870,
+   "anio_max": 2025
+  },
+  "jacks_gold": {
+   "descripcion": "Jacks (2019) precio real de gold (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_platinum": {
+   "descripcion": "Jacks (2019) precio real de platinum (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_silver": {
+   "descripcion": "Jacks (2019) precio real de silver (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_cocoa": {
+   "descripcion": "Jacks (2019) precio real de cocoa (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_coffee": {
+   "descripcion": "Jacks (2019) precio real de coffee (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_cotton": {
+   "descripcion": "Jacks (2019) precio real de cotton (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_cottonseed": {
+   "descripcion": "Jacks (2019) precio real de cottonseed (1900=100)",
+   "n": 152,
+   "anio_min": 1874,
+   "anio_max": 2025
+  },
+  "jacks_palm_oil": {
+   "descripcion": "Jacks (2019) precio real de palm_oil (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_peanuts": {
+   "descripcion": "Jacks (2019) precio real de peanuts (1900=100)",
+   "n": 156,
+   "anio_min": 1870,
+   "anio_max": 2025
+  },
+  "jacks_rubber": {
+   "descripcion": "Jacks (2019) precio real de rubber (1900=100)",
+   "n": 136,
+   "anio_min": 1890,
+   "anio_max": 2025
+  },
+  "jacks_saw_logs": {
+   "descripcion": "Jacks (2019) precio real de saw_logs (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_soybeans": {
+   "descripcion": "Jacks (2019) precio real de soybeans (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_sugar": {
+   "descripcion": "Jacks (2019) precio real de sugar (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_tea": {
+   "descripcion": "Jacks (2019) precio real de tea (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_tobacco": {
+   "descripcion": "Jacks (2019) precio real de tobacco (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_wool": {
+   "descripcion": "Jacks (2019) precio real de wool (1900=100)",
+   "n": 176,
+   "anio_min": 1850,
+   "anio_max": 2025
+  },
+  "jacks_indice_vp1975": {
+   "descripcion": "Jacks (2019) indice real, ponderaciones valor de produccion 1975 (1900=100)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_indice_vp2019": {
+   "descripcion": "idem ponderaciones 2019",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_indice_igual": {
+   "descripcion": "idem ponderacion igual (42 bienes)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_sub_cultivados": {
+   "descripcion": "Jacks subindice bienes cultivados",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_sub_subsuelo": {
+   "descripcion": "Jacks subindice bienes del subsuelo (energia+metales+minerales)",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "jacks_sub_subsuelo_sin_energia": {
+   "descripcion": "Jacks subindice subsuelo sin energia",
+   "n": 126,
+   "anio_min": 1900,
+   "anio_max": 2025
+  },
+  "gycpi_nominal": {
+   "descripcion": "Grilli-Yang commodity price index (1977-79=100), nominal",
+   "n": 112,
+   "anio_min": 1900,
+   "anio_max": 2011
+  },
+  "gycpi_metales_nominal": {
+   "descripcion": "GYCPI metales",
+   "n": 112,
+   "anio_min": 1900,
+   "anio_max": 2011
+  },
+  "muv_g5": {
+   "descripcion": "Indice de valor unitario de manufacturas (MUV-G5)",
+   "n": 112,
+   "anio_min": 1900,
+   "anio_max": 2011
+  },
+  "gycpi_real": {
+   "descripcion": "GYCPI/MUV (terminos de intercambio materias primas/manufacturas)",
+   "n": 112,
+   "anio_min": 1900,
+   "anio_max": 2011
+  },
+  "gycpi_metales_real": {
+   "descripcion": "GYCPI metales / MUV",
+   "n": 112,
+   "anio_min": 1900,
+   "anio_max": 2011
+  },
+  "cmo_petroleo_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de petroleo",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_carbon_aus_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de carbon_aus",
+   "n": 56,
+   "anio_min": 1970,
+   "anio_max": 2025
+  },
+  "cmo_gas_eeuu_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de gas_eeuu",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_gas_europa_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de gas_europa",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_cobre_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de cobre",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_hierro_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de hierro",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_aluminio_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de aluminio",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_oro_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de oro",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_estano_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de estano",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_niquel_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de niquel",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "cmo_zinc_real2010": {
+   "descripcion": "Banco Mundial Pink Sheet, precio real (US$ 2010) de zinc",
+   "n": 66,
+   "anio_min": 1960,
+   "anio_max": 2025
+  },
+  "usgs_prod_mundial_aluminio_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de aluminio, t",
+   "n": 122,
+   "anio_min": 1900,
+   "anio_max": 2021
+  },
+  "usgs_prod_mundial_bauxita_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de bauxita, t",
+   "n": 122,
+   "anio_min": 1900,
+   "anio_max": 2021
+  },
+  "usgs_prod_mundial_cobre_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de cobre, t",
+   "n": 121,
+   "anio_min": 1900,
+   "anio_max": 2020
+  },
+  "usgs_prod_mundial_oro_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de oro, t",
+   "n": 123,
+   "anio_min": 1900,
+   "anio_max": 2022
+  },
+  "usgs_prod_mundial_hierro_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de hierro, t",
+   "n": 118,
+   "anio_min": 1904,
+   "anio_max": 2021
+  },
+  "usgs_prod_mundial_plomo_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de plomo, t",
+   "n": 105,
+   "anio_min": 1900,
+   "anio_max": 2021
+  },
+  "usgs_prod_mundial_niquel_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de niquel, t",
+   "n": 120,
+   "anio_min": 1900,
+   "anio_max": 2019
+  },
+  "usgs_prod_mundial_fosfato_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de fosfato, t",
+   "n": 123,
+   "anio_min": 1900,
+   "anio_max": 2022
+  },
+  "usgs_prod_mundial_plata_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de plata, t",
+   "n": 122,
+   "anio_min": 1900,
+   "anio_max": 2021
+  },
+  "usgs_prod_mundial_estano_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de estano, t",
+   "n": 117,
+   "anio_min": 1905,
+   "anio_max": 2021
+  },
+  "usgs_prod_mundial_zinc_t": {
+   "descripcion": "USGS DS140 produccion mundial (mina) de zinc, t",
+   "n": 123,
+   "anio_min": 1900,
+   "anio_max": 2022
+  },
+  "mundo_oil_prod_twh": {
+   "descripcion": "Produccion mundial de petroleo TWh (OWID)",
+   "n": 125,
+   "anio_min": 1900,
+   "anio_max": 2024
+  },
+  "mundo_oil_cum_twh": {
+   "descripcion": "Acumulada mundial desde 1900",
+   "n": 125,
+   "anio_min": 1900,
+   "anio_max": 2024
+  },
+  "mundo_gas_prod_twh": {
+   "descripcion": "Produccion mundial de gas TWh",
+   "n": 125,
+   "anio_min": 1900,
+   "anio_max": 2024
+  },
+  "mundo_gas_cum_twh": {
+   "descripcion": "Acumulada mundial de gas",
+   "n": 125,
+   "anio_min": 1900,
+   "anio_max": 2024
+  },
+  "mundo_coal_prod_twh": {
+   "descripcion": "Produccion mundial de carbon TWh",
+   "n": 125,
+   "anio_min": 1900,
+   "anio_max": 2024
+  },
+  "mundo_coal_cum_twh": {
+   "descripcion": "Acumulada mundial de carbon",
+   "n": 125,
+   "anio_min": 1900,
+   "anio_max": 2024
+  },
+  "mundo_gigantes_n": {
+   "descripcion": "Descubrimientos mundiales de campos gigantes (incl. conjuntos)",
+   "n": 152,
+   "anio_min": 1868,
+   "anio_max": 2019
+  },
+  "mundo_gigantes_eur_mbep": {
+   "descripcion": "EUR mundial descubierto en gigantes, Mbep",
+   "n": 152,
+   "anio_min": 1868,
+   "anio_max": 2019
+  },
+  "mundo_gigantes_eur_petroleo_mbep": {
+   "descripcion": "idem petroleo",
+   "n": 152,
+   "anio_min": 1868,
+   "anio_max": 2019
+  },
+  "mundo_gigantes_eur_cum_mbep": {
+   "descripcion": "EUR acumulado mundial de gigantes desde 1868",
+   "n": 170,
+   "anio_min": 1850,
+   "anio_max": 2019
+  }
+ },
+ "recursos_hubbert.csv": "Ajustes Hubbert por pais/recurso: linealizacion P/Q=r(1-Q/URR) (Q>=20% de Q2019) y r condicional al URR proxy",
+ "constantes_mundiales_gea2012": {
+  "coal__historical_production_to_2005_EJ": 6712.0,
+  "coal__production_2005_EJ": 123.8,
+  "coal__reserves_high_EJ": 21000.0,
+  "coal__reserves_low_EJ": 17300.0,
+  "coal__resources_high_EJ": 435000.0,
+  "coal__resources_low_EJ": 291000.0,
+  "conventional_gas__historical_production_to_2005_EJ": 3087.0,
+  "conventional_gas__production_2005_EJ": 89.8,
+  "conventional_gas__reserves_high_EJ": 7100.0,
+  "conventional_gas__reserves_low_EJ": 5000.0,
+  "conventional_gas__resources_high_EJ": 8900.0,
+  "conventional_gas__resources_low_EJ": 7200.0,
+  "conventional_oil__historical_production_to_2005_EJ": 6069.0,
+  "conventional_oil__production_2005_EJ": 147.9,
+  "conventional_oil__reserves_high_EJ": 7610.0,
+  "conventional_oil__reserves_low_EJ": 4900.0,
+  "conventional_oil__resources_high_EJ": 6150.0,
+  "conventional_oil__resources_low_EJ": 4170.0,
+  "conventional_uranium__historical_production_to_2005_EJ": 1218.0,
+  "conventional_uranium__production_2005_EJ": 24.7,
+  "conventional_uranium__reserves_high_EJ": 2400.0,
+  "conventional_uranium__reserves_low_EJ": 2400.0,
+  "conventional_uranium__resources_high_EJ": 7400.0,
+  "conventional_uranium__resources_low_EJ": 7400.0,
+  "unconventional_gas__additional_occurrences_EJ": 1000000.0,
+  "unconventional_gas__historical_production_to_2005_EJ": 113.0,
+  "unconventional_gas__production_2005_EJ": 9.6,
+  "unconventional_gas__reserves_high_EJ": 67100.0,
+  "unconventional_gas__reserves_low_EJ": 20100.0,
+  "unconventional_gas__resources_high_EJ": 121900.0,
+  "unconventional_gas__resources_low_EJ": 40200.0,
+  "unconventional_oil__additional_occurrences_EJ": 40000.0,
+  "unconventional_oil__historical_production_to_2005_EJ": 513.0,
+  "unconventional_oil__production_2005_EJ": 20.2,
+  "unconventional_oil__reserves_high_EJ": 5600.0,
+  "unconventional_oil__reserves_low_EJ": 3750.0,
+  "unconventional_oil__resources_high_EJ": 14800.0,
+  "unconventional_oil__resources_low_EJ": 11280.0,
+  "unconventional_uranium__additional_occurrences_EJ": 2600000.0,
+  "unconventional_uranium__historical_production_to_2005_EJ": 34.0,
+  "unconventional_uranium__reserves_high_EJ": 7100.0,
+  "unconventional_uranium__reserves_low_EJ": 7100.0
+ }
+}

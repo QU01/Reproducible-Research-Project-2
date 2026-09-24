@@ -23,11 +23,12 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
 T_SPLIT = 40  # 1990
 
-FREE = {  # name: (low, high)
-    "g0": (0.0, 0.02), "kappa": (0.0, 0.03), "kappa_m": (0.0, 1.0),
-    "lam0": (0.0, 1.5), "j0": (0.0, 0.15), "sig_a": (0.005, 0.08), "tau": (0.0, 0.08),
-    "b0": (-6.0, 0.0), "b1": (0.0, 3.0), "b2": (-1.5, 0.5), "bp": (0.0, 4.0), "b3": (-3.0, 0.0),
-    "r_R": (0.01, 0.12), "x0": (0.01, 0.5), "x_hist": (0.05, 1.5),
+FREE = {  # name: (low, high) -- stage 2 (simulation-based); stage 1 is src/submodels.py
+    "g0": (0.0, 0.02), "kappa": (0.0, 0.03), "kappa_m": (0.0, 0.3), "kappa_f": (0.0, 0.15),
+    "lam0": (0.0, 1.5), "j0": (0.0, 0.15), "sig_a": (0.005, 0.08), "theta_d": (0.0, 0.4),
+    "b0": (-7.0, 0.0), "b1": (0.0, 2.0), "b2": (-1.0, 0.2), "bp": (0.0, 4.5), "b3": (-3.0, 0.0),
+    "b4": (0.0, 4.0), "r_R": (0.03, 0.15), "x_hist": (0.05, 1.5),
+    "m_scale": (0.05, 1.0), "r_scale": (0.02, 1.0), "w_scale": (0.0, 0.6), "eps_w": (0.0, 2.0),
 }
 NAMES = list(FREE)
 
@@ -36,6 +37,11 @@ LY = np.log(W.Y / W.pop)
 LY[~W.observed] = np.nan
 CONF = np.where(W.observed, W.conflict, np.nan)
 RR = np.where(W.observed, W.rr_obs, np.nan)
+DEBT = np.where(W.observed, W.extra.get("debt_gdp", np.full((W.N, W.T), np.nan)), np.nan)
+_top10 = W.extra.get("top10_share_ptinc", np.full((W.N, W.T), np.nan))
+_flat = np.nan_to_num(W.extra.get("wid_flat_flag", np.zeros((W.N, W.T))))
+TOP10 = np.where(W.observed & (_flat == 0), _top10, np.nan)
+BASE = Params()          # stage-1 estimates are merged in by set_cutoff
 
 
 def growth_sd(ly, t_end):
@@ -51,15 +57,26 @@ def growth_sd(ly, t_end):
 SD_OBS = growth_sd(LY, T_SPLIT)
 
 
-def loss(v, R=12, seed=1, detail=False):
+def set_cutoff(t):
+    """Estimate with data up to year index t only (rolling-origin validation): stage-1
+    submodels are re-fitted on data <= t and become the base parameters of stage 2."""
+    global T_SPLIT, SD_OBS, BASE, STAGE1
+    from submodels import estimate as stage1
+    T_SPLIT = int(t)
+    SD_OBS = growth_sd(LY, T_SPLIT)
+    ov, STAGE1 = stage1(W, LY, T_SPLIT)
+    BASE = Params().with_vector(list(ov), list(ov.values()))
+
+
+def loss(v, R=8, seed=1, detail=False):
     try:
         return _loss(v, R, seed, detail)
     except Exception:
         return 1e3
 
 
-def _loss(v, R=12, seed=1, detail=False):
-    p = Params().with_vector(NAMES, v)
+def _loss(v, R=8, seed=1, detail=False):
+    p = BASE.with_vector(NAMES, v)
     sim = Simulator(W, p, R=R, seed=seed)
     o = sim.run(0, T_SPLIT + 1)
     m = np.nanmean(o["ly"], 0)
@@ -72,23 +89,32 @@ def _loss(v, R=12, seed=1, detail=False):
     okc = ~np.isnan(c) & ~np.isnan(h)
     ce = -np.mean(c[okc] * np.log(h[okc]) + (1 - c[okc]) * np.log(1 - h[okc]))
     # aggregate conflict incidence by decade (keeps conflicts from piling up over time)
-    inc = sum(abs(np.nanmean(np.where(okc, h, np.nan)[:, a:a + 10]) - np.nanmean(c[:, a:a + 10]))
-              for a in range(0, T_SPLIT, 10)) / 4
+    inc = np.mean([abs(np.nanmean(np.where(okc, h, np.nan)[:, a:a + 10]) - np.nanmean(c[:, a:a + 10]))
+                   for a in range(0, T_SPLIT, 10)])
     # natural-resource rents / GDP (WDI starts in 1970)
     rs = np.nanmean(o["res_share"], 0)
     d_rr = RR[:, :T_SPLIT + 1]
     okr = ~np.isnan(d_rr) & ~np.isnan(rs)
-    rr_rmse = np.sqrt(np.mean((rs[okr] - d_rr[okr]) ** 2))
+    rr_rmse = np.sqrt(np.mean((rs[okr] - d_rr[okr]) ** 2)) if okr.any() else 0.0
     # calibration of the stochastic part: share of observed country-years (from 1955) inside the
     # simulated 10-90% band (target 0.8)
     lo, hi = np.nanpercentile(o["ly"], 10, 0), np.nanpercentile(o["ly"], 90, 0)
     okb = ok & (np.arange(T_SPLIT + 1)[None] >= 5)
     cov = np.mean((d[okb] >= lo[okb]) & (d[okb] <= hi[okb]))
+    # public debt / GDP and elite income share (WID top 10%, non-interpolated years)
+    dsim = np.nanmean(o["debt"], 0)
+    dd = DEBT[:, :T_SPLIT + 1]
+    okd = np.isfinite(dd) & np.isfinite(dsim) & (dd < 3)
+    debt_rmse = np.sqrt(np.mean((dsim[okd] - dd[okd]) ** 2)) if okd.any() else 0.0
+    esim = np.nanmean(o["E"], 0)
+    de = TOP10[:, :T_SPLIT + 1]
+    oke = np.isfinite(de) & np.isfinite(esim)
+    e_rmse = np.sqrt(np.mean((esim[oke] - de[oke]) ** 2)) if oke.any() else 0.0
     total = (rmse + 2.0 * abs(sd_sim - SD_OBS) + 1.0 * ce + 3.0 * inc + 3.0 * rr_rmse
-             + 1.0 * abs(cov - 0.8))
+             + 1.0 * abs(cov - 0.8) + 0.3 * debt_rmse + 1.0 * e_rmse)
     if detail:
         return dict(total=total, rmse=rmse, sd_sim=sd_sim, sd_obs=SD_OBS, ce=ce, inc_gap=inc,
-                    rr_rmse=rr_rmse, cobertura_80=cov)
+                    rr_rmse=rr_rmse, cobertura_80=cov, debt_rmse=debt_rmse, elite_rmse=e_rmse)
     return total if np.isfinite(total) else 1e3
 
 
@@ -188,25 +214,36 @@ def backtest(p, R=64, seed=7):
     return res, o
 
 
-def main():
+def calibrate_cutoff(year, maxiter=40, popsize=10, x0=None, workers=4, seed=3):
+    """Calibrate using only data up to `year`; returns (params dict, in-sample fit)."""
+    set_cutoff(year - 1950)
+    if x0 is None:
+        x0 = Params().vector(NAMES)
+    x0 = np.array([np.clip(v, *FREE[n]) for n, v in zip(NAMES, x0)])
+    r = differential_evolution(loss, [FREE[n] for n in NAMES], seed=seed, maxiter=maxiter,
+                               popsize=popsize, tol=1e-4, polish=False, workers=workers,
+                               updating="deferred", x0=x0)
+    fit = loss(r.x, R=24, seed=11, detail=True)
+    full = BASE.with_vector(NAMES, r.x)
+    from dataclasses import asdict
+    return ({k: float(v) for k, v in asdict(full).items()}, {k: float(v) for k, v in fit.items()},
+            {n: float(v) for n, v in zip(NAMES, r.x)}, STAGE1)
+
+
+def main(maxiter=40, popsize=10):
+    """Final calibration on all data (1950-2019): stage 1 + stage 2. Rolling calibrations for
+    validation are done by src/validate.py with the same function and earlier cutoffs."""
     OUT.mkdir(exist_ok=True)
-    x0 = Params().vector(NAMES)
+    x0 = None
     prev = OUT / "calibration.json"
-    if prev.exists():  # warm start from the previous calibration where names overlap
+    if prev.exists():
         old = json.load(open(prev))["params"]
-        x0 = np.array([np.clip(old.get(n, v), *FREE[n]) for n, v in zip(NAMES, x0)])
-    print("initial", loss(x0, detail=True))
+        x0 = [old.get(n, getattr(Params(), n)) for n in NAMES]
     t = time.time()
-    r = differential_evolution(loss, [FREE[n] for n in NAMES], seed=3, maxiter=90, popsize=12,
-                               tol=1e-4, polish=False, workers=4, updating="deferred", x0=x0)
-    print("DE done", round(time.time() - t), "s", r.fun)
-    p = Params().with_vector(NAMES, r.x)
-    fit = loss(r.x, R=32, seed=11, detail=True)  # fresh seeds for reporting
-    print("fit", fit)
-    bt, o = backtest(p)
-    print(json.dumps(bt, indent=1))
-    json.dump({"params": {n: float(v) for n, v in zip(NAMES, r.x)}, "fit_1950_1990": fit,
-               "backtest": bt}, open(OUT / "calibration.json", "w"), indent=1)
+    full, fit, free, st1 = calibrate_cutoff(2019, maxiter=maxiter, popsize=popsize, x0=x0)
+    print("done", round(time.time() - t), "s", fit)
+    json.dump({"params": full, "libres": free, "fit": fit, "etapa1": st1, "cutoff": 2019},
+              open(OUT / "calibration.json", "w"), indent=1)
 
 
 if __name__ == "__main__":

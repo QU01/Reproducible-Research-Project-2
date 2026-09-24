@@ -1,0 +1,697 @@
+{
+ "variables": {
+  "exports_cow": {
+   "desc": "Exportaciones totales (suma diádica COW)",
+   "unit": "millones USD corrientes",
+   "source": "COW Dyadic Trade 4.0",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9450,
+    "n_countries": 188
+   }
+  },
+  "imports_cow": {
+   "desc": "Importaciones totales (suma diádica COW)",
+   "unit": "millones USD corrientes",
+   "source": "COW Dyadic Trade 4.0",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9450,
+    "n_countries": 188
+   }
+  },
+  "n_export_partners": {
+   "desc": "Número de destinos con exportaciones > 0",
+   "unit": "número",
+   "source": "COW Dyadic Trade 4.0",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9422,
+    "n_countries": 188
+   }
+  },
+  "hhi_export_partners": {
+   "desc": "Herfindahl de concentración de exportaciones por socio (0-1)",
+   "unit": "índice",
+   "source": "COW",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9422,
+    "n_countries": 188
+   }
+  },
+  "hhi_import_partners": {
+   "desc": "Herfindahl de concentración de importaciones por socio (0-1)",
+   "unit": "índice",
+   "source": "COW",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9447,
+    "n_countries": 188
+   }
+  },
+  "share_x_to_core": {
+   "desc": "Exportaciones hacia el centro (20 % sup. PIB pc PWT del año) / exportaciones",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9420,
+    "n_countries": 188
+   }
+  },
+  "share_m_from_core": {
+   "desc": "Importaciones desde el centro / importaciones",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9447,
+    "n_countries": 188
+   }
+  },
+  "share_trade_core": {
+   "desc": "Comercio (X+M) con el centro / comercio total",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 9449,
+    "n_countries": 188
+   }
+  },
+  "is_core": {
+   "desc": "1 si el país está en el 20 % superior del PIB pc (rgdpna/pop) de ese año",
+   "unit": "0/1",
+   "source": "PWT 10.01",
+   "coverage": {
+    "years": [
+     1950,
+     2019
+    ],
+    "n_obs": 10399,
+    "n_countries": 183
+   }
+  },
+  "drain_erdi_usd": {
+   "desc": "Drenaje por intercambio desigual (ERDI): sum_j X_ij (p_j/p_i - 1)+ hacia el centro; sólo periferia",
+   "unit": "millones USD corrientes",
+   "source": "COW + PWT pl_gdpo; método Hickel et al. (2021)",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 6704,
+    "n_countries": 155
+   }
+  },
+  "drain_erdi_gdp": {
+   "desc": "drain_erdi_usd / PIB nominal (cgdpo*pl_gdpo)",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 6704,
+    "n_countries": 155
+   }
+  },
+  "drain_erdi_x": {
+   "desc": "drain_erdi_usd / exportaciones totales COW",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 6686,
+    "n_countries": 155
+   }
+  },
+  "drain_erdi_in_usd": {
+   "desc": "Drenaje recibido por el país del centro desde la periferia (ERDI)",
+   "unit": "millones USD corrientes",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 1697,
+    "n_countries": 41
+   }
+  },
+  "drain_erdi_in_gdp": {
+   "desc": "drain_erdi_in_usd / PIB nominal",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 1697,
+    "n_countries": 41
+   }
+  },
+  "drain_px_usd": {
+   "desc": "Drenaje conservador: como drain_erdi_usd pero con precios de exportación PWT pl_x",
+   "unit": "millones USD corrientes",
+   "source": "COW + PWT pl_x",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 6702,
+    "n_countries": 155
+   }
+  },
+  "drain_px_gdp": {
+   "desc": "drain_px_usd / PIB nominal",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 6702,
+    "n_countries": 155
+   }
+  },
+  "drain_px_x": {
+   "desc": "drain_px_usd / exportaciones totales COW",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 6684,
+    "n_countries": 155
+   }
+  },
+  "drain_px_in_usd": {
+   "desc": "Drenaje (pl_x) recibido por el centro",
+   "unit": "millones USD corrientes",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 1697,
+    "n_countries": 41
+   }
+  },
+  "drain_px_in_gdp": {
+   "desc": "drain_px_in_usd / PIB nominal",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 1697,
+    "n_countries": 41
+   }
+  },
+  "openness_pwt": {
+   "desc": "Apertura PWT: csh_x - csh_m (precios PPA corrientes)",
+   "unit": "fracción",
+   "source": "PWT 10.01",
+   "coverage": {
+    "years": [
+     1950,
+     2019
+    ],
+    "n_obs": 10378,
+    "n_countries": 183
+   }
+  },
+  "openness_cow": {
+   "desc": "(exports_cow + imports_cow) / PIB nominal PWT (sólo bienes)",
+   "unit": "fracción",
+   "source": "COW+PWT",
+   "coverage": {
+    "years": [
+     1950,
+     2014
+    ],
+    "n_obs": 8431,
+    "n_countries": 171
+   }
+  },
+  "tot_pwt": {
+   "desc": "Términos de intercambio PWT: pl_x / pl_m",
+   "unit": "ratio",
+   "source": "PWT 10.01",
+   "coverage": {
+    "years": [
+     1950,
+     2019
+    ],
+    "n_obs": 10397,
+    "n_countries": 183
+   }
+  },
+  "price_level": {
+   "desc": "Nivel de precios del PIB PWT pl_gdpo (EE.UU. 2017 = 1); ERDI = 1/price_level",
+   "unit": "ratio",
+   "source": "PWT 10.01",
+   "coverage": {
+    "years": [
+     1950,
+     2019
+    ],
+    "n_obs": 10389,
+    "n_countries": 183
+   }
+  },
+  "eci_sitc_atlas": {
+   "desc": "ECI SITC (Atlas, Hausmann-Hidalgo), 1962-2017",
+   "unit": "índice estandarizado",
+   "source": "Harvard Growth Lab vía Gapminder DDF",
+   "coverage": {
+    "years": [
+     1962,
+     2016
+    ],
+    "n_obs": 11353,
+    "n_countries": 250
+   }
+  },
+  "eci_hs_atlas": {
+   "desc": "ECI HS (Atlas), 1995-2017",
+   "unit": "índice estandarizado",
+   "source": "Harvard Growth Lab vía Gapminder DDF",
+   "coverage": {
+    "years": [
+     1995,
+     2016
+    ],
+    "n_obs": 5036,
+    "n_countries": 242
+   }
+  },
+  "eci_sitc_gl": {
+   "desc": "ECI SITC, Growth Lab rankings 1995-2023",
+   "unit": "índice estandarizado",
+   "source": "Harvard Growth Lab",
+   "coverage": {
+    "years": [
+     1995,
+     2019
+    ],
+    "n_obs": 3599,
+    "n_countries": 145
+   }
+  },
+  "eci_hs92_gl": {
+   "desc": "ECI HS92, Growth Lab rankings 1995-2023",
+   "unit": "índice estandarizado",
+   "source": "Harvard Growth Lab",
+   "coverage": {
+    "years": [
+     1995,
+     2019
+    ],
+    "n_obs": 3599,
+    "n_countries": 145
+   }
+  },
+  "eci": {
+   "desc": "ECI empalmado: eci_sitc_gl, y antes de 1995 eci_sitc_atlas reescalado (MCO en solape)",
+   "unit": "índice",
+   "source": "Growth Lab",
+   "coverage": {
+    "years": [
+     1962,
+     2019
+    ],
+    "n_obs": 11788,
+    "n_countries": 250
+   }
+  },
+  "patents_res_per_mn": {
+   "desc": "Solicitudes de patente de residentes por millón de habitantes",
+   "unit": "por millón",
+   "source": "WDI + PWT pop",
+   "coverage": {
+    "years": [
+     1980,
+     2019
+    ],
+    "n_obs": 3525,
+    "n_countries": 148
+   }
+  },
+  "fdi_in_stock_proxy": {
+   "desc": "Stock aproximado de IED: suma de entradas netas/PIB con depreciación 5 %/año desde 1970",
+   "unit": "fracción del PIB",
+   "source": "WDI (derivado)",
+   "coverage": {
+    "years": [
+     1970,
+     2019
+    ],
+    "n_obs": 8345,
+    "n_countries": 200
+   }
+  },
+  "trade_gdp_wdi": {
+   "desc": "Comercio (X+M de bienes y servicios) / PIB",
+   "unit": "fracción",
+   "source": "WDI NE.TRD.GNFS.ZS",
+   "coverage": {
+    "years": [
+     1960,
+     2019
+    ],
+    "n_obs": 7890,
+    "n_countries": 190
+   }
+  },
+  "fdi_in_gdp": {
+   "desc": "IED, entradas netas / PIB",
+   "unit": "fracción",
+   "source": "WDI BX.KLT.DINV.WD.GD.ZS",
+   "coverage": {
+    "years": [
+     1970,
+     2019
+    ],
+    "n_obs": 8230,
+    "n_countries": 200
+   }
+  },
+  "fdi_out_gdp": {
+   "desc": "IED, salidas netas / PIB",
+   "unit": "fracción",
+   "source": "WDI BM.KLT.DINV.WD.GD.ZS",
+   "coverage": {
+    "years": [
+     1970,
+     2019
+    ],
+    "n_obs": 6362,
+    "n_countries": 196
+   }
+  },
+  "hightech_x_share": {
+   "desc": "Exportaciones de alta tecnología / exportaciones de manufacturas",
+   "unit": "fracción",
+   "source": "WDI TX.VAL.TECH.MF.ZS",
+   "coverage": {
+    "years": [
+     2007,
+     2019
+    ],
+    "n_obs": 1886,
+    "n_countries": 184
+   }
+  },
+  "manuf_x_share": {
+   "desc": "Manufacturas / exportaciones de mercancías",
+   "unit": "fracción",
+   "source": "WDI TX.VAL.MANF.ZS.UN",
+   "coverage": {
+    "years": [
+     1962,
+     2019
+    ],
+    "n_obs": 7125,
+    "n_countries": 198
+   }
+  },
+  "patents_resident": {
+   "desc": "Solicitudes de patente de residentes",
+   "unit": "número",
+   "source": "WDI IP.PAT.RESD",
+   "coverage": {
+    "years": [
+     1980,
+     2019
+    ],
+    "n_obs": 3584,
+    "n_countries": 156
+   }
+  },
+  "researchers_per_mn": {
+   "desc": "Investigadores en I+D por millón de habitantes",
+   "unit": "por millón",
+   "source": "WDI SP.POP.SCIE.RD.P6",
+   "coverage": {
+    "years": [
+     1996,
+     2019
+    ],
+    "n_obs": 1620,
+    "n_countries": 136
+   }
+  },
+  "rd_gdp": {
+   "desc": "Gasto en I+D / PIB",
+   "unit": "fracción",
+   "source": "WDI GB.XPD.RSDV.GD.ZS",
+   "coverage": {
+    "years": [
+     1996,
+     2019
+    ],
+    "n_obs": 2088,
+    "n_countries": 150
+   }
+  },
+  "tot_wdi": {
+   "desc": "Términos de intercambio de trueque neto (2000=100)",
+   "unit": "índice",
+   "source": "WDI TT.PRI.MRCH.XD.WD",
+   "coverage": {
+    "years": [
+     1980,
+     2011
+    ],
+    "n_obs": 3945,
+    "n_countries": 195
+   }
+  }
+ },
+ "estimates": {
+  "eci_splice": {
+   "splice_slope": 0.9752975722939083,
+   "splice_intercept": 0.023825883900888745,
+   "overlap_n": 3164,
+   "overlap_corr": 0.9643306504340001
+  },
+  "gravity": {
+   "method": "MCO log-lineal, EF de año (within), flujos>0.01 M USD, COW 1950-2014",
+   "n": 643837,
+   "r2_within": 0.629,
+   "coef": {
+    "ln_gdp_o": 0.991,
+    "ln_gdp_d": 0.844,
+    "ln_dist": -1.044,
+    "contig": 0.551,
+    "comlang_off": 0.573,
+    "colony": 1.039
+   },
+   "se_naive": {
+    "ln_gdp_o": 0.0012,
+    "ln_gdp_d": 0.0011,
+    "ln_dist": 0.003,
+    "contig": 0.0148,
+    "comlang_off": 0.0067,
+    "colony": 0.016
+   }
+  },
+  "eci_growth": {
+   "method": "MCO; crec. anual medio ln(PIBpc) t->t+10 ~ ECI_t + ln PIBpc_t + EF año; t=1965,...,2005",
+   "n": 1389,
+   "r2": 0.12,
+   "coef_eci": 0.0086,
+   "se_eci": 0.0009,
+   "coef_lny": -0.005,
+   "se_lny": 0.0007,
+   "sd_eci": 0.932
+  },
+  "drain_erdi_by_decade": {
+   "1950": {
+    "agg_drain_over_periphery_gdp": 0.0169,
+    "median_drain_gdp": 0.0159,
+    "agg_drain_over_periphery_exports": 0.2376,
+    "agg_drain_usd_bn_per_year": 4.5606,
+    "n_countries": 46.0
+   },
+   "1960": {
+    "agg_drain_over_periphery_gdp": 0.0298,
+    "median_drain_gdp": 0.0386,
+    "agg_drain_over_periphery_exports": 0.4046,
+    "agg_drain_usd_bn_per_year": 12.9533,
+    "n_countries": 83.0
+   },
+   "1970": {
+    "agg_drain_over_periphery_gdp": 0.0458,
+    "median_drain_gdp": 0.0518,
+    "agg_drain_over_periphery_exports": 0.3906,
+    "agg_drain_usd_bn_per_year": 74.7932,
+    "n_countries": 115.0
+   },
+   "1980": {
+    "agg_drain_over_periphery_gdp": 0.1062,
+    "median_drain_gdp": 0.0653,
+    "agg_drain_over_periphery_exports": 0.7644,
+    "agg_drain_usd_bn_per_year": 334.9786,
+    "n_countries": 121.0
+   },
+   "1990": {
+    "agg_drain_over_periphery_gdp": 0.2334,
+    "median_drain_gdp": 0.1681,
+    "agg_drain_over_periphery_exports": 1.2477,
+    "agg_drain_usd_bn_per_year": 1424.558,
+    "n_countries": 140.0
+   },
+   "2000": {
+    "agg_drain_over_periphery_gdp": 0.2462,
+    "median_drain_gdp": 0.159,
+    "agg_drain_over_periphery_exports": 0.8502,
+    "agg_drain_usd_bn_per_year": 3131.4018,
+    "n_countries": 141.0
+   },
+   "2010": {
+    "agg_drain_over_periphery_gdp": 0.1396,
+    "median_drain_gdp": 0.1099,
+    "agg_drain_over_periphery_exports": 0.5552,
+    "agg_drain_usd_bn_per_year": 3819.5595,
+    "n_countries": 138.0
+   }
+  },
+  "drain_px_by_decade": {
+   "1950": {
+    "agg_drain_over_periphery_gdp": 0.0068,
+    "median_drain_gdp": 0.0003,
+    "agg_drain_over_periphery_exports": 0.0958,
+    "agg_drain_usd_bn_per_year": 1.8372,
+    "n_countries": 46.0
+   },
+   "1960": {
+    "agg_drain_over_periphery_gdp": 0.0138,
+    "median_drain_gdp": 0.0022,
+    "agg_drain_over_periphery_exports": 0.1883,
+    "agg_drain_usd_bn_per_year": 6.0269,
+    "n_countries": 83.0
+   },
+   "1970": {
+    "agg_drain_over_periphery_gdp": 0.0191,
+    "median_drain_gdp": 0.0078,
+    "agg_drain_over_periphery_exports": 0.1627,
+    "agg_drain_usd_bn_per_year": 31.1553,
+    "n_countries": 115.0
+   },
+   "1980": {
+    "agg_drain_over_periphery_gdp": 0.0155,
+    "median_drain_gdp": 0.0112,
+    "agg_drain_over_periphery_exports": 0.1113,
+    "agg_drain_usd_bn_per_year": 48.7898,
+    "n_countries": 121.0
+   },
+   "1990": {
+    "agg_drain_over_periphery_gdp": 0.0267,
+    "median_drain_gdp": 0.0168,
+    "agg_drain_over_periphery_exports": 0.143,
+    "agg_drain_usd_bn_per_year": 163.2578,
+    "n_countries": 140.0
+   },
+   "2000": {
+    "agg_drain_over_periphery_gdp": 0.019,
+    "median_drain_gdp": 0.0086,
+    "agg_drain_over_periphery_exports": 0.0657,
+    "agg_drain_usd_bn_per_year": 241.9907,
+    "n_countries": 141.0
+   },
+   "2010": {
+    "agg_drain_over_periphery_gdp": 0.0106,
+    "median_drain_gdp": 0.0042,
+    "agg_drain_over_periphery_exports": 0.0422,
+    "agg_drain_usd_bn_per_year": 290.0727,
+    "n_countries": 138.0
+   }
+  },
+  "penn_effect": {
+   "pl_gdpo": {
+    "beta": 0.2021,
+    "se": 0.0038,
+    "r2": 0.648,
+    "n": 9724
+   },
+   "pl_x": {
+    "beta": -0.0057,
+    "se": 0.0022,
+    "r2": 0.812,
+    "n": 9734
+   }
+  },
+  "diffusion": {
+   "method": "Convergencia condicionada (reduced form): crec. anual PIBpc t->t+10 ~ gap + gap*m_core + gap*fdi (+EF año), gap = ln(y_USA / y_i), m_core = importaciones desde el centro / PIB (COW/PWT).",
+   "n": 1099,
+   "r2": 0.107,
+   "coef": {
+    "gap": 0.0013,
+    "gap_x_mcore": -0.0007,
+    "gap_x_fdi": 0.0639
+   },
+   "se": {
+    "gap": 0.0008,
+    "gap_x_mcore": 0.0039,
+    "gap_x_fdi": 0.0127
+   },
+   "mean_mcore": 0.17,
+   "mean_fdi": 0.0234
+  }
+ },
+ "dyadic": {
+  "file": "comercio_dyadic.csv.gz",
+  "columns": {
+   "iso3_o": "exportador",
+   "iso3_d": "importador",
+   "year": "año",
+   "flow": "importaciones de d desde o, millones USD corrientes (COW flow1/flow2)"
+  },
+  "years": [
+   1950,
+   2014
+  ],
+  "n_rows": 790673
+ }
+}
