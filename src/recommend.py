@@ -16,9 +16,9 @@ nationalisations, climate and disasters are endogenous for the next H years. The
 difference with the decision rule alone under common random numbers:
 
     bienestar : 10 * (log consumption pc - BC) - 0.3 * (conflict - BC) per year
-    revelada  : 10 * (log share of world GNI - BC) per year, the non-inertia part of the reward
-                revealed by the inverse problem (src/irl.py, parsimonious: inertia + power);
-                the anchor itself plays the role of the inertia term
+    revelada  : the reward revealed by the inverse problem (src/irl.py) without its inertia term,
+                10 * sum_f w_f (feature_f - BC) per year over welfare, power (share of world GNI),
+                elite income, peace and resource autonomy; the anchor plays the role of inertia
 plus, at the horizon, the change in net worth (capital minus debt, share of GDP) valued at par,
 so that borrowing to consume before the horizon is not free.
 
@@ -98,7 +98,7 @@ class Origin:
         R, N = self.R, sim.w.N
         years = list(range(self.t0 + 1, self.t1))
         out = {k: np.full((R, N, len(years)), np.nan) for k in
-               ("lc", "lshare", "conf", "ly", "debt", "hazard", "reserves", "borrow", "squeeze")}
+               ("lc", "lshare", "lelite", "ims", "conf", "ly", "debt", "hazard", "reserves", "borrow", "squeeze")}
         out.update({f"a_{c}": np.full((R, N, len(years)), np.nan) for c in CHANNELS})
         out.update({f"bc_{c}": np.full((R, N, len(years)), np.nan) for c in CHANNELS})
         buf = dict(obs=[], z=[], mask=[], delta=[])
@@ -118,6 +118,8 @@ class Origin:
             gni = np.nan_to_num(rec["gni_pc"]) * L
             out["lc"][..., i] = np.log(np.maximum(rec["cons_pc"], 1e-9))
             out["lshare"][..., i] = np.log(np.maximum(gni / np.maximum(gni.sum(1, keepdims=True), 1e-12), 1e-12))
+            out["lelite"][..., i] = np.log(np.maximum(sim.E * np.nan_to_num(rec["gni_pc"]) / np.maximum(sim.ne, 1e-3), 1e-9))
+            out["ims"][..., i] = rec["ims"]
             out["conf"][..., i] = rec["conflict"]
             out["ly"][..., i] = rec["ly"]
             out["debt"][..., i] = rec["debt"]
@@ -133,13 +135,31 @@ class Origin:
         return out, buf
 
 
+_W = None
+
+
+def revealed_weights():
+    """Revealed-reward weights in feature units (irl.json, full estimate), inertia dropped,
+    scaled so that the largest weight is 1."""
+    global _W
+    if _W is None:
+        e = json.load(open(RES / "irl.json"))
+        th = np.array(list(e["theta_std"].values())) / np.array(e["sd"])
+        th = th[:5]                                   # bienestar, poder, elite, paz, autonomia
+        _W = th / np.abs(th).max()
+    return _W
+
+
 def block_rewards(mode, pol_out, bc_out, deltas):
     """Per-decision rewards (R, N, S) relative to the rule under common random numbers."""
     n = pol_out["lc"].shape[-1]
     if mode == "bienestar":
         u = 10 * (pol_out["lc"] - bc_out["lc"]) - 0.3 * (np.nan_to_num(pol_out["conf"]) - np.nan_to_num(bc_out["conf"]))
     else:
-        u = 10 * (pol_out["lshare"] - bc_out["lshare"])
+        w = revealed_weights()
+        f = [pol_out["lc"] - bc_out["lc"], pol_out["lshare"] - bc_out["lshare"], pol_out["lelite"] - bc_out["lelite"],
+             -(pol_out["hazard"] - bc_out["hazard"]), -(pol_out["ims"] - bc_out["ims"])]
+        u = 10 * sum(wk * np.nan_to_num(fk) for wk, fk in zip(w, f))
     u = np.nan_to_num(u)
     S = len(deltas)
     r = np.zeros(u.shape[:2] + (S,))

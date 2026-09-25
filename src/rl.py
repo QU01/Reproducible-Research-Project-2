@@ -208,7 +208,9 @@ def load_irl_theta():
     """theta in feature units (theta_std / sd) from results/irl.json."""
     global IRL_THETA
     e = json.load(open(OUT / "irl.json"))
-    src = e.get("parsimonioso", e)          # parsimonious reward avoids collinear weights
+    src = e.get("parsimonioso", e)          # parsimonious reward avoids collinear weights ...
+    if sum(abs(v) > 0 for v in src["theta_std"].values()) < 2:
+        src = e                              # ... unless it keeps only inertia (nothing to optimise)
     th = np.array(list(src["theta_std"].values())) / np.array(e["sd"])
     IRL_THETA = th / np.abs(th).max()
     return IRL_THETA
