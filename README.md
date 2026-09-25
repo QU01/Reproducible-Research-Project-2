@@ -49,51 +49,92 @@ python -c "import sys; sys.path.insert(0,'src'); import validate; validate.run_r
 python src/irl.py                  # reglas de decisión + recompensa revelada -> results/irl.json
 python src/validate.py             # validación multi-corte -> results/validation.json
 python src/rl.py                   # PPO: bienestar, poder, élite, irl -> results/policy_*.npy
+python src/recommend.py            # recomendaciones incrementales -> results/recomendaciones.json
+python src/osint.py                # capas OSINT abiertas -> dashboard/osint/*.json
 python src/analyze.py              # -> results/dashboard_data.json
-python src/build_dashboard.py      # -> dashboard/index.html
+python src/build_dashboard.py      # -> dashboard/index.html + data.json, geo.json (publicar con osint/ e img/)
 ```
 
 Las notas de investigación de cada módulo (datos, cobertura, literatura, ecuaciones y parámetros con citas) están en `docs/research/`.
 
+## Ahorro, financiamiento y recomendaciones incrementales
+
+- **Financiamiento** (`src/model.py`, `docs/research/financiamiento.md`):
+  - Gastar por encima de la trayectoria de referencia se paga en un 54 % con ahorro propio (estimado con ΔCA/ΔI = −0,46) y el resto con deuda externa, hasta un techo de déficit del 13 % del PIB. Más allá del techo, el país recorta el consumo por la fuerza.
+  - La deuda externa extra paga la tasa del país y se amortiza en unos 10 años.
+  - El capital tiene costos de ajuste cuadráticos, con χ calibrado en 12.
+  - Las políticas de RL eligen también cuánto gastar, entre el 10 % y el 60 % del PIB.
+- **Recomendaciones incrementales** (`src/recommend.py`): PPO anclado a la regla de decisión estimada, con ajustes acotados a ×0,61–×1,65 y una penalización por alejarse. Se entrena en modo pronóstico con episodios de 20 años desde 1980–2019 y se compara con la regla bajo los mismos números aleatorios. Para cada país reporta el cambio por canal, el efecto en consumo, PIB, deuda y conflicto, la probabilidad de mejora y la robustez del signo entre conjuntos de parámetros calibrados con datos hasta 2000, 2010 y 2019.
+
+## Globo 3D y capas OSINT
+
+El dashboard es un globo 3D ([globe.gl](https://github.com/vasturiano/globe.gl)) con la capa del modelo por año y capas OSINT abiertas (`src/osint.py`):
+
+| Capa | Fuente |
+|---|---|
+| Conflictos geolocalizados 1989–2023 | UCDP GED v24.1 |
+| Rutas marítimas | Benden 2021, derivadas de AIS |
+| Comercio bilateral | Correlates of War |
+| Rutas aéreas | OpenFlights |
+| Centrales eléctricas | WRI |
+| Ductos, terminales de GNL y yacimientos | Global Energy Monitor |
+| Reactores nuevos | GeoNuclearData |
+| Cables submarinos | TeleGeography |
+| Puertos | NGA World Port Index |
+| Muestras reales de aviones (París) y barcos (Gotemburgo) | ADS-B / AIS |
+
+El visor de artifacts no puede leer feeds en tiempo real. La versión con datos en vivo (OpenSky, AIS, noticias y sismos) está integrada en [Quasarbroker](https://github.com/QU01/Quasarbroker) (rama `claude/world-systems-agent-model-p0omqe`): módulo SISTEMA-MUNDO, API `/api/worldsystem/*` y selector MAPA 2D / GLOBO 3D.
+
 ## Resultados principales
 
-**Ajuste en muestra (1950–2019):**
+**Ajuste en muestra (1950–2019, con financiamiento):**
 
-- RMSE del log PIB per cápita: 0,55;
-- cobertura de la banda p10–p90: 62 % (nominal 80 %);
+- RMSE del log PIB per cápita: 0,51;
+- cobertura de la banda p10–p90: 61 % (nominal 80 %);
 - RMSE de deuda/PIB: 0,39;
-- RMSE de la participación del top 10 %: 0,15.
+- RMSE de la participación del top 10 %: 0,14.
 
 **Problema inverso:**
 
 - La regla estimada de ajuste parcial supera a la persistencia en 5 de 6 canales, en torno a un 5 % a 5–10 años.
-- La recompensa revelada (BBL) da pesos poder 0,76, élite −0,54, inercia 0,37 y el resto ≈ 0. La conducta observada vence al 63 % de sus desviaciones; las recompensas teóricas explican 49–52 % y unos pesos al azar, 50 %.
-- La versión parsimoniosa es inercia 0,87 + poder 0,50, con 65 % de racionalidad.
-- El centro y la semiperiferia valoran la paz (0,84 y 0,77). Las autocracias tienen más inercia (0,57 frente a 0,32).
+- La recompensa revelada (BBL) da pesos inercia 0,84, poder 0,47, bienestar −0,28 y el resto ≈ 0. La conducta observada vence al 58 % de sus desviaciones; las recompensas teóricas explican 50–52 % y unos pesos al azar, 50 %.
+- El centro valora la paz (0,97).
 
 **Validación fuera de muestra (49 orígenes, 1970–2018):**
 
 | Variable | Horizonte | Modelo | Mejor referencia |
 |---|---|---|---|
-| log PIB pc, CRPS | 5 años | **0,112** | 0,127 (panel) |
-| log PIB pc, CRPS | 10 años | **0,170** | 0,215 (AR1) |
-| log PIB pc, RMSE | 1 / 5 / 10 años | 0,109 / 0,212 / 0,313 | **0,061 / 0,190 / 0,300** (AR1) |
-| Correlación del crecimiento | 10 años | **0,27** | 0,11 |
-| Conflicto, Brier (AUC) | 5 años | 0,081 (0,83) | **0,066 (0,90)** logit histórico |
-| Deuda/PIB, RMSE | 5 / 10 años | **0,29 / 0,43** | 0,33 / 0,47 persistencia |
-| Temperatura global, RMSE | 5 / 10 años | **0,157 / 0,135 °C** | 0,182 / 0,209 tendencia |
+| log PIB pc, CRPS | 5 años | **0,119** | 0,127 (panel) |
+| log PIB pc, CRPS | 10 años | **0,180** | 0,215 (AR1) |
+| log PIB pc, RMSE | 1 / 5 / 10 años | 0,116 / 0,222 / 0,323 | **0,061 / 0,190 / 0,300** (AR1) |
+| Correlación del crecimiento | 10 años | **0,20** | 0,11 |
+| Conflicto, Brier (AUC) | 5 años | 0,079 (0,84) | **0,066 (0,90)** logit histórico |
+| Deuda/PIB, RMSE | 5 / 10 años | **0,31 / 0,45** | 0,33 / 0,47 persistencia |
+| Temperatura global, RMSE | 5 / 10 años | **0,158 / 0,134 °C** | 0,182 / 0,209 tendencia |
 | Rentas de recursos, RMSE | 10 años | **0,068** | 0,071 persistencia |
 
-La banda p10–p90 cubre un 67–75 % en lugar del 80 % nominal.
+- La banda p10–p90 cubre un 60–70 % en lugar del 80 % nominal.
+- Frente a la versión sin financiamiento, el ajuste en muestra mejora y el pronóstico fuera de muestra empeora algo (CRPS a 10 años 0,170 → 0,180).
 
-En las ablaciones, la frontera metaétnica mejora el AUC de conflicto (0,767 frente a 0,752). Deuda y crisis, clima e instituciones mejoran algo el PIB a 10 años. Sistema-mundo y demografía estructural casi no aportan al pronóstico.
+**RL, con elección del gasto:**
+
+- bienestar gasta el 28 % del PIB y se vuelve acreedor neto;
+- poder gasta el 46 % y lleva la deuda mediana al 68 %;
+- élite redistribuye el 20 %.
+
+**Recomendaciones ancladas (objetivo de bienestar):**
+
+- Recortar el gasto unos 10 puntos del PIB, sobre todo capital (−7) e importaciones de alto valor (−2,8).
+- El consumo sube un 6 % en 2020–2030, el PIB cae un 6,5 % a 10 años y la deuda baja 29 puntos.
+- El signo del gasto es robusto en 176 de 180 países.
+- A 20 años la ganancia de consumo se reduce a +3,4 % y el PIB queda un 8 % abajo.
+- Este resultado depende del costo de ajuste calibrado, que pierde el 27 % de la inversión histórica, así que hay que revisarlo antes de interpretarlo como recomendación.
+- Con la recompensa revelada (poder) sale lo contrario: invertir 19 puntos más, endeudarse y recortar el consumo casi un 30 %.
 
 **Proyección a 2030:**
 
-- crecimiento del PIB per cápita mundial: 1,4 % anual;
-- temperatura global: 1,41 °C;
-- democracias: 56 %;
-- deuda mediana: 51 % del PIB;
-- probabilidad media de conflicto: 14 %.
-
-El dashboard (`dashboard/index.html`) muestra el mapa animado 1950–2030 y las secciones de problema inverso, validación y clima.
+- crecimiento del PIB per cápita mundial: 1,3 % anual;
+- temperatura global: 1,39 °C;
+- democracias: 57 %;
+- deuda mediana: 48 % del PIB;
+- probabilidad media de conflicto: 12 %.
