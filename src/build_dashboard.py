@@ -14,7 +14,8 @@ def main():
     text = json.load(open(ROOT / "dashboard" / "findings.json"))
     html = (tpl.replace("__DATA__", data).replace("__GEO__", geo)
             .replace("__FINDINGS__", json.dumps(text["findings"]))
-            .replace("__LIMITS__", json.dumps(text["limits"])))
+            .replace("__LIMITS__", json.dumps(text["limits"]))
+            .replace("__CLIMA__", json.dumps(text.get("clima", ""))))
     out = ROOT / "dashboard" / "index.html"
     out.write_text(html)
     print(out, round(len(html) / 1e6, 2), "MB")

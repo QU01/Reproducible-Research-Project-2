@@ -1,111 +1,99 @@
 # Atlas del Sistema-Mundo
 
-Modelo agéntico híbrido que combina tres teorías macrohistóricas:
+Modelo agéntico de 180 países (1950–2019, proyección a 2030) que combina:
 
-| Teoría | Qué aporta al modelo |
-|---|---|
-| **Sistema-mundo** (Wallerstein, Emmanuel, Amin) | Centro / semiperiferia / periferia según productividad relativa; intercambio desigual (τ), rentas de monopolio sobre bienes de alto valor (μ), IED que busca rendimiento y repatria beneficios. |
-| **Demografía estructural** (Goldstone, Turchin) | Las élites capturan una parte del producto y de las rentas que entran al país → sobreproducción de élites, estancamiento del ingreso de masas, índice de estrés político PSI = MMP × EMP × SFD → riesgo de conflicto interno. |
-| **Frontera metaétnica** (Turchin) | La cohesión colectiva (*asabiya*) crece en la frontera (periferia abierta y drenada por el centro) y decae en los centros ricos; eleva la capacidad estatal. |
-| **Agotamiento de recursos** (Hubbert) | Capacidad bruta de extracción logística en lo ya extraído; el capital extractivo extranjero compite con el nacional por esa capacidad y acelera el agotamiento del anfitrión. |
+| Bloque | Qué aporta | Datos que lo anclan |
+|---|---|---|
+| **Sistema-mundo** (Wallerstein, Emmanuel, Amin) | Centro/semiperiferia/periferia por productividad relativa. Intercambio desigual sobre la red real de comercio bilateral, rentas de monopolio sobre bienes de alto valor, intereses de la deuda periférica hacia el centro. | COW Dyadic Trade 1950–2014, PWT price levels, ECI, WDI FDI |
+| **Demografía estructural** (Goldstone, Turchin) | Captura de élites (anclada en el top 10 % del WID), sobreproducción de élites, movilización de masas con protuberancia juvenil y PSI = MMP × EMP × SFD, donde SFD incluye la deuda. PSI y factores de riesgo determinan el conflicto civil. | WID, SWIID, Barro-Lee, UN WPP 2024, UCDP/PRIO |
+| **Frontera metaétnica** (Turchin) | Asabiya inicial a partir de proxies de cohesión y capacidad estatal. Crece en la frontera (drenaje, extracción extranjera) y decae en centros ricos. | V-Dem, CREG, EPR, WVS, rivalidades |
+| **Recursos** (Hubbert) | Capacidad bruta de extracción logística en lo ya extraído, con fracciones iniciales físicas por país. La extracción extranjera compite con la nacional, hay nacionalizaciones y regalías por época, y el precio mundial es de equilibrio. | OWID energy, reservas, yacimientos gigantes, rentas del Banco Mundial, nacionalizaciones |
+| **Deuda y crisis** | Regla de reacción Δd = a + b·d + c·g + e·crisis + (r* − r̄)·d estimada con datos (reversión −0,027, crecimiento −0,30). Crisis por logit (deuda, tasa de EE. UU., crecimiento, contagio) con pérdida permanente. | Global Macro Database, IMF HPDD, Laeven-Valencia, JST |
+| **Instituciones y geopolítica** | Golpes (trampa del golpe, Guerra Fría), transiciones y quiebres democráticos, impulso de la democracia a la productividad, ayuda oficial. | Powell-Thyne, V-Dem RoW, Archigos, ATOP, WDI ODA |
+| **Clima y ecología** | Emisiones de la extracción fósil, temperatura global por TCRE y escalamiento por país. Daño Burke-Hsiang-Miguel con persistencia, desastres que destruyen capital, capital natural degradado por la huella ecológica. | OWID CO₂, HadCRUT/GISTEMP, UDel/FAO, EM-DAT, Global Footprint Network |
 
-Cada país es un agente que cada año produce `Y = A·K^α·R^ψ·(h·L)^(1−α−ψ)` (R = recursos naturales,
-comprados a un precio mundial de equilibrio) y reparte un presupuesto discrecional entre seis canales:
+Cada país reparte cada año un presupuesto entre seis canales: **k** capital, **r** tecnología (I+D y educación, con saltos tecnológicos estocásticos), **m** importaciones de alto valor, **x** extracción propia, **f** extracción en el exterior y **w** redistribución.
 
-* **k** capital doméstico · **r** tecnología/industria propia (saltos tecnológicos estocásticos, tipo Poisson)
-* **m** importar bienes de alto valor del centro (consumo de calidad + tecnología incorporada, pero paga renta)
-* **x** extracción propia de recursos naturales
-* **f** invertir fuera en recursos de otros países (concesiones: compiten con la extracción del anfitrión; las rentas regresan menos una regalía)
-* **w** redistribución (reduce la captura de élites y la movilización de masas)
+## Problema inverso: cómo deciden realmente los países
 
-### Recursos naturales
+1. **Acciones observadas** (`src/sources/acciones.py`): formación de capital, importaciones de manufacturas, rentas, I+D + educación pública, IED saliente y gasto social o transferencias, como % del PIB.
+2. **Clonación de conducta** (`src/behavior.py`): regla de ajuste parcial en escala logit, z_t = ρ·z_{t−1} + β·estado + efecto país. Los hiperparámetros se eligen por validación fuera de muestra (el error medio es un 5 % menor que el de la persistencia).
+3. **Recompensa revelada** (`src/irl.py`): estimador de Bajari, Benkard y Levin (2007). Con la regla observada y desviaciones simuladas del mismo mundo, con números aleatorios comunes, se buscan los pesos θ de la recompensa r = θ·φ con los que la conducta observada es mejor que sus desviaciones. Las características φ son bienestar, poder, ingreso de la élite, paz, autonomía en recursos e inercia (costo de ajuste). Se reporta el índice de racionalidad, bootstrap por países y heterogeneidad por zona, régimen y década.
+4. **RL con la recompensa revelada** (`src/rl.py`, modo `irl`): PPO con esa recompensa, para comparar lo que "deberían" hacer los países con lo que hicieron.
 
-* Cada país tiene recursos recuperables últimos `U`; su **capacidad bruta de extracción** es logística en la
-  fracción ya extraída `x = X/U`: `Cap = r_R·U·(x+ε)(1−x)` (curva de Hubbert). Sube mientras se abre el
-  yacimiento y cae al agotarlo.
-* Extracción = `Cap·(1−e^{−e})`, con `e` = capital extractivo (nacional + extranjero) / (c_R·Cap). El capital
-  extranjero **compite** por la misma capacidad: se lleva su parte de la extracción, acelera el agotamiento y
-  reduce la capacidad que le queda al país anfitrión, que solo conserva una regalía.
-* Quien usa más recursos de los que controla (en casa o en concesiones fuera) paga un sobrecosto ζ, así que al
-  agotar los propios conviene asegurarse recursos fuera.
-* Las élites capturan una fracción mayor de la renta de recursos (maldición de los recursos) y la extracción
-  extranjera alimenta la frontera metaétnica del anfitrión.
-* Con Cobb-Douglas, la participación mundial de las rentas se toma de los datos (ψ_t); el modelo explica su
-  reparto entre países.
+## Validación
 
-Los saltos tecnológicos son en parte deterministas (difusión hacia la frontera, más rápida con
-importaciones e IED) y en parte estocásticos (tasa creciente con la inversión en *r* y la asabiya;
-tamaño creciente con la distancia a la frontera).
+`src/validate.py` pronostica desde 49 orígenes (1970–2018) a 1, 5 y 10 años.
+
+- Cada origen usa parámetros calibrados solo con datos hasta el último corte anterior (1970, 1980, 1990, 2000, 2010) y la regla de decisión estimada hasta ese año.
+- Después del origen, golpes, regímenes, crisis, nacionalizaciones, clima y desastres son endógenos, y las series exógenas quedan congeladas. La excepción es la población, que se toma observada.
+- Referencias: persistencia, derivas, AR(1), regresión panel directa, logit histórico y tendencia.
+- Ablaciones: apagar cada teoría o módulo con los mismos parámetros.
+
+## Calibración en dos etapas
+
+- **Etapa 1** (`src/submodels.py`): golpes, transiciones de régimen, crisis, reacción fiscal y nacionalizaciones se estiman directamente con datos hasta el corte (logit / MCO).
+- **Etapa 2** (`src/calibrate.py`): 22 parámetros estructurales por evolución diferencial sobre trayectorias simuladas. Se ajustan PIB per cápita, dispersión del crecimiento, conflicto, rentas de recursos, deuda, participación del 10 % más rico y cobertura de las bandas.
 
 ## Flujo de trabajo
 
 ```bash
 python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
-python src/fetch_data.py      # PWT 10.01, UCDP/PRIO, V-Dem (espejos CRAN en GitHub) + Natural Earth
-python src/data_prep.py       # -> data/processed/panel.csv (180 países, 1950-2019)
-python src/calibrate.py       # calibración 1950-1990 + pronóstico ciego 1991-2019 -> results/calibration.json
-python src/rl.py              # PPO multiagente, 3 regímenes de recompensa -> results/policy_*.npy
-python src/analyze.py         # evaluación, arquetipos, curvas de respuesta -> results/dashboard_data.json
-python src/build_dashboard.py # -> dashboard/index.html (autocontenido, abre en el navegador)
+python src/fetch_data.py           # PWT, UCDP, V-Dem, Banco Mundial, Natural Earth
+python src/data_prep.py            # -> data/processed/panel.csv
+for s in acciones elites finanzas comercio recursos geopolitica demografia clima; do
+  python -c "import sys; sys.path.insert(0,'src'); from sources import $s; $s.build()"; done
+python src/merge_sources.py        # -> data/processed/panel_full.csv (+ world_full.csv)
+python src/calibrate.py            # calibración final 1950-2019 -> results/calibration.json
+python -c "import sys; sys.path.insert(0,'src'); import validate; validate.run_rolling_calibration()"
+python src/irl.py                  # reglas de decisión + recompensa revelada -> results/irl.json
+python src/validate.py             # validación multi-corte -> results/validation.json
+python src/rl.py                   # PPO: bienestar, poder, élite, irl -> results/policy_*.npy
+python src/analyze.py              # -> results/dashboard_data.json
+python src/build_dashboard.py      # -> dashboard/index.html
 ```
 
-| Archivo | Contenido |
-|---|---|
-| `src/model.py` | Simulador vectorizado (R mundos Monte Carlo × N países) |
-| `src/calibrate.py` | Evolución diferencial sobre momentos simulados + validación fuera de muestra |
-| `src/rl.py` | PPO con parámetros compartidos (numpy + autograd) |
-| `src/analyze.py` | Resultados, arquetipos (k-medias), curvas de respuesta de la política |
-| `dashboard/` | Plantilla y dashboard con mapamundi animado |
-| `results/` | Parámetros, métricas y políticas entrenadas |
+Las notas de investigación de cada módulo (datos, cobertura, literatura, ecuaciones y parámetros con citas) están en `docs/research/`.
 
-## Datos
+## Resultados principales
 
-* **Penn World Table 10.01** (Feenstra, Inklaar y Timmer 2015): PIB real, población, stock de capital,
-  capital humano, participación laboral, participaciones de inversión, exportaciones e importaciones.
-* **Banco Mundial WDI** `NY.GDP.TOTL.RT.ZS`: rentas totales de recursos naturales (% del PIB), 1970–2019.
-* **UCDP/PRIO Armed Conflict Dataset** (vía el paquete de R `peacesciencer`): años de conflicto interno.
-* **V-Dem / Polity** (vía `peacesciencer`): no se usan en la dinámica, quedan en el panel para extensiones.
-* **Natural Earth 1:110m** (paquete `world-atlas`): fronteras para el mapa.
+**Ajuste en muestra (1950–2019):**
 
-## Resultados
+- RMSE del log PIB per cápita: 0,55;
+- cobertura de la banda p10–p90: 62 % (nominal 80 %);
+- RMSE de deuda/PIB: 0,39;
+- RMSE de la participación del top 10 %: 0,15.
 
-Dashboard: `dashboard/index.html` (mapamundi animado 1950–2019, 6 escenarios, 12 capas).
+**Problema inverso:**
 
-### Validación (calibrado con 1950–1990, pronóstico ciego 1991–2019)
+- La regla estimada de ajuste parcial supera a la persistencia en 5 de 6 canales, en torno a un 5 % a 5–10 años.
+- La recompensa revelada (BBL) da pesos poder 0,76, élite −0,54, inercia 0,37 y el resto ≈ 0. La conducta observada vence al 63 % de sus desviaciones; las recompensas teóricas explican 49–52 % y unos pesos al azar, 50 %.
+- La versión parsimoniosa es inercia 0,87 + poder 0,50, con 65 % de racionalidad.
+- El centro y la semiperiferia valoran la paz (0,84 y 0,77). Las autocracias tienen más inercia (0,57 frente a 0,32).
 
-| log PIB pc, 2019 (180 países) | RMSE | Corr. crecimiento | Acierto de zona |
+**Validación fuera de muestra (49 orígenes, 1970–2018):**
+
+| Variable | Horizonte | Modelo | Mejor referencia |
 |---|---|---|---|
-| **Modelo híbrido** | 0.52 | **0.24** | 0.83 |
-| Persistencia | 0.72 | — | 0.88 |
-| Deriva propia 1970–90 | 0.83 | 0.13 | 0.78 |
-| Deriva global | 0.47 | −0.08 | 0.88 |
-| Convergencia β | **0.47** | **0.24** | 0.88 |
+| log PIB pc, CRPS | 5 años | **0,112** | 0,127 (panel) |
+| log PIB pc, CRPS | 10 años | **0,170** | 0,215 (AR1) |
+| log PIB pc, RMSE | 1 / 5 / 10 años | 0,109 / 0,212 / 0,313 | **0,061 / 0,190 / 0,300** (AR1) |
+| Correlación del crecimiento | 10 años | **0,27** | 0,11 |
+| Conflicto, Brier (AUC) | 5 años | 0,081 (0,83) | **0,066 (0,90)** logit histórico |
+| Deuda/PIB, RMSE | 5 / 10 años | **0,29 / 0,43** | 0,33 / 0,47 persistencia |
+| Temperatura global, RMSE | 5 / 10 años | **0,157 / 0,135 °C** | 0,182 / 0,209 tendencia |
+| Rentas de recursos, RMSE | 10 años | **0,068** | 0,071 persistencia |
 
-| Conflicto interno 1991–2019 | AUC | Brier |
-|---|---|---|
-| Modelo (PSI + ingreso + asabiya) | 0.83 | **0.085** |
-| Frecuencia pasada del país | **0.85** | 0.090 |
+La banda p10–p90 cubre un 67–75 % en lugar del 80 % nominal.
 
-| Rentas de recursos / PIB (WDI) | RMSE 2000 | RMSE 2010 | RMSE 2019 | Spearman 2019 |
-|---|---|---|---|---|
-| Modelo | 0.057 | **0.072** | **0.055** | 0.88 |
-| Persistencia de 1990 | **0.053** | 0.074 | 0.072 | **0.90** |
+En las ablaciones, la frontera metaétnica mejora el AUC de conflicto (0,767 frente a 0,752). Deuda y crisis, clima e instituciones mejoran algo el PIB a 10 años. Sistema-mundo y demografía estructural casi no aportan al pronóstico.
 
-La banda p10–p90 del PIB cubre el 76 % de los casos en 2019 (ideal: 80 %).
+**Proyección a 2030:**
 
-### Políticas emergentes (PPO, 400 iteraciones × 3 recompensas)
+- crecimiento del PIB per cápita mundial: 1,4 % anual;
+- temperatura global: 1,41 °C;
+- democracias: 56 %;
+- deuda mediana: 51 % del PIB;
+- probabilidad media de conflicto: 14 %.
 
-1. **Agotados los recursos propios, se sale a buscar los ajenos.** La parte del presupuesto invertida en recursos fuera sube 17 / 11 / 4 puntos (poder / élite / bienestar) al pasar de reservas intactas a agotadas; la extracción propia hace lo contrario. Es una estrategia minoritaria (2–5 %) porque la capacidad logística limita lo que el capital adicional puede sacar.
-2. **Los que salen fuera son otros extractivistas** (Omán, Turkmenistán, Surinam, Irak, Rusia), que reciclan sus rentas en concesiones ajenas.
-3. **La competencia extractiva es un juego de poder:** con la recompensa de poder, el 53 % de la extracción periférica queda en manos extranjeras (35 % con bienestar); bajo estrés alto, hasta un 19 % del presupuesto va a recursos fuera.
-4. **Élites rentistas que reparten:** estados petroleros con recompensa de élite extraen (16 %) y redistribuyen (12 %), con lo que frenan la sobreproducción de élites.
-5. **Primero comprar, después fabricar:** la importación cae del 59 % al 3 % al acercarse a la frontera; la tecnología propia se concentra en los años 50.
-6. **El estrés político se concentra en el centro** (PSI ≈ doble que en la periferia).
-7. **Los recursos bajan el techo:** el Gini entre países baja a 0,26–0,30, pero el PIB per cápita mundial de RL se queda en unos 22–23 mil dólares; en 2019 queda un 37 % de las reservas y el precio se multiplica por 6–9 desde 1970.
-
-### Límites
-
-Un solo recurso genérico, sin descubrimientos ni sustitución (el precio sube de más); la participación mundial
-de las rentas es exógena y las rentas anteriores a 1970 se rellenan con el valor de 1970; demografía exógena;
-asabiya, élites, reservas últimas y propiedad de la extracción son latentes; sin redes bilaterales; RL con
-parámetros compartidos y aprendizaje simultáneo. Las políticas son óptimas *dentro del modelo*.
+El dashboard (`dashboard/index.html`) muestra el mapa animado 1950–2030 y las secciones de problema inverso, validación y clima.

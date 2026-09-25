@@ -184,6 +184,7 @@ def main():
         sc[name] = rnd(pad(a))
     data["scenarios"]["pronostico"] = sc
     data["mundo"]["tg_pronostico_1990"] = rnd(pad(np.where(np.arange(W.T) >= 40, np.nanmean(of["Tg"], 0), np.nan)[None])[0])
+    data["mundo"]["co2_pronostico_1990"] = rnd(pad(np.where(np.arange(W.T) >= 40, np.nansum(np.nanmean(of["co2"], 0), 0), np.nan)[None])[0])
 
     # ---- projection 2020-2030 (all data up to 2019)
     op, bm_all = forecast_run(W30, params, 69, W30.T)
@@ -215,7 +216,6 @@ def main():
     data["mundo"]["tg_obs"] = rnd(pad(gm[None])[0]) if gm is not None else None
     co2w = W.world.get("clima__co2_mt")
     data["mundo"]["co2_obs"] = rnd(pad(co2w[None])[0]) if co2w is not None else None
-    data["mundo"]["co2_modelo_hist"] = rnd(pad(np.nansum(np.nanmean(o["co2"], 0), 0)[None])[0])
 
     # ---- decision rules (behavioral cloning) and their out-of-sample checks
     ev = {}

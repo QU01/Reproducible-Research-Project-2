@@ -158,6 +158,34 @@ def estimate(rows, n_boot=100, seed=0):
                 racionalidad=rat, racionalidad_alternativas=alt, n=len(rows), sd=sd.tolist())
 
 
+def forward_select(rows, min_gain=0.005):
+    """Parsimonious reward: add features greedily while the rationality index improves.
+    Needed because some features are nearly collinear across deviations (poder vs elite)."""
+    dW = np.array([r["dW"] for r in rows])
+    sd = dW.std(0) + 1e-12
+    D = dW / sd
+    chosen, best_rat, path = [], 0.5, []
+    while len(chosen) < len(FEATS):
+        cand = []
+        for k in range(len(FEATS)):
+            if k in chosen:
+                continue
+            cols = chosen + [k]
+            th, rat = fit_theta(D[:, cols], starts=8)
+            cand.append((rat, k, th))
+        rat, k, th = max(cand, key=lambda c: c[0])
+        if rat - best_rat < min_gain:
+            break
+        chosen.append(k)
+        best_rat = rat
+        path.append(dict(agrega=FEATS[k], racionalidad=float(rat)))
+    th, rat = fit_theta(D[:, chosen], starts=16)
+    full = np.zeros(len(FEATS))
+    full[chosen] = th
+    return dict(theta_std=dict(zip(FEATS, full.round(4).tolist())), racionalidad=float(rat), camino=path,
+                correlacion=np.corrcoef(D.T).round(3).tolist())
+
+
 def subgroup(rows, key, groups):
     out = {}
     for name, pred in groups.items():
@@ -194,6 +222,7 @@ def main():
                 g = np.array([r["dW"] for r in sub]) @ th
                 prof[f"{c}{'+' if s > 0 else '-'}"] = float(np.mean(g < 0))
     est["desvios_rentables"] = prof
+    est["parsimonioso"] = forward_select(rows)
     json.dump(est, open(RES / "irl.json", "w"), indent=1)
     json.dump(rows, open(RES / "irl_deviations.json", "w"))
     print(json.dumps({k: v for k, v in est.items() if k != "sd"}, indent=1))

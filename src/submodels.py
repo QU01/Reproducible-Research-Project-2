@@ -8,7 +8,7 @@ with data <= cutoff keeps the rolling-origin validation free of look-ahead.
   regimes      logits P(A->D) and P(D->A) on log income, lagged growth, share of democracies
   crises       logit P(any financial crisis onset) on debt over threshold, US real rate,
                lagged growth, share of countries in crisis last year
-  fiscal       OLS primary balance on lagged debt and growth (Bohn reaction function)
+  debt         OLS change of debt / GDP on lagged debt, growth, crisis (reaction function)
   nationalis.  logit P(resource nationalisation) on 3-year oil price shock, price level,
                polity, post-1985 regime (countries with resource rents > 3% of GDP)
 """
@@ -102,19 +102,21 @@ def estimate(W, LY, cutoff, verbose=False):
         rep["crisis"] = dict(coef=dict(zip(["const", "deuda_sobre_umbral", "tasa_real_eeuu", "g", "contagio"], b.round(3).tolist())),
                              se=se.round(3).tolist(), n=n, tasa=round(rate, 4))
 
-    # ---- fiscal reaction (primary balance ~ lagged debt, growth)
-    bal = x.get("gov_balance_gdp")
+    # ---- debt dynamics: d_t - d_{t-1} on lagged debt, growth, crisis onset and world-rate shocks
     rows = []
+    rb = float(np.mean(rstar[:cutoff + 1]))
     for t in range(2, cutoff + 1):
-        pb = bal[:, t] + (rstar[t] + 0.02) * debt[:, t - 1]
-        f = np.column_stack([np.ones(N), debt[:, t - 1], g[:, t]])
-        ok = np.all(np.isfinite(f), 1) & np.isfinite(pb) & (np.abs(pb) < 0.3) & (debt[:, t - 1] < 3)
-        rows.append((f[ok], pb[ok]))
+        dd = debt[:, t] - debt[:, t - 1] - (rstar[t] - rb) * debt[:, t - 1]
+        f = np.column_stack([np.ones(N), debt[:, t - 1], g[:, t], np.nan_to_num(cr[:, t])])
+        raw_d = x.get("debt_gdp")
+        ok = (np.all(np.isfinite(f), 1) & np.isfinite(raw_d[:, t]) & np.isfinite(raw_d[:, t - 1])
+              & (np.abs(dd) < 0.3) & (debt[:, t - 1] < 3))
+        rows.append((f[ok], dd[ok]))
     X, y = _stack(rows)
     if len(y) > 300:
         b = np.linalg.lstsq(X, y, rcond=None)[0]
-        out.update(dict(pb0=b[0], pb_d=b[1], pb_g=b[2]))
-        rep["fiscal"] = dict(coef=dict(zip(["const", "deuda", "g"], b.round(4).tolist())), n=int(len(y)))
+        out.update(dict(fd0=b[0], fd_d=b[1], fd_g=b[2], fd_c=b[3], r_bar=rb))
+        rep["deuda"] = dict(coef=dict(zip(["const", "deuda", "g", "crisis"], b.round(4).tolist())), n=int(len(y)))
 
     # ---- nationalisations
     ev = np.nan_to_num(x.get("nac_evento_petroleo", np.zeros((N, T)))) + np.nan_to_num(x.get("nac_evento_mineria", np.zeros((N, T))))

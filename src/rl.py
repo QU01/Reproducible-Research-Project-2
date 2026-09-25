@@ -194,7 +194,8 @@ def load_irl_theta():
     """theta in feature units (theta_std / sd) from results/irl.json."""
     global IRL_THETA
     e = json.load(open(OUT / "irl.json"))
-    th = np.array(list(e["theta_std"].values())) / np.array(e["sd"])
+    src = e.get("parsimonioso", e)          # parsimonious reward avoids collinear weights
+    th = np.array(list(src["theta_std"].values())) / np.array(e["sd"])
     IRL_THETA = th / np.abs(th).max()
     return IRL_THETA
 
@@ -241,7 +242,7 @@ def gae(rew, val, mask, gamma=0.95, lam=0.9):
     return adv, adv + val
 
 
-def train(mode, params, iters=400, R=16, seed=0, log=print):
+def train(mode, params, iters=250, R=12, seed=0, log=print):
     rng = np.random.default_rng(seed)
     w = build_world()
     sim = Simulator(w, params, R=R, seed=seed)

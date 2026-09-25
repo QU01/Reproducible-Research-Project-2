@@ -219,7 +219,7 @@ def evaluate(origins=range(20, 69), R=32, variants=("completo",), include_frozen
                                  truth=np.array([GMST[t]])))
                 recs.append(dict(kind="temp", method="tendencia_10a", t0=t0, h=h, pred=np.array([GMST[t0] + slope * h]),
                                  truth=np.array([GMST[t]])))
-        if (t0 - origins[0]) % 5 == 0:
+        if (t0 - list(origins)[0]) % 5 == 0:
             log(f"  origin {1950 + t0} (params cutoff {cut}) {time.time() - t_start:.0f}s")
     return recs
 
@@ -259,10 +259,23 @@ def summarise(recs):
     return out
 
 
-def main(variants=tuple(ABLATIONS), R=32):
+def _eval_chunk(args):
+    origins, variants, R = args
+    return evaluate(origins=list(origins), variants=variants, R=R, log=lambda *a: None)
+
+
+def main(variants=tuple(ABLATIONS), R=32, workers=4):
     run_rolling_calibration()
     t = time.time()
-    recs = evaluate(variants=variants, R=R)
+    origins = list(range(20, 69))
+    if workers > 1:
+        from multiprocessing import get_context
+        chunks = [origins[k::workers] for k in range(workers)]
+        with get_context("fork").Pool(workers) as pool:
+            parts = pool.map(_eval_chunk, [(c, variants, R) for c in chunks])
+        recs = [r for part in parts for r in part]
+    else:
+        recs = evaluate(variants=variants, R=R)
     summ = summarise(recs)
     summ["meta"] = dict(origins=[1970, 2018], cutoffs=CUTOFFS, horizons=HORIZONS, R=R,
                         seconds=time.time() - t)

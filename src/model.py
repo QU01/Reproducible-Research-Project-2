@@ -74,6 +74,8 @@ class Params:
     kappa: float = 0.015       # diffusion speed toward frontier (per unit gap)
     kappa_m: float = 0.10      # diffusion from embodied tech in manufactured imports (Coe-Helpman)
     kappa_f: float = 0.064     # diffusion from FDI inflows (estimated in docs/research/comercio.md)
+    phi_h: float = 1.0         # absorptive capacity: diffusion scales with (hc / hc_frontier)^phi_h
+                               # (Borensztein, De Gregorio & Lee 1998; Nelson-Phelps)
     lam0: float = 0.60         # tech-jump hazard scale
     j0: float = 0.04           # mean jump size (log TFP), scaled by (1+gap)
     sig_a: float = 0.020       # idiosyncratic TFP noise
@@ -125,11 +127,11 @@ class Params:
     nat_post85: float = -1.55  # post-1985 regime
     nat_theta: float = 0.75    # share of foreign extraction capital taken over
     # debt and crises (docs/research/finanzas.md)
-    pb0: float = -0.01         # primary balance intercept (fiscal reaction function, Bohn)
-    pb_d: float = 0.014        # reaction of the primary balance to debt
-    pb_g: float = 0.18         # reaction to growth
-    d_fat: float = 1.0         # fiscal fatigue threshold
-    k_fat: float = 0.05        # fiscal fatigue curvature
+    fd0: float = 0.01          # debt dynamics estimated on data: dd = fd0 + fd_d d + fd_g g + fd_c crisis
+    fd_d: float = -0.02        # mean reversion of debt / GDP (fiscal reaction, Bohn)
+    fd_g: float = -0.5         # growth lowers debt / GDP
+    fd_c: float = 0.05         # debt jump in a crisis year
+    r_bar: float = 0.01        # mean world real rate in the estimation sample
     prem_p: float = 0.04       # periphery risk premium
     prem_d: float = 0.04       # premium per unit of debt above the intolerance threshold
     dstar0: float = 0.4        # debt intolerance threshold in the periphery ...
@@ -747,9 +749,9 @@ class Simulator:
             lg = (p.cr0 + p.cr_d * (self.debt / dstar - 1) + p.cr_r * rstar + p.cr_g * self.g_prev
                   + p.cr_cont * self.crisis_share)
             crisis = (u_cris < _sigmoid(lg)) & act & (self.crisis_t <= 0)
-        pb = p.pb0 + p.pb_d * self.debt + p.pb_g * g - p.k_fat * np.maximum(self.debt - p.d_fat, 0) ** 2
-        self.debt = np.where(act, np.clip(self.debt * (1 + rate) / np.exp(g) - pb + p.cr_debt * crisis, 0, 4),
-                             self.debt)
+        # reduced-form debt dynamics estimated on data, plus the burden of world-rate shocks
+        dd = p.fd0 + p.fd_d * self.debt + p.fd_g * g + p.fd_c * crisis + (rstar - p.r_bar) * self.debt
+        self.debt = np.where(act, np.clip(self.debt + dd, 0, 4), self.debt)
         self.crisis_t = np.where(crisis, 3.0, np.maximum(self.crisis_t - 1, 0))
         self.crisis_share = float(np.mean(crisis[act]))
 
@@ -763,7 +765,9 @@ class Simulator:
         fdi_in = np.clip(self.ex("fdi_in_gdp", t, 0.02), 0, 0.2)
         aid = np.clip(self.ex("oda_gni", t, 0.0) / 100, 0, 0.3)
         embodied = np.minimum(foreign_m / Gs, 0.3)
-        dln = (p.g0 + gap * (p.kappa + p.kappa_m * embodied + p.kappa_f * fdi_in)
+        hq = np.nanquantile(np.where(act[0], hc, np.nan), 0.9)
+        absorb = np.clip(hc / hq, 0.05, 1.5) ** p.phi_h
+        dln = (p.g0 + gap * absorb * (p.kappa + p.kappa_m * embodied + p.kappa_f * fdi_in)
                + p.aid_eff * aid * (1 - aid / 0.3)
                + p.sig_a * n_tfp - p.gam_a * self.conf - p.cp_loss * (self.coup_t > 0)
                - p.cr_loss * crisis)
