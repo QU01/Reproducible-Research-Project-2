@@ -44,7 +44,7 @@ from rl import Adam, N_OBS, gae, init_mlp, mlp, observe
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT / "results"
 ORIGINS = [30, 40, 50, 60, 69]          # 1980, 1990, 2000, 2010, 2019
-H = 10                                   # years per episode
+H = 20                                   # years per episode (2019 origin: 11, population ends in 2030)
 STEP = 5                                 # decision every 5 years
 NC = len(CHANNELS)
 DMAX = 0.5                               # |delta| <= 0.5: at most x1.65 or x0.61 the rule
@@ -317,6 +317,10 @@ def main(iters=150, R=8):
                     endeudamiento_extra_medio=float(np.nanmean(P_["borrow"])),
                     recorte_forzado_medio=float(np.nanmean(P_["squeeze"])),
                 )
+        # long run: the same policy from the 2000 origin over 20 years (2001-2020)
+        P_, B_ = evaluate(th, origins[ORIGINS.index(50)], seeds=range(2000, 2004))
+        lr = {k: np.nanmean(P_[k] - B_[k], (0, 1)).round(4).tolist() for k in ("lc", "ly", "debt")}
+        lr["anios"] = list(range(2001, 2001 + len(lr["lc"])))
         # robustness: sign agreement of each channel change across parameter sets
         fin = tabs["final"]
         for iso, row in fin.items():
@@ -333,7 +337,7 @@ def main(iters=150, R=8):
             row["acuerdo_signo"] = agree
             row["mejora_en_todos"] = bool(all(tb.get(iso, {}).get("d_consumo_medio", -1) > 0 for tb in tabs.values())) \
                 if mode == "bienestar" else None
-        res[mode] = dict(curva=curve, global_=glob, paises=fin,
+        res[mode] = dict(curva=curve, global_=glob, paises=fin, largo_plazo=lr,
                          alternativos={k: v for k, v in tabs.items() if k != "final"})
         print(mode, "done", round(time.time() - t0), "s", json.dumps(glob), flush=True)
     json.dump(res, open(RES / "recomendaciones.json", "w"))

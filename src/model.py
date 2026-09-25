@@ -778,7 +778,7 @@ class Simulator:
         dstar = p.dstar0 + p.dstar1 * core
         rate = rstar + p.prem_p * (1 - core) + p.prem_d * np.maximum(self.debt - dstar, 0.0)
         # the extra foreign debt pays the country's rate and is amortised out of national income
-        xint = rate * self.xdebt * G
+        xint = np.where(self.xdebt > 0, rate, rstar) * self.xdebt * G     # creditors earn the world rate
         xrep = p.x_amort * self.xdebt
         interest_abroad = p.ext_int * (1 - core) * np.maximum(rate, 0) * (self.debt - self.xdebt) * G + xint
         int_in = interest_abroad.sum(1, keepdims=True) * wexp_n
