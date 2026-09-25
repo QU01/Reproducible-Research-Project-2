@@ -12,6 +12,7 @@
   --c-k:#2a78d6; --c-r:#eb6834; --c-m:#1baf7a; --c-x:#eda100; --c-f:#e87ba4; --c-w:#008300;
   --z-core:#2a78d6; --z-semi:#1baf7a; --z-per:#eb6834;
   --good:#006300; --bad:#d03b3b;
+  --globe-bg:#0b1522; --globe-glow:#1d3a5c; --globe-ink:#dfe8f1;
   --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -71,13 +72,29 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .year{font-family:var(--display);font-weight:700;font-size:44px;line-height:.9;font-variant-numeric:tabular-nums;color:var(--ink)}
 .layername{font-weight:600}
 .layerdesc{color:var(--muted);font-size:12.5px;max-width:52ch}
-svg.map{width:100%;height:auto;display:block}
-svg.map path.c{stroke:var(--surface);stroke-width:.5;cursor:pointer}
-svg.map path.c:hover{stroke:var(--ink);stroke-width:1.2}
-svg.map path.c.sel{stroke:var(--ink);stroke-width:1.8}
-svg.map path.c.dim{opacity:.25}
-svg.map .sphere{fill:var(--ocean);stroke:var(--line)}
-svg.map .grat{fill:none;stroke:var(--grid);stroke-width:.5}
+.globewrap{position:relative;border-radius:8px;overflow:hidden;background:radial-gradient(ellipse at 50% 45%, var(--globe-glow) 0%, var(--globe-bg) 62%);aspect-ratio:16/10;max-height:640px;width:100%;max-width:100%}
+@media (max-width:640px){.globewrap{aspect-ratio:1/1}}
+#globe{position:absolute;inset:0}
+#globe canvas{display:block;outline:none}
+.globe-load{position:absolute;inset:0;display:grid;place-items:center;color:var(--globe-ink);font-family:var(--mono);font-size:12px;letter-spacing:.06em}
+.globe-hud{position:absolute;left:10px;bottom:10px;display:flex;flex-direction:column;gap:3px;font-family:var(--mono);font-size:10.5px;color:var(--globe-ink);pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.globe-tools{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+.globe-tools button{font:500 11.5px/1 var(--body);color:var(--globe-ink);background:rgba(10,16,22,.55);border:1px solid rgba(255,255,255,.18);padding:6px 9px;border-radius:6px;cursor:pointer;backdrop-filter:blur(4px)}
+.globe-tools button[aria-pressed="true"]{background:rgba(255,255,255,.85);color:#0b1117}
+.float-tooltip-kap{background:transparent!important;padding:0!important;box-shadow:none!important}
+.gtip{font-family:var(--body);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;box-shadow:0 6px 20px rgba(0,0,0,.18);font-size:12.5px;min-width:150px}
+.gtip b{font-family:var(--display);font-size:14px} .gtip .k{color:var(--muted)} .gtip .v{font-family:var(--mono)}
+.scene-tooltip{font-family:var(--body)!important;background:var(--surface)!important;color:var(--ink)!important;border:1px solid var(--line);border-radius:8px;padding:8px 10px!important;box-shadow:0 6px 20px rgba(0,0,0,.18);font-size:12.5px!important;min-width:150px}
+.scene-tooltip b{font-family:var(--display);font-size:14px}
+.scene-tooltip .k{color:var(--muted)} .scene-tooltip .v{font-family:var(--mono)}
+.osint{display:flex;flex-wrap:wrap;gap:4px}
+.osint button{display:inline-flex;align-items:center;gap:6px;font:500 12.5px/1 var(--body);color:var(--ink2);background:var(--surface);border:1px solid var(--line);padding:6px 10px;border-radius:999px;cursor:pointer}
+.osint button i{width:9px;height:9px;border-radius:50%;display:inline-block;opacity:.35}
+.osint button[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
+.osint button[aria-pressed="true"] i{opacity:1}
+.olegend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--ink2);padding:2px 6px 0}
+.olegend span{display:inline-flex;align-items:center;gap:5px}
+.olegend i{width:9px;height:9px;border-radius:50%;display:inline-block}
 .legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:4px 6px 0;font-size:12px;color:var(--ink2)}
 .legend .sw{display:inline-flex;align-items:center;gap:6px}
 .legend .sw i{width:12px;height:12px;border-radius:3px;display:inline-block}
@@ -184,6 +201,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div class="row"><span class="lbl">Escenario</span><div class="seg" id="scn"></div></div>
     <div class="row"><span class="lbl">Capa</span><div class="seg" id="lay"></div></div>
     <div class="row" id="chanrow" hidden><span class="lbl">Canal</span><div class="seg" id="chan"></div></div>
+    <div class="row"><span class="lbl">OSINT</span><div class="osint" id="osint"></div></div>
   </div>
 
   <div class="main">
@@ -195,8 +213,14 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
         </div>
         <div class="year" id="yearlbl">1950</div>
       </div>
-      <svg class="map" id="map" viewBox="0 0 960 470" role="img" aria-label="Mapa mundial del escenario seleccionado"></svg>
+      <div class="globewrap" role="img" aria-label="Globo terráqueo interactivo con la capa del modelo y capas OSINT">
+        <div id="globe"></div>
+        <div class="globe-load" id="globeLoad">Cargando globo y datos…</div>
+        <div class="globe-tools"><button id="spin" aria-pressed="true">Rotar</button><button id="reset">Vista inicial</button></div>
+        <div class="globe-hud" id="hud"></div>
+      </div>
       <div class="legend" id="legend"></div>
+      <div class="olegend" id="olegend"></div>
       <div class="timebar">
         <button class="play" id="play" aria-label="Reproducir"><svg viewBox="0 0 14 14" id="playicon"><path d="M3 1.5v11l9-5.5z"/></svg></button>
         <input type="range" id="yr" min="1950" max="2030" step="1" value="1950" aria-label="Año">
@@ -359,9 +383,13 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
 <div class="tip" id="tip" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js"></script>
 <script>
-const D = __DATA__;
-const GEO = __GEO__;
+(async function(){
+const getJSON = u => fetch(u).then(r => { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); });
+let D, GEO;
+try { [D, GEO] = await Promise.all([getJSON("data.json"), getJSON("geo.json")]); }
+catch (e) { document.getElementById("globeLoad").textContent = "No se pudieron cargar los datos del modelo (" + e.message + ")."; return; }
 const M = D.meta, Y0 = 1950, T = M.years.length, N = M.iso3.length;
 const CH = M.channels;
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -482,39 +510,70 @@ function colorFor(lay){
   return v => s(L.log ? Math.log(Math.max(v,1e-6)) : v);
 }
 
-// ---------- map
-const svg = d3.select("#map");
-const proj = d3.geoNaturalEarth1().fitExtent([[4,4],[956,466]], {type:"Sphere"});
-const path = d3.geoPath(proj);
-svg.append("path").attr("class","sphere").attr("d", path({type:"Sphere"}));
-svg.append("path").attr("class","grat").attr("d", path(d3.geoGraticule10()));
+// ---------- globe
 const idxByNum = new Map(M.isonum.map((n,i)=>[n,i]));
 const feats = GEO.features.filter(f => f.properties.name !== "Antarctica");
-const cpaths = svg.append("g").selectAll("path").data(feats).join("path")
-  .attr("class","c").attr("d", path)
-  .on("mousemove", (ev,f)=>showTip(ev,f)).on("mouseleave", hideTip)
-  .on("click", (ev,f)=>{ const i = idxByNum.get(f.id); if (i!=null){ st.sel=i; renderSide(); renderMap(); } });
-const tip = document.getElementById("tip");
-
+const gEl = document.getElementById("globe"), gWrap = gEl.parentElement;
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const withA = (c, a) => { const r = d3.color(c); if (!r) return c; r.opacity = a; return r.formatRgb(); };
+let G = null, hoverF = null;
 function t(){ return st.year - Y0; }
+if (typeof Globe === "function"){
+  G = Globe({animateIn:false, rendererConfig:{antialias:true, alpha:true}})(gEl)
+    .backgroundColor("rgba(0,0,0,0)")
+    .globeImageUrl(isDark() ? "img/earth-night.jpg" : "img/earth-blue-marble.jpg")
+    .showAtmosphere(true).atmosphereColor("#7fb2ff").atmosphereAltitude(0.17)
+    .polygonsData(feats).polygonsTransitionDuration(0)
+    .polygonSideColor(() => "rgba(6,12,18,0.35)")
+    .polygonLabel(f => tipHtml(f))
+    .onPolygonHover(f => { hoverF = f; gEl.style.cursor = f ? "pointer" : ""; G.polygonAltitude(altFn()); })
+    .onPolygonClick(f => { const i = idxByNum.get(f.id); if (i != null){ st.sel = i; renderSide(); renderMap(); focusSel(); } })
+    .onGlobeReady(() => { document.getElementById("globeLoad").hidden = true; });
+  G.pointOfView({lat: 18, lng: 12, altitude: 2.3}, 0);
+  const ctl = G.controls(); ctl.autoRotate = !reducedMotion; ctl.autoRotateSpeed = 0.35; ctl.enableDamping = true;
+  const fit = () => G.width(gWrap.clientWidth).height(gWrap.clientHeight);
+  new ResizeObserver(fit).observe(gWrap); fit();
+  const spin = document.getElementById("spin");
+  spin.setAttribute("aria-pressed", String(ctl.autoRotate));
+  spin.addEventListener("click", () => { ctl.autoRotate = !ctl.autoRotate; spin.setAttribute("aria-pressed", String(ctl.autoRotate)); });
+  document.getElementById("reset").addEventListener("click", () => G.pointOfView({lat: 18, lng: 12, altitude: 2.3}, 900));
+  setTimeout(() => { document.getElementById("globeLoad").hidden = true; }, 6000);
+} else {
+  document.getElementById("globeLoad").textContent = "El visor 3D no pudo cargarse (WebGL o la librería globe.gl no están disponibles).";
+}
+const altFn = () => f => f === hoverF ? 0.02 : idxByNum.get(f.id) === st.sel ? 0.016 : 0.006;
+const strokeFn = () => f => idxByNum.get(f.id) === st.sel ? "rgba(255,255,255,0.95)" : "rgba(8,14,20,0.55)";
+function focusSel(){
+  if (!G) return;
+  const f = feats.find(ff => idxByNum.get(ff.id) === st.sel); if (!f) return;
+  const c = d3.geoCentroid(f);
+  G.controls().autoRotate = false; document.getElementById("spin").setAttribute("aria-pressed", "false");
+  G.pointOfView({lat: c[1], lng: c[0], altitude: 1.7}, 900);
+}
+
 function renderMap(){
   const lay = st.lay, scn = st.scn, tt = t();
   const z = lay === "core" ? zones(scn, tt) : null;
   const col = lay === "core" ? null : colorFor(lay);
   const members = st.arch != null && D.arquetipo_pais ? archMembers(st.arch) : null;
-  cpaths.attr("fill", f => {
-    const i = idxByNum.get(f.id); if (i == null) return css("--nodata");
-    if (lay === "core"){ return z[i] == null ? css("--nodata") : css(ZC[z[i]]); }
+  const nod = css("--nodata");
+  const fill = f => {
+    const i = idxByNum.get(f.id); if (i == null) return nod;
+    if (lay === "core") return z[i] == null ? nod : css(ZC[z[i]]);
     const v = val(scn, lay, i, tt);
-    return v == null ? css("--nodata") : col(v);
-  }).classed("sel", f => idxByNum.get(f.id) === st.sel)
-    .classed("dim", f => members ? !members.has(M.iso3[idxByNum.get(f.id)]) : false);
+    return v == null ? nod : col(v);
+  };
+  if (G){
+    G.polygonCapColor(f => withA(fill(f), members && !members.has(M.iso3[idxByNum.get(f.id)]) ? 0.12 : 0.8))
+     .polygonAltitude(altFn()).polygonStrokeColor(strokeFn());
+    renderOsint();
+  }
   document.getElementById("yearlbl").textContent = st.year + (st.year > (M.last_data_year||2019) ? "*" : "");
   renderStrip();
 }
-function showTip(ev, f){
+function tipHtml(f){
   const i = idxByNum.get(f.id);
-  let html = `<b>${i!=null ? M.names[i] : f.properties.name}</b>`;
+  let html = `<div class="gtip"><b>${i!=null ? M.names[i] : f.properties.name}</b>`;
   if (i != null){
     const tt = t(), sc = st.scn;
     const ly = val(sc,"ly",i,tt), z = zones(sc,tt)[i];
@@ -526,11 +585,176 @@ function showTip(ev, f){
     html += rows.map(r=>`<div><span class="k">${r[0]}</span> · <span class="v">${r[1]}</span></div>`).join("");
     if (ly == null) html += `<div class="k">Sin datos este año</div>`;
   } else html += `<div class="k">Fuera de la muestra PWT</div>`;
-  tip.innerHTML = html; tip.hidden = false;
-  const x = Math.min(ev.clientX + 14, innerWidth - 200), y = Math.min(ev.clientY + 14, innerHeight - 120);
-  tip.style.left = x + "px"; tip.style.top = y + "px";
+  return html + `</div>`;
 }
-function hideTip(){ tip.hidden = true; }
+
+// ---------- OSINT layers (static open snapshots, published next to the page)
+const FUELC = {carbon:"#9aa3ab", gas:"#ff9f43", petroleo:"#c0763a", nuclear:"#c77dff", hidro:"#4ea8de", eolica:"#9be7f5", solar:"#ffd60a", otra:"#8ac926"};
+const FUELN = {carbon:"Carbón", gas:"Gas", petroleo:"Petróleo", nuclear:"Nuclear", hidro:"Hidro", eolica:"Eólica", solar:"Solar", otra:"Otras"};
+const OLAYERS = [
+  {id:"conflictos", name:"Conflictos", color:"#ff5a47", file:["osint/modelo.json","osint/conflictos_ged.json"], on:true,
+   src:"UCDP GED v24.1 (1989–2023): eventos geolocalizados en celdas de 0,5°, altura según muertes. Antes de 1989, países con conflicto activo (UCDP/PRIO); después de 2023, riesgo modelado ≥ 30 %"},
+  {id:"maritimo", name:"Rutas marítimas", color:"#3fe0c5", file:["osint/maritimo.json"], on:true,
+   src:"Shipping Lanes v1 (Benden 2021): rutas principales, medias y menores derivadas de la densidad AIS"},
+  {id:"comercio", name:"Comercio bilateral", color:"#f2c14e", file:["osint/modelo.json"], on:false,
+   src:"Correlates of War, comercio diádico 1950–2014: 300 mayores flujos del quinquenio (después de 2014 se mantiene el último)"},
+  {id:"vuelos", name:"Rutas aéreas", color:"#7cc6ff", file:["osint/vuelos.json"], on:false,
+   src:"OpenFlights, rutas de 2014: los 2 500 pares de aeropuertos con más aerolíneas"},
+  {id:"plantas", name:"Centrales eléctricas", color:"#ffd166", file:["osint/plantas.json"], on:false,
+   src:"WRI Global Power Plant Database v1.3 (2021): 10 701 centrales de 50 MW o más; altura según capacidad"},
+  {id:"energia", name:"Petróleo, gas y nuclear", color:"#ff7ab8", file:["osint/energia.json"], on:false,
+   src:"Global Energy Monitor: terminales de GNL en operación y yacimientos de ≥ 20 mil bep/d; GeoNuclearData: reactores en construcción o planeados"},
+  {id:"ductos", name:"Oleoductos y gasoductos", color:"#e76f51", file:["osint/ductos.json"], on:false,
+   src:"Global Energy Monitor (GOIT y GGIT): ductos de petróleo y gas en operación"},
+  {id:"cables", name:"Cables submarinos", color:"#b8a1ff", file:["osint/cables.json"], on:false,
+   src:"TeleGeography Submarine Cable Map (copia en GitHub), CC BY-NC-SA 3.0"},
+  {id:"puertos", name:"Puertos", color:"#e9edf1", file:["osint/puertos.json"], on:false,
+   src:"NGA World Port Index: puertos grandes y medianos"},
+  {id:"aviones", name:"Aviones en vivo (muestra)", color:"#ffe066", file:["osint/trafico.json"], on:false, fly:{lat:48.8, lng:2.4, altitude:0.18},
+   src:"Trayectorias ADS-B reales sobre París, 7 oct 2021 12–15 UTC (paquete traffic, datos de OpenSky); altura exagerada ×15. No es tráfico en tiempo real: el visor no puede conectarse a feeds externos"},
+  {id:"barcos", name:"Barcos en vivo (muestra)", color:"#80ffdb", file:["osint/trafico.json"], on:false, fly:{lat:57.66, lng:11.8, altitude:0.06},
+   src:"Trayectorias AIS reales cerca de Gotemburgo, 5 jul 2017 (Agencia Marítima Danesa vía movingpandas). No es tráfico en tiempo real"},
+];
+const OS = {};
+const oKey = {};                                   // skip re-uploading unchanged layers while the year plays
+const changed = (k, v) => { if (oKey[k] === v) return false; oKey[k] = v; return true; };
+let texNow = null;
+const oOn = new Set(OLAYERS.filter(l=>l.on).map(l=>l.id));
+const loading = new Map();
+function loadFile(f){
+  if (!loading.has(f)) loading.set(f, getJSON(f).then(d => { OS[f] = d; return d; }).catch(() => null));
+  return loading.get(f);
+}
+const loadLayer = L => Promise.all(L.file.map(loadFile));
+function buildOsintControls(){
+  const box = document.getElementById("osint");
+  box.innerHTML = OLAYERS.map(L=>`<button data-id="${L.id}" aria-pressed="${oOn.has(L.id)}"><i style="background:${L.color}"></i>${L.name}</button>`).join("");
+  box.querySelectorAll("button").forEach(b => b.addEventListener("click", async () => {
+    const id = b.dataset.id, L = OLAYERS.find(l=>l.id===id);
+    if (oOn.has(id)) oOn.delete(id); else { oOn.add(id); b.setAttribute("aria-pressed", "true"); await loadLayer(L);
+      if (L.fly && G){ G.controls().autoRotate = false; document.getElementById("spin").setAttribute("aria-pressed","false"); G.pointOfView(L.fly, 1600); } }
+    b.setAttribute("aria-pressed", String(oOn.has(id)));
+    renderOsint();
+  }));
+  Promise.all(OLAYERS.filter(l=>oOn.has(l.id)).map(loadLayer)).then(renderOsint);
+}
+function renderOsint(){
+  if (!G) return;
+  const tex = isDark() ? "img/earth-night.jpg" : "img/earth-blue-marble.jpg";
+  if (tex !== texNow){ texNow = tex; G.globeImageUrl(tex); }
+  const yr = st.year, hud = [];
+  const mod = OS["osint/modelo.json"];
+  // conflicts: UCDP GED hexbins 1989-2023, country rings before 1989, modelled risk after 2023
+  const ged = OS["osint/conflictos_ged.json"];
+  let rings = [], hexes = [];
+  if (oOn.has("conflictos") && ged && ged.por_anio[yr]){
+    hexes = ged.por_anio[yr];
+    hud.push(`${d3.format(",")(d3.sum(hexes, r => r[2]))} eventos y ${d3.format(",")(ged.muertes_por_anio[yr])} muertes en ${yr} (UCDP GED)`);
+  } else if (oOn.has("conflictos") && mod){
+    if (yr <= 2019){
+      rings = (mod.conflictos_por_anio[yr] || []).map(i => ({lng: mod.posiciones[i][0], lat: mod.posiciones[i][1], c: "255,90,71"}));
+      hud.push(`${rings.length} países con conflicto armado activo en ${yr} (UCDP/PRIO)`);
+    } else {
+      const cf = arr(st.scn === "datos" ? "proyeccion" : st.scn, "conflict") || arr("proyeccion", "conflict");
+      if (cf) for (let i=0;i<N;i++){ const v = cf[i][t()]; if (v != null && v >= 0.3 && mod.posiciones[i]) rings.push({lng: mod.posiciones[i][0], lat: mod.posiciones[i][1], c: "255,170,60"}); }
+      hud.push(`${rings.length} países con riesgo de conflicto modelado ≥ 30 % en ${yr}`);
+    }
+  }
+  if (changed("hex", `${hexes.length}|${yr}`)){
+    const TYPE = {1:"estatal", 2:"no estatal", 3:"violencia unilateral"};
+    G.hexBinPointsData(hexes).hexBinPointLng(r => r[0]).hexBinPointLat(r => r[1]).hexBinPointWeight(r => r[3] + 1)
+      .hexBinResolution(3).hexMargin(0.15).hexBinMerge(false).hexTransitionDuration(0)
+      .hexAltitude(d => Math.min(0.3, 0.004 + Math.log1p(d.sumWeight) / 45))
+      .hexTopColor(d => `rgba(255,${Math.round(Math.max(40, 150 - 18 * Math.log1p(d.sumWeight)))},70,0.92)`).hexSideColor(() => "rgba(160,30,20,0.75)")
+      .hexLabel(d => { const ev = d3.sum(d.points, p => p[2]), m = d3.sum(d.points, p => p[3]);
+        const ty = d3.rollups(d.points, v => d3.sum(v, p => p[3]), p => p[4]).sort((a,b)=>b[1]-a[1])[0];
+        return `<div class="gtip"><b>${d3.format(",")(m)} muertes</b><div><span class="k">Eventos</span> · <span class="v">${d3.format(",")(ev)}</span></div><div><span class="k">Tipo principal</span> · ${TYPE[ty[0]]}</div><div class="k">UCDP GED ${yr}</div></div>`; });
+  }
+  if (changed("rings", rings.map(r => r.lng + "," + r.lat + r.c).join(";")))
+    G.ringsData(rings).ringLat("lat").ringLng("lng").ringAltitude(0.012)
+      .ringColor(r => tt => `rgba(${r.c},${Math.max(0, 1 - tt)})`).ringMaxRadius(4.5)
+      .ringPropagationSpeed(reducedMotion ? 0 : 1.4).ringRepeatPeriod(reducedMotion ? 0 : 1300);
+  // arcs: flights and bilateral trade
+  let arcs = [];
+  const fl = OS["osint/vuelos.json"];
+  if (oOn.has("vuelos") && fl){
+    const mx = fl.filas[0][4];
+    arcs = arcs.concat(fl.filas.map(r => ({sLng:r[0], sLat:r[1], eLng:r[2], eLat:r[3], col:["rgba(124,198,255,0.08)","rgba(124,198,255,0.75)"],
+      w: 0.12 + 0.6 * r[4] / mx, alt: null, dash: 0.25, time: 2600, lab: `${r[5]} – ${r[6]} · ${r[4]} aerolíneas`})));
+    hud.push(`${fl.filas.length} rutas aéreas (OpenFlights 2014)`);
+  }
+  if (oOn.has("comercio") && mod){
+    const years = Object.keys(mod.comercio_por_anio).map(Number);
+    const y5 = Math.max(...years.filter(y => y <= yr).concat([years[0]]));
+    const rows = mod.comercio_por_anio[y5] || [];
+    const mx = d3.max(rows, r => r[2]) || 1;
+    arcs = arcs.concat(rows.map(r => ({sLng: mod.posiciones[r[0]][0], sLat: mod.posiciones[r[0]][1], eLng: mod.posiciones[r[1]][0], eLat: mod.posiciones[r[1]][1],
+      col: ["rgba(242,193,78,0.9)","rgba(242,193,78,0.15)"], w: 0.2 + 1.6 * Math.sqrt(r[2] / mx), alt: 0.18 + 0.25 * Math.sqrt(r[2] / mx), dash: 0.35, time: 4200,
+      lab: `${M.names[r[0]]} → ${M.names[r[1]]} · ${d3.format(",.0f")(r[2])} mil M USD`})));
+    hud.push(`Comercio bilateral ${y5}: 300 mayores flujos (COW)`);
+  }
+  const years5 = mod ? Object.keys(mod.comercio_por_anio).map(Number).filter(y => y <= yr) : [];
+  if (changed("arcs", `${oOn.has("vuelos")}|${!!fl}|${oOn.has("comercio")}|${!!mod}|${Math.max(0, ...years5)}`)) G.arcsData(arcs).arcStartLat("sLat").arcStartLng("sLng").arcEndLat("eLat").arcEndLng("eLng")
+    .arcColor("col").arcStroke("w").arcAltitude("alt").arcAltitudeAutoScale(0.32)
+    .arcDashLength("dash").arcDashGap(0.15).arcDashAnimateTime(a => reducedMotion ? 0 : a.time).arcLabel(a => `<div class="gtip">${a.lab}</div>`);
+  // paths: shipping lanes, submarine cables, pipelines, real traffic samples
+  const sh = OS["osint/maritimo.json"], cb = OS["osint/cables.json"], du = OS["osint/ductos.json"], tf = OS["osint/trafico.json"];
+  const LC = {principal:"rgba(63,224,197,0.95)", media:"rgba(63,224,197,0.6)", menor:"rgba(63,224,197,0.35)"};
+  const onKey = ["maritimo","cables","ductos","aviones","barcos"].map(k => oOn.has(k) && OS[OLAYERS.find(l=>l.id===k).file[0]] ? 1 : 0).join("");
+  if (changed("paths", onKey)){
+    const P = [];
+    const at = (pts, a) => pts.map(q => [q[0], q[1], a]);
+    const AIR = 0.3048 / 1000 / 6371 * 15;           // feet -> globe radii, exaggerated x15
+    if (+onKey[0]) for (const r of sh.filas) P.push({pts: at(r[1], 0.004), col: LC[r[0]], dash: 0.08, time: 30000, lab: `Ruta marítima ${r[0]}`});
+    if (+onKey[1]) for (const r of cb.filas) P.push({pts: at(r[2], 0.002), col: withA(r[1], 0.9), dash: 1, time: 0, lab: r[0]});
+    if (+onKey[2]) for (const r of du.filas) P.push({pts: at(r[2], 0.003), col: r[0] === "gas" ? "rgba(255,180,90,0.8)" : "rgba(231,111,81,0.85)", dash: 1, time: 0, lab: `${r[1]} (${r[0] === "gas" ? "gas" : "petróleo"})`});
+    if (+onKey[3]) for (const r of tf.filas) if (r[0] === "avion") P.push({pts: r[2].map(q => [q[0], q[1], Math.max(0.0002, q[2] * AIR)]), col: "rgba(255,224,102,0.95)", dash: 0.05, time: 6000, lab: `Vuelo ${r[1]}`});
+    if (+onKey[4]) for (const r of tf.filas) if (r[0] === "barco") P.push({pts: at(r[2], 0.0004), col: "rgba(128,255,219,0.95)", dash: 0.06, time: 9000, lab: r[1]});
+    G.pathsData(P).pathPoints("pts").pathPointLat(p => p[1]).pathPointLng(p => p[0])
+      .pathPointAlt(p => p[2])
+      .pathColor("col").pathDashLength("dash").pathDashGap(pa => pa.dash >= 1 ? 0 : 0.02)
+      .pathDashAnimateTime(pa => reducedMotion ? 0 : pa.time).pathTransitionDuration(0)
+      .pathLabel(pa => `<div class="gtip">${pa.lab}</div>`);
+  }
+  if (+onKey[0]) hud.push(`Rutas marítimas: ${sh.filas.length} tramos (densidad AIS)`);
+  if (+onKey[1]) hud.push(`${cb.n_cables} cables submarinos (TeleGeography)`);
+  if (+onKey[2]) hud.push(`${d3.format(",")(du.filas.length)} tramos de ductos en operación (GEM)`);
+  if (+onKey[3]) hud.push(`${tf.filas.filter(r=>r[0]==="avion").length} aviones reales sobre París, 7 oct 2021 (ADS-B)`);
+  if (+onKey[4]) hud.push(`${tf.filas.filter(r=>r[0]==="barco").length} barcos reales en Gotemburgo, 5 jul 2017 (AIS)`);
+  // points: power plants and oil, gas and new nuclear
+  const pp = OS["osint/plantas.json"], en = OS["osint/energia.json"];
+  const EC = {gnl:"#ff7ab8", yacimiento:"#f15bb5", nuclear_nuevo:"#c77dff"};
+  const pKey = `${oOn.has("plantas") && pp ? 1 : 0}${oOn.has("energia") && en ? 1 : 0}`;
+  if (changed("points", pKey)){
+    let pts = [];
+    if (pKey[0] === "1") pts = pts.concat(pp.filas.map(r => ({lng: r[0], lat: r[1], alt: Math.min(0.15, 0.003 + r[2] / 35000), rad: 0.07 + Math.sqrt(r[2]) / 280, col: FUELC[r[3]]})));
+    if (pKey[1] === "1") pts = pts.concat(en.filas.map(r => ({lng: r[0], lat: r[1],
+      alt: r[3] === "yacimiento" ? Math.min(0.08, 0.004 + Math.min(r[2], 3e6) / 4e7) : r[3] === "gnl" ? Math.min(0.08, 0.01 + Math.min(r[2], 60) / 900) : 0.02, rad: r[3] === "yacimiento" ? 0.18 : 0.3, col: EC[r[3]]})));
+    G.pointsData(pts).pointLng("lng").pointLat("lat").pointAltitude("alt").pointRadius("rad").pointColor("col").pointsMerge(true).pointsTransitionDuration(0);
+  }
+  if (pKey[0] === "1") hud.push(`${d3.format(",")(pp.filas.length)} centrales ≥ 50 MW (WRI 2021)`);
+  if (pKey[1] === "1") hud.push(`${en.filas.filter(r=>r[3]==="gnl").length} terminales de GNL, ${en.filas.filter(r=>r[3]==="yacimiento").length} yacimientos y ${en.filas.filter(r=>r[3]==="nuclear_nuevo").length} reactores en construcción o planeados`);
+  // labels: ports
+  const po = OS["osint/puertos.json"];
+  const ports = oOn.has("puertos") && po ? po.filas : [];
+  if (changed("labels", ports.length)){
+    G.labelsData(ports).labelLng(r => r[0]).labelLat(r => r[1]).labelText(r => r[3] === "L" ? r[2] : "")
+      .labelSize(r => r[3] === "L" ? 0.28 : 0).labelDotRadius(r => r[3] === "L" ? 0.22 : 0.12)
+      .labelColor(r => r[3] === "L" ? "rgba(233,237,241,0.9)" : "rgba(233,237,241,0.55)").labelResolution(2).labelAltitude(0.004)
+      .labelLabel(r => `<div class="gtip"><b>${r[2]}</b><div class="k">Puerto ${r[3] === "L" ? "grande" : "mediano"} · ${r[4]}</div></div>`).labelsTransitionDuration(0);
+  }
+  if (ports.length) hud.push(`${ports.length} puertos grandes y medianos (NGA WPI)`);
+  extraOsint(hud);
+  document.getElementById("hud").innerHTML = hud.map(h => `<span>${h}</span>`).join("");
+  // legend
+  const lg = [];
+  for (const L of OLAYERS) if (oOn.has(L.id)) lg.push(`<span title="${L.src}"><i style="background:${L.color}"></i>${L.name}</span>`);
+  if (oOn.has("plantas")) lg.push(...Object.keys(FUELN).map(k => `<span><i style="background:${FUELC[k]}"></i>${FUELN[k]}</span>`));
+  if (oOn.has("energia")) lg.push(`<span><i style="background:#ff7ab8"></i>Terminal de GNL</span><span><i style="background:#f15bb5"></i>Yacimiento</span><span><i style="background:#c77dff"></i>Reactor nuevo</span>`);
+  if (oOn.has("ductos")) lg.push(`<span><i style="background:rgba(231,111,81,1)"></i>Oleoducto</span><span><i style="background:rgba(255,180,90,1)"></i>Gasoducto</span>`);
+  document.getElementById("olegend").innerHTML = lg.length ? `<span class="hint">Fuente de cada capa al pasar el cursor · instantáneas abiertas: el visor no puede leer feeds en tiempo real</span>` + lg.join("") : "";
+}
+function extraOsint(hud){}
 function fmtLayer(lay, v){
   if (v == null) return "—";
   if (lay === "ly") return fmt$(Math.exp(v));
@@ -1029,9 +1253,12 @@ function buildRecs(){
     sv += `<line x1="${xs(0)}" x2="${xs(0)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--axis)"/><line x1="${m.l}" x2="${W-m.r}" y1="${ys(0)}" y2="${ys(0)}" stroke="var(--axis)"/>`;
     sv += `<text x="${W-m.r}" y="${H-1}" text-anchor="end">cambio del gasto (pp del PIB)</text>`;
     for (const k of isos){ const i = M.iso3.indexOf(k), z = zs[i];
-      sv += `<circle data-i="${i}" class="${i===st.sel?"sel":""}" cx="${xs(P[k].presupuesto_pp)}" cy="${ys(100*P[k].d_consumo_medio)}" r="${3.2+2*P[k].prob_mejora}" fill="${z==null?"var(--muted)":`var(${ZC[z]})`}" fill-opacity=".8"><title>${M.names[i]}: gasto ${sgn(P[k].presupuesto_pp)} pp, consumo ${sgn(100*P[k].d_consumo_medio)} %</title></circle>`; }
+      sv += `<circle data-i="${i}" data-k="${k}" class="${i===st.sel?"sel":""}" cx="${xs(P[k].presupuesto_pp)}" cy="${ys(100*P[k].d_consumo_medio)}" r="${3.2+2*P[k].prob_mejora}" fill="${z==null?"var(--muted)":`var(${ZC[z]})`}" fill-opacity=".8"/>`; }
     sv += `</svg><div class="keyrow" style="margin-top:4px">${ZN.map((n,zi)=>`<span><i class="sq" style="background:var(${ZC[zi]})"></i>${n}</span>`).join("")}<span>tamaño = probabilidad de mejora</span></div>`;
     const box = document.getElementById("recScatter"); box.innerHTML = sv;
+    box.querySelectorAll("circle").forEach(cn=>{ const k = cn.dataset.k, i = +cn.dataset.i;
+      const tl = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      tl.textContent = `${M.names[i]}: gasto ${sgn(P[k].presupuesto_pp)} pp, consumo ${sgn(100*P[k].d_consumo_medio)} %`; cn.appendChild(tl); });
     box.querySelectorAll("circle").forEach(cn=>cn.addEventListener("click", ()=>{ st.sel = +cn.dataset.i; renderAll(); draw(); document.querySelector(".mapbox").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }));
     // table
     const rows = isos.slice().sort((a,b)=> sortKey==="nombre" ? d3.ascending(M.names[M.iso3.indexOf(a)], M.names[M.iso3.indexOf(b)]) : d3.descending(P[a][sortKey], P[b][sortKey]));
@@ -1093,10 +1320,11 @@ function buildMech(){
     + (D.calibration.etapa1 ? `<dt style="grid-column:1/-1;font-weight:600;color:var(--ink);margin-top:8px">Etapa 1 · estimación directa con datos</dt>` + Object.entries(D.calibration.etapa1).map(([k,v])=>`<dt>${E1N[k]||k} (n = ${d3.format(",")(v.n)})</dt><dd>${Object.entries(v.coef).map(([a,b])=>`${a} ${f2(b)}`).join(" · ")}</dd>`).join("") : "");
 }
 
-buildControls(); renderAll(); buildInverse(); buildValidation(); buildPolicies(); buildRecs(); buildClimate(); buildMech();
+buildOsintControls(); buildControls(); renderAll(); buildInverse(); buildValidation(); buildPolicies(); buildRecs(); buildClimate(); buildMech();
 document.getElementById("findings").innerHTML = __FINDINGS__;
 document.getElementById("limits").innerHTML = __LIMITS__;
 document.getElementById("climaProse").innerHTML = __CLIMA__;
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>{ renderAll(); });
 new MutationObserver(()=>renderAll()).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+})();
 </script>
