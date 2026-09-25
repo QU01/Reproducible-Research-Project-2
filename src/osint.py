@@ -279,7 +279,8 @@ def main():
                      ("conflictos_ged", conflict_events), ("cables", cables), ("puertos", ports), ("energia", energy),
                      ("ductos", pipelines), ("trafico", traffic)):
         d = fn()
-        json.dump(d, open(OUT / f"{name}.json", "w"), separators=(",", ":"), ensure_ascii=False)
+        txt = json.dumps(d, separators=(",", ":"), ensure_ascii=False).replace("\ufffd", "")   # broken bytes in some names
+        (OUT / f"{name}.json").write_text(txt, encoding="utf-8")
         print(name, round((OUT / f"{name}.json").stat().st_size / 1e6, 2), "MB")
 
 
