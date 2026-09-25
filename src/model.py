@@ -61,6 +61,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 ALPHA = 0.35
 CHANNELS = ["k", "r", "m", "x", "f", "w"]
+FIN_CH = ("k", "r", "m", "x", "f")   # uses of saving / foreign exchange (w is a domestic transfer)
 CHANNEL_NAMES = {"k": "Capital doméstico", "r": "Tecnología/industria propia",
                  "m": "Importar bienes del centro", "x": "Extracción propia de recursos",
                  "f": "Invertir fuera en recursos", "w": "Redistribución"}
@@ -144,6 +145,12 @@ class Params:
     cr_cont: float = 3.0       # contagion: share of countries in crisis last year
     cr_loss: float = 0.045     # permanent output loss of a crisis (Laeven-Valencia, Cerra-Saxena)
     cr_debt: float = 0.08      # debt jump after a crisis
+    # financing and consumption vs saving (docs/research/financiamiento.md)
+    fh_eta: float = 0.54       # share of extra investment financed by domestic saving (dCA/dI = eta - 1)
+    cm0: float = 0.14          # ceiling on the current-account deficit / GDP (q90 in the data)
+    chi_k: float = 0.0         # capital adjustment cost (chi/2)(I/K - iota)^2 K (Hayashi 1982)
+    iota_g: float = 0.04       # normal net investment rate in the adjustment cost
+    x_amort: float = 0.10      # amortisation of extra foreign debt per year (~10-year maturity)
     # institutions and geopolitics (docs/research/geopolitica.md)
     cp0: float = -4.35         # coup attempt intercept
     cp_l: float = -0.28        # log(income/10k)
@@ -380,7 +387,8 @@ class Simulator:
 
     REC = ["ly", "core", "E", "ne", "psi", "asab", "conflict", "gni_pc", "rent_in", "drain",
            "jump", "cons_pc", "res_share", "reserves", "fshare", "ims", "res_out",
-           "debt", "crisis", "demo", "coup", "temp", "dclim", "natcap", "co2", "eco_ue"] + CHANNELS
+           "debt", "crisis", "demo", "coup", "temp", "dclim", "natcap", "co2", "eco_ue",
+           "borrow", "squeeze", "adjcost"] + CHANNELS
 
     def __init__(self, world: World, params: Params, R=8, seed=0):
         self.w, self.p, self.R = world, params, R
@@ -401,6 +409,19 @@ class Simulator:
 
     def observed(self, t):
         return t <= self.obs_until
+
+    def ca_ref(self, t):
+        """Reference current account / GDP: observed (carried forward) up to obs_until, then
+        each country's 10-year mean before the forecast origin."""
+        ca = self.w.locf("ca_gdp")
+        if self.observed(t):
+            v = ca[:, t]
+        else:
+            lo = max(0, self.obs_until - 9)
+            blk = ca[:, lo:self.obs_until + 1]
+            n = np.isfinite(blk).sum(1)
+            v = np.where(n > 0, np.nansum(blk, 1) / np.maximum(n, 1), np.nan)
+        return np.where(np.isfinite(v), np.clip(v, -0.3, 0.3), -0.03)
 
     def roy_t(self, t):
         """Host-government take on foreign extraction by era (docs/research/recursos.md)."""
@@ -432,6 +453,7 @@ class Simulator:
         self.price_hist = []
         # debt, institutions, climate, ecology
         self.debt, self.crisis_t = z(0.4), z(0.0)
+        self.xdebt = z(0.0)          # foreign debt from spending above the reference path
         self.demo, self.poly = z(0.0), z(0.4)
         self.Bdem = z(0.0)
         self.coup_t, self.coup_trap = z(0.0), z(0.0)
@@ -559,6 +581,7 @@ class Simulator:
         self.conf[:, m] = w.conflict[m, t]
         d = w.locf("debt_gdp")[m, t]
         self.debt[:, m] = np.where(np.isfinite(d), np.clip(d, 0, 3), self.debt[:, m])
+        self.xdebt[:, m] = 0.0
         _, _, ext, _, _ = self._extraction()
         target = w.rr[m, t] * w.Y[m, t] / np.maximum(self.price, 1e-6)
         sc = np.clip(target / np.maximum(ext[:, m], 1e-12), 0.05, 20)
@@ -682,6 +705,20 @@ class Simulator:
         gap = np.where(act, np.clip(self.lnA_F - self.lnA, 0.0, 4.0), 0.0)
         a = {c: np.where(act, np.nan_to_num(actions[c]), 0.0) for c in CHANNELS}
 
+        # ---------------------------------------------------------------- financing: saving vs borrowing
+        # Spending on the saving-using channels above the reference path (observed actions, or the
+        # 10-year mean before a forecast origin) is financed a share fh_eta by domestic saving
+        # (less consumption) and the rest by foreign borrowing, up to a ceiling on the current-account
+        # deficit; any excess is forced saving (a consumption squeeze). Cutting spending below the
+        # reference raises consumption only by fh_eta; the rest leaves as capital exports.
+        ref = self.hist_actions(t, None if obs_mode else self.obs_until)
+        extra_b = sum(a[c] - np.where(act, np.nan_to_num(ref[c]), 0.0) for c in FIN_CH)
+        want = (1 - p.fh_eta) * extra_b
+        room = np.maximum(p.cm0 + self.ca_ref(t)[None], 0.0)
+        borrow = np.where(act, np.where(want > 0, np.minimum(want, room), want), 0.0)
+        squeeze = np.where(act, want - borrow, 0.0)
+        dom_burden = np.where(act, extra_b - borrow, 0.0)     # borne by residents (share of GDP)
+
         # ---------------------------------------------------------------- world-system flows
         wexp = core ** 2 * G
         wexp_n = wexp / np.maximum(wexp.sum(1, keepdims=True), 1e-9)
@@ -740,7 +777,10 @@ class Simulator:
         rstar = float(np.clip(self.wx("finanzas__us_real_strate", t, 0.01), -0.05, 0.10))
         dstar = p.dstar0 + p.dstar1 * core
         rate = rstar + p.prem_p * (1 - core) + p.prem_d * np.maximum(self.debt - dstar, 0.0)
-        interest_abroad = p.ext_int * (1 - core) * np.maximum(rate, 0) * self.debt * G
+        # the extra foreign debt pays the country's rate and is amortised out of national income
+        xint = rate * self.xdebt * G
+        xrep = p.x_amort * self.xdebt
+        interest_abroad = p.ext_int * (1 - core) * np.maximum(rate, 0) * (self.debt - self.xdebt) * G + xint
         int_in = interest_abroad.sum(1, keepdims=True) * wexp_n
         if obs_mode:
             crisis = np.broadcast_to(np.nan_to_num(w.extra.get("crisis_any", np.zeros((N, w.T)))[:, t]) > 0,
@@ -750,8 +790,10 @@ class Simulator:
                   + p.cr_cont * self.crisis_share)
             crisis = (u_cris < _sigmoid(lg)) & act & (self.crisis_t <= 0)
         # reduced-form debt dynamics estimated on data, plus the burden of world-rate shocks
-        dd = p.fd0 + p.fd_d * self.debt + p.fd_g * g + p.fd_c * crisis + (rstar - p.r_bar) * self.debt
-        self.debt = np.where(act, np.clip(self.debt + dd, 0, 4), self.debt)
+        dref = self.debt - self.xdebt
+        dd = p.fd0 + p.fd_d * dref + p.fd_g * g + p.fd_c * crisis + (rstar - p.r_bar) * dref
+        self.xdebt = np.where(act, self.xdebt + borrow - xrep, self.xdebt)
+        self.debt = np.where(act, np.clip(dref + dd, 0, 4) + self.xdebt, self.debt)
         self.crisis_t = np.where(crisis, 3.0, np.maximum(self.crisis_t - 1, 0))
         self.crisis_share = float(np.mean(crisis[act]))
 
@@ -760,7 +802,11 @@ class Simulator:
         gni = np.maximum(G + rent_in - rent_out, 1e-6 * Gs)
 
         # ---------------------------------------------------------------- capital & technology
-        self.K = np.where(act, (1 - dlt) * self.K + eff * a["k"] * G, self.K)
+        Ik = eff * a["k"] * G
+        Kc = np.maximum(self.K, 1e-9)
+        adj = 0.5 * p.chi_k * (Ik / Kc - dlt - p.iota_g) ** 2 * Kc
+        adj = np.minimum(adj, 0.9 * Ik)
+        self.K = np.where(act, np.maximum((1 - dlt) * self.K + Ik - adj, 0.05 * Kc), self.K)
         self.K = np.where(hit, self.K * (1 - np.minimum(loss * Gs / np.maximum(self.K, 1e-9), 0.5)), self.K)
         fdi_in = np.clip(self.ex("fdi_in_gdp", t, 0.02), 0, 0.2)
         aid = np.clip(self.ex("oda_gni", t, 0.0) / 100, 0, 0.3)
@@ -787,7 +833,7 @@ class Simulator:
         base = G - res_inc
         elite_inc = self.E * base + phiR * res_inc + phi * rent_in
         mass_inc = ((1 - self.E) * base + (1 - phiR) * res_inc + (1 - phi) * rent_in
-                    - rent_out + a["w"] * G)
+                    - rent_out + a["w"] * G - (1 - self.E) * (dom_burden + xrep) * G)
         mass_inc = np.maximum(mass_inc, 0.05 * Gs)
         mass_pc = mass_inc / L
         v = elite_inc / mass_inc
@@ -874,7 +920,7 @@ class Simulator:
         self.price = price
         self.G_prev = np.where(act, Gs, self.G_prev)
         self.g_prev = np.where(act, g, 0.0)
-        cons = (1 - sum(a[c] for c in CHANNELS)) * gni + mspend * 0.5 + a["w"] * G * 0.5
+        cons = (1 - sum(a[c] for c in CHANNELS)) * gni + mspend * 0.5 + a["w"] * G * 0.5 + (borrow - xrep) * G
         nz = lambda v: np.where(act, v, np.nan)
         rec = dict(ly=ly, core=core, E=self.E.copy(), ne=self.ne.copy(), psi=psi_idx, asab=self.asab.copy(),
                    conflict=self.conf.copy(), gni_pc=nz(gni / L),
@@ -885,7 +931,8 @@ class Simulator:
                    debt=nz(self.debt.copy()), crisis=nz(crisis.astype(float)), demo=nz(self.demo.copy()),
                    coup=nz(np.broadcast_to(succ, (R, N)).astype(float)), temp=nz(np.broadcast_to(Tloc, (R, N))),
                    dclim=nz(self.Dclim.copy()), natcap=nz(self.Nnat.copy()), co2=nz(co2_i * 1000),
-                   eco_ue=nz(eco_ue / Gs),
+                   eco_ue=nz(eco_ue / Gs), borrow=nz(borrow), squeeze=nz(squeeze),
+                   adjcost=nz(np.where(Ik > 0, adj / np.maximum(Ik, 1e-12), 0.0)),
                    **{c: nz(a[c]) for c in CHANNELS})
         self.last = rec
         self.last_price = price[:, 0].copy()

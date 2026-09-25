@@ -11,6 +11,10 @@ with data <= cutoff keeps the rolling-origin validation free of look-ahead.
   debt         OLS change of debt / GDP on lagged debt, growth, crisis (reaction function)
   nationalis.  logit P(resource nationalisation) on 3-year oil price shock, price level,
                polity, post-1985 regime (countries with resource rents > 3% of GDP)
+  financing    Feldstein-Horioka style: within-country change of the current account on the
+               change of the investment rate with year effects, dCA = (eta - 1) dI, so eta is the
+               share of extra investment financed by domestic saving; the ceiling on the
+               current-account deficit is its 90th percentile
 """
 import numpy as np
 
@@ -141,6 +145,27 @@ def estimate(W, LY, cutoff, verbose=False):
             out.update(dict(zip(names, b)))
             rep["nacionalizacion"] = dict(coef=dict(zip(names, b.round(3).tolist())), se=se.round(3).tolist(),
                                           n=n, tasa=round(rate, 4))
+    # ---- financing: domestic saving vs foreign borrowing
+    I, CA = x.get("acc_k"), x.get("ca_gdp")
+    if I is not None and CA is not None:
+        dI, dC = np.diff(I[:, :cutoff + 1], axis=1), np.diff(CA[:, :cutoff + 1], axis=1)
+        a, b = [], []
+        for t in range(dI.shape[1]):
+            ok = np.isfinite(dI[:, t]) & np.isfinite(dC[:, t]) & (np.abs(dI[:, t]) < 0.15) & (np.abs(dC[:, t]) < 0.2)
+            if ok.sum() > 5:
+                a.append(dI[ok, t] - dI[ok, t].mean())
+                b.append(dC[ok, t] - dC[ok, t].mean())
+        if a:
+            a, b = np.concatenate(a), np.concatenate(b)
+            beta = float(a @ b / (a @ a))
+            res = b - beta * a
+            se = float(np.sqrt(np.sum((a * res) ** 2)) / (a @ a))          # robust (HC0)
+            out["fh_eta"] = float(np.clip(1 + beta, 0.0, 1.0))
+            deficit = -CA[:, :cutoff + 1]
+            out["cm0"] = float(np.nanquantile(deficit[np.isfinite(deficit)], 0.9))
+            rep["financiamiento"] = dict(coef=dict(dCA_dI=round(beta, 3), eta=round(1 + beta, 3),
+                                                   techo_deficit_q90=round(out["cm0"], 3)),
+                                         se=[round(se, 3)], n=int(len(a)))
     out = {k: float(v) for k, v in out.items() if np.isfinite(v)}
     if verbose:
         import json

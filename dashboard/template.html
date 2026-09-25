@@ -148,6 +148,15 @@ tr.ours td:first-child{font-weight:600}
 .flow .sm{font-size:10.5px;fill:var(--muted);font-family:var(--mono)}
 .flow rect.box{fill:var(--surface2);stroke:var(--axis)}
 .flow path{fill:none;stroke-width:1.6}
+.tablewrap.tall{max-height:520px;overflow-y:auto}
+.tablewrap.tall thead th{position:sticky;top:0;background:var(--surface);z-index:1}
+td .pp{display:inline-block;min-width:44px}
+td.pos{color:var(--good)} td.neg{color:var(--bad)}
+.scatter{width:100%;height:auto;display:block}
+.scatter text{fill:var(--muted);font-family:var(--mono);font-size:10px}
+.scatter .gl{stroke:var(--grid);stroke-width:1}
+.scatter circle{stroke:var(--surface);stroke-width:.6;cursor:pointer}
+.scatter circle.sel{stroke:var(--ink);stroke-width:1.6}
 footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -167,6 +176,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
       <span class="tag">Deuda y crisis</span>
       <span class="tag">Clima · Burke-Hsiang-Miguel</span>
       <span class="tag">Problema inverso · IRL</span>
+      <span class="tag">Ahorro y financiamiento</span>
     </div>
   </header>
 
@@ -253,7 +263,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div class="bhead">
       <div class="eyebrow">3 · Aprendizaje por refuerzo</div>
       <h2>Políticas que emergen</h2>
-      <p class="lede">Una red de política compartida (PPO) para las 180 naciones; cada una ve su propio estado y cada cinco años reparte un 35 % de su PIB entre seis canales. Entrenamos cuatro sistemas de recompensa: tres teóricos (bienestar, poder, élite) y la recompensa revelada por la conducta observada.</p>
+      <p class="lede">Una red de política compartida (PPO) para las 180 naciones; cada una ve su propio estado y cada cinco años decide cuánto gastar (entre el 10 % y el 60 % del PIB; el resto se consume) y cómo repartirlo entre seis canales. Lo que gasta por encima de su trayectoria histórica lo paga en parte con ahorro propio (menos consumo) y en parte con deuda externa, hasta un techo de déficit; más allá, con un recorte forzado del consumo. Entrenamos cuatro sistemas de recompensa: tres teóricos (bienestar, poder, élite) y la recompensa revelada por la conducta observada. Son óptimos globales dentro del modelo, no recomendaciones: esas están en la sección 4.</p>
     </div>
     <div class="grid4" id="rewardCards"></div>
     <div class="grid2" style="margin-top:16px">
@@ -288,9 +298,31 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
     <div class="card prose" style="margin-top:16px" id="findings"></div>
   </section>
 
+  <section class="block" id="recomendaciones">
+    <div class="bhead">
+      <div class="eyebrow">4 · Recomendaciones incrementales</div>
+      <h2>¿Qué debería cambiar cada país a partir de lo que ya hace?</h2>
+      <p class="lede">En lugar del óptimo global, cada país parte de su regla de decisión estimada y el aprendizaje solo puede ajustarla, con un costo por alejarse (una región de confianza). Se entrena en modo pronóstico desde 1980, 1990, 2000, 2010 y 2019, con golpes, crisis, clima y deuda endógenos, y se compara con la regla sola bajo los mismos números aleatorios. Los cambios se expresan en puntos del PIB para 2020–2024.</p>
+    </div>
+    <div class="row" style="margin-bottom:12px"><span class="lbl">Objetivo</span><div class="seg" id="recMode"></div></div>
+    <div class="grid4" id="recKPI"></div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>Cambio medio recomendado por zona</h3><p class="hint" style="margin-top:2px">Puntos del PIB respecto a la regla estimada, media 2020–2024.</p><div class="tablewrap" style="margin-top:8px"><table id="recZones"></table></div><p class="note" id="recZoneNote"></p></div>
+      <div class="card"><h3>Más gasto no siempre es más consumo</h3><p class="hint" style="margin-top:2px">Cada punto es un país: cambio recomendado del gasto (eje x) y efecto medio sobre el consumo per cápita en 10 años (eje y). Pulsa un país para verlo en el mapa.</p><div id="recScatter"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
+        <h3>Recomendación por país</h3>
+        <div class="seg" id="recSort"></div>
+      </div>
+      <p class="hint" style="margin-top:2px">Robustez: parte de los conjuntos de parámetros (calibrados con datos hasta 2000, 2010 y 2019) en que el cambio del gasto tiene el mismo signo. Probabilidad de mejora: parte de los mundos simulados en que el consumo medio 2020–2029 supera al de la regla.</p>
+      <div class="tablewrap tall" style="margin-top:8px"><table id="recTable"></table></div>
+    </div>
+  </section>
+
   <section class="block" id="clima">
     <div class="bhead">
-      <div class="eyebrow">4 · Clima, ecología y recursos</div>
+      <div class="eyebrow">5 · Clima, ecología y recursos</div>
       <h2>El techo físico</h2>
       <p class="lede" id="climaLede"></p>
     </div>
@@ -310,7 +342,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-si
 
   <section class="block" id="mecanica">
     <div class="bhead">
-      <div class="eyebrow">5 · Mecánica</div>
+      <div class="eyebrow">6 · Mecánica</div>
       <h2>Cómo está hecho el modelo</h2>
     </div>
     <div class="grid2">
@@ -612,6 +644,7 @@ function renderSide(){
     <div id="sideAllocWrap"><h3 style="font-size:14px">Asignación aprendida · ${SCN.find(s=>s.id===rl)?.name||""}</h3>
       <div class="keyrow" style="margin:4px 0">${CH.map(c=>`<span><i class="sq" style="background:var(--c-${c})"></i>${CHN[c]}</span>`).join("")}</div>
       <div id="sideAlloc"></div></div>
+    ${recSide(i)}
     <p class="hint">Pulsa cualquier país del mapa para verlo aquí.</p>`;
   const yrs = M.years;
   const S = (s,v)=>{ const a = arr(s,v); return a ? yrs.map((y,k)=>[y, a[i][k]]) : []; };
@@ -904,6 +937,10 @@ function buildPolicies(){
     ["Reservas restantes (mediana) 2019", "reservas_restantes_2019", pct],
     ["Extracción extranjera en la periferia 2019", "extraccion_extranjera_periferia_2019", pct],
     ["Dependencia de recursos importados del centro 2019", "dependencia_importacion_centro_2019", pct],
+    ["Gasto discrecional medio 1970–2019 (% PIB)", "presupuesto_medio", pct1],
+    ["Endeudamiento externo extra medio (% PIB/año)", "endeudamiento_extra_medio", pct1],
+    ["Recorte forzado del consumo medio (% PIB/año)", "recorte_forzado_medio", pct1],
+    ["Pérdida por costos de ajuste (% de la inversión)", "costo_ajuste_medio", pct1],
   ];
   let t = `<thead><tr><th>Indicador</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>`;
   for (const [n,k,f] of rows) t += `<tr><td>${n}</td>${cols.map(c=>{ const v = get(c[0])?.[k]; return `<td>${v==null?"—":f(v)}</td>`; }).join("")}</tr>`;
@@ -931,6 +968,81 @@ function archMembers(id){
   const mode = st.scn.startsWith("rl_") ? st.scn.slice(3) : "bienestar";
   const map = D.arquetipo_pais[mode] || {};
   return new Set(Object.entries(map).filter(([k,v])=>v===id).map(([k])=>k));
+}
+
+// ---------- incremental recommendations
+const RMODES = [["bienestar","Bienestar"],["revelada","Recompensa revelada"]];
+let recMode = "bienestar";
+const sgn = v => (v>0?"+":"") + d3.format(".1f")(v);
+function recSide(i){
+  const R = D.recomendaciones?.[recMode]; if (!R) return "";
+  const r = R.paises[M.iso3[i]]; if (!r) return "";
+  const rows = CH.map(c=>`<div class="brow" style="grid-template-columns:120px 1fr 52px"><div class="blab">${CHN[c]}</div>
+      <div style="position:relative;height:10px;background:var(--surface2);border-radius:3px"><span style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--axis)"></span>
+      <span style="position:absolute;top:1px;bottom:1px;border-radius:2px;background:var(--c-${c});${r.cambio_pp[c]>=0?`left:50%;width:${Math.min(50,Math.abs(r.cambio_pp[c])*10)}%`:`right:50%;width:${Math.min(50,Math.abs(r.cambio_pp[c])*10)}%`}"></span></div>
+      <div class="blab" style="font-family:var(--mono);text-align:right">${sgn(r.cambio_pp[c])}</div></div>`).join("");
+  return `<div><h3 style="font-size:14px">Recomendación 2020–2024 · ${RMODES.find(m=>m[0]===recMode)[1]}</h3>
+    <p class="hint" style="margin:2px 0 4px">Puntos del PIB respecto a lo que el país haría según su regla estimada.</p>
+    <div class="bars">${rows}</div>
+    <dl class="kv" style="margin-top:6px"><dt>Gasto total</dt><dd>${sgn(r.presupuesto_pp)} pp</dd>
+    <dt>Consumo medio 2020–2029</dt><dd>${sgn(100*r.d_consumo_medio)} %</dd><dt>Deuda en 10 años</dt><dd>${sgn(100*r.d_deuda_10a)} pp</dd>
+    <dt>Prob. de mejora</dt><dd>${pct(r.prob_mejora)}</dd><dt>Robustez del signo del gasto</dt><dd>${pct(r.acuerdo_signo.presupuesto)}</dd></dl></div>`;
+}
+function buildRecs(){
+  const sec = document.getElementById("recomendaciones");
+  if (!D.recomendaciones){ sec.hidden = true; return; }
+  const modes = RMODES.filter(m=>D.recomendaciones[m[0]]);
+  const zs = zones("datos", 69);
+  const btn = d3.select("#recMode").selectAll("button").data(modes).join("button").text(d=>d[1]).on("click",(e,d)=>{ recMode=d[0]; draw(); renderSide(); });
+  let sortKey = "d_consumo_medio";
+  const SORTS = [["d_consumo_medio","Por consumo"],["presupuesto_pp","Por gasto"],["prob_mejora","Por probabilidad"],["nombre","Por nombre"]];
+  const sb = d3.select("#recSort").selectAll("button").data(SORTS).join("button").text(d=>d[1]).on("click",(e,d)=>{ sortKey=d[0]; draw(); });
+  function draw(){
+    btn.attr("aria-pressed", d=>d[0]===recMode); sb.attr("aria-pressed", d=>d[0]===sortKey);
+    const R = D.recomendaciones[recMode], P = R.paises, G = R.global_;
+    const isos = Object.keys(P);
+    const robust = isos.filter(k=>P[k].acuerdo_signo.presupuesto===1 && P[k].prob_mejora>=0.8).length;
+    document.getElementById("recKPI").innerHTML = [
+      [sgn(100*G.d_consumo_mundial)+" %", "Consumo per cápita medio 2020–2029 frente a la regla (media de países)"],
+      [sgn(100*G.d_pib_mundial_10a)+" %", "PIB per cápita en 10 años frente a la regla"],
+      [sgn(100*G.d_deuda_10a)+" pp", "Deuda / PIB en 10 años frente a la regla"],
+      [`${robust} de ${isos.length}`, "Países con mejora probable (≥ 80 %) y signo del gasto igual con los tres conjuntos de parámetros"],
+    ].map(([n,l])=>`<div class="card"><div style="font-family:var(--display);font-size:26px;font-weight:600">${n}</div><div class="hint">${l}</div></div>`).join("");
+    // zones
+    let h = `<thead><tr><th>Zona</th>${CH.map(c=>`<th>${CHN[c]}</th>`).join("")}<th>Gasto</th><th>Consumo</th><th>Deuda</th></tr></thead><tbody>`;
+    for (const [zi,zn] of [[2,"Centro"],[1,"Semiperiferia"],[0,"Periferia"]]){
+      const mem = isos.filter(k=>zs[M.iso3.indexOf(k)]===zi);
+      if (!mem.length) continue;
+      const mean = f => d3.mean(mem, f);
+      h += `<tr><td>${zn} (${mem.length})</td>${CH.map(c=>{ const v = mean(k=>P[k].cambio_pp[c]); return `<td class="${v>0.05?"pos":v<-0.05?"neg":""}">${sgn(v)}</td>`; }).join("")}
+        <td>${sgn(mean(k=>P[k].presupuesto_pp))}</td><td>${sgn(100*mean(k=>P[k].d_consumo_medio))} %</td><td>${sgn(100*mean(k=>P[k].d_deuda_10a))}</td></tr>`;
+    }
+    document.getElementById("recZones").innerHTML = h + "</tbody>";
+    document.getElementById("recZoneNote").textContent = `Endeudamiento externo extra medio ${pct1(G.endeudamiento_extra_medio)} del PIB al año; recorte forzado del consumo ${pct1(G.recorte_forzado_medio)}. Probabilidad de conflicto ${sgn(100*G.d_conflicto)} puntos frente a la regla.`;
+    // scatter
+    const W=560,H=300,m={l:44,r:10,t:10,b:30};
+    const xs = d3.scaleLinear().domain(d3.extent(isos, k=>P[k].presupuesto_pp)).nice().range([m.l,W-m.r]);
+    const ys = d3.scaleLinear().domain(d3.extent(isos, k=>100*P[k].d_consumo_medio)).nice().range([H-m.b,m.t]);
+    let sv = `<svg class="scatter" viewBox="0 0 ${W} ${H}" role="img" aria-label="Gasto recomendado frente a efecto sobre el consumo">`;
+    for (const tk of ys.ticks(5)) sv += `<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${ys(tk)}" y2="${ys(tk)}"/><text x="${m.l-6}" y="${ys(tk)+3}" text-anchor="end">${sgn(tk)}%</text>`;
+    for (const tk of xs.ticks(6)) sv += `<text x="${xs(tk)}" y="${H-12}" text-anchor="middle">${sgn(tk)}</text>`;
+    sv += `<line x1="${xs(0)}" x2="${xs(0)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--axis)"/><line x1="${m.l}" x2="${W-m.r}" y1="${ys(0)}" y2="${ys(0)}" stroke="var(--axis)"/>`;
+    sv += `<text x="${W-m.r}" y="${H-1}" text-anchor="end">cambio del gasto (pp del PIB)</text>`;
+    for (const k of isos){ const i = M.iso3.indexOf(k), z = zs[i];
+      sv += `<circle data-i="${i}" class="${i===st.sel?"sel":""}" cx="${xs(P[k].presupuesto_pp)}" cy="${ys(100*P[k].d_consumo_medio)}" r="${3.2+2*P[k].prob_mejora}" fill="${z==null?"var(--muted)":`var(${ZC[z]})`}" fill-opacity=".8"><title>${M.names[i]}: gasto ${sgn(P[k].presupuesto_pp)} pp, consumo ${sgn(100*P[k].d_consumo_medio)} %</title></circle>`; }
+    sv += `</svg><div class="keyrow" style="margin-top:4px">${ZN.map((n,zi)=>`<span><i class="sq" style="background:var(${ZC[zi]})"></i>${n}</span>`).join("")}<span>tamaño = probabilidad de mejora</span></div>`;
+    const box = document.getElementById("recScatter"); box.innerHTML = sv;
+    box.querySelectorAll("circle").forEach(cn=>cn.addEventListener("click", ()=>{ st.sel = +cn.dataset.i; renderAll(); draw(); document.querySelector(".mapbox").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }));
+    // table
+    const rows = isos.slice().sort((a,b)=> sortKey==="nombre" ? d3.ascending(M.names[M.iso3.indexOf(a)], M.names[M.iso3.indexOf(b)]) : d3.descending(P[a][sortKey], P[b][sortKey]));
+    let tb = `<thead><tr><th>País</th>${CH.map(c=>`<th>${CHN[c]}</th>`).join("")}<th>Gasto</th><th>Consumo</th><th>PIB 10a</th><th>Deuda 10a</th><th>Conflicto</th><th>Prob. mejora</th><th>Robustez</th></tr></thead><tbody>`;
+    for (const k of rows){ const r = P[k], i = M.iso3.indexOf(k);
+      tb += `<tr data-i="${i}" style="cursor:pointer"><td>${M.names[i]}</td>${CH.map(c=>`<td class="${r.cambio_pp[c]>0.05?"pos":r.cambio_pp[c]<-0.05?"neg":""}">${sgn(r.cambio_pp[c])}</td>`).join("")}
+        <td>${sgn(r.presupuesto_pp)}</td><td>${sgn(100*r.d_consumo_medio)} %</td><td>${sgn(100*r.d_pib_10a)} %</td><td>${sgn(100*r.d_deuda_10a)}</td><td>${sgn(100*r.d_conflicto)}</td><td>${pct(r.prob_mejora)}</td><td>${pct(r.acuerdo_signo.presupuesto)}</td></tr>`; }
+    const tbl = document.getElementById("recTable"); tbl.innerHTML = tb + "</tbody>";
+    tbl.querySelectorAll("tr[data-i]").forEach(tr=>tr.addEventListener("click", ()=>{ st.sel = +tr.dataset.i; renderAll(); draw(); }));
+  }
+  draw();
 }
 
 // ---------- mechanics
@@ -970,17 +1082,18 @@ function buildMech(){
     <p><strong>Frontera metaétnica.</strong> La asabiya crece logísticamente donde hay una frontera: periferias abiertas que el centro drena. Decae en los centros ricos, más rápido con élites sobreproducidas. Aumenta la capacidad estatal: eficiencia de la inversión, éxito de la innovación y resistencia a la inestabilidad.</p>
     <p><strong>Recursos naturales.</strong> Cada país tiene unos recursos recuperables últimos U. Su capacidad bruta de extracción es logística en lo ya extraído (curva de Hubbert): crece mientras se abre el yacimiento y cae al agotarlo. El capital extractivo nacional y el extranjero compiten por esa misma capacidad: una concesión extranjera se lleva su parte, acelera el agotamiento y reduce lo que el país puede explotar por sí mismo; el anfitrión solo conserva una regalía. Los recursos son un insumo de la producción con precio mundial de equilibrio, y quien los importa paga un sobrecosto. Por eso, cuando un país agota los suyos, le conviene asegurarse recursos fuera. Las élites capturan más renta de recursos que de otros ingresos (maldición de los recursos), y la extracción extranjera alimenta la frontera metaétnica.</p>
     <p><strong>Deuda y crisis.</strong> La variación de la deuda pública/PIB se estima con datos: revierte a la media, baja con el crecimiento y sube en las crisis y cuando la tasa real mundial supera su media. La tasa que paga cada país es la tasa real de EE. UU. más una prima periférica y una prima por deuda sobre el umbral de intolerancia. Las crisis financieras (logit estimado: deuda, tasa mundial, crecimiento y contagio) cuestan 4,5 % de producto de forma permanente y suben la deuda. Los intereses que paga la periferia fluyen hacia sus acreedores del centro. La tensión fiscal alimenta el SFD del PSI.</p>
+    <p><strong>Ahorro y financiamiento.</strong> Gastar más de lo que el país gastaba históricamente tiene un costo. Según los datos, cuando la inversión sube un punto, la cuenta corriente empeora 0,46 puntos: el 54 % se paga con ahorro propio (menos consumo) y el resto con deuda externa, hasta un techo de déficit (el percentil 90 observado, 13 % del PIB). Más allá del techo, el país recorta el consumo por la fuerza. La deuda externa adicional paga la tasa del país (con sus primas) y se amortiza en unos diez años con cargo al ingreso nacional. Además, invertir muy por encima de lo normal rinde menos: el capital sufre costos de ajuste cuadráticos (χ/2)(I/K − δ − 4 %)²K, con χ calibrado con los datos.</p>
     <p><strong>Instituciones y geopolítica.</strong> Golpes de Estado, con trampa del golpe y efecto de la Guerra Fría, y transiciones entre democracia y autocracia, estimados con Powell-Thyne y V-Dem. La democracia da un impulso a la productividad (Acemoglu et al. 2019, ≈ +20 % a largo plazo) y un golpe exitoso cuesta 0,8 puntos de crecimiento al año durante 5 años. La ayuda oficial suma crecimiento con rendimientos decrecientes. Las democracias parciales son las más inestables.</p>
     <p><strong>Clima y ecología.</strong> La extracción fósil genera emisiones. La temperatura global responde a las emisiones acumuladas (0,46 °C por 1000 GtCO₂) y la de cada país la sigue con su propio factor de escala. El daño a la productividad sigue la curva de Burke-Hsiang-Miguel (óptimo ≈ 13 °C) con persistencia 0,8. Además, los desastres destruyen capital con más frecuencia a medida que se calienta el planeta, las anomalías de temperatura suben levemente el riesgo de conflicto, y un stock de capital natural se degrada con la huella ecológica por encima de la biocapacidad.</p>
     <p><strong>Tecnología.</strong> La PTF difunde hacia una frontera que avanza, más rápido con importaciones de alto valor e IED y en proporción a la capacidad de absorción (capital humano relativo), y da saltos estocásticos con tasa de Poisson creciente en el esfuerzo de mejora y la asabiya; los saltos son mayores cuanto más lejos se está de la frontera.</p>`;
   const P = D.calibration.libres || D.calibration.params;
-  const E1N = {golpes:"Golpes (logit)", transicion_ad:"Autocracia → democracia", transicion_da:"Democracia → autocracia", crisis:"Crisis financieras", deuda:"Dinámica de la deuda", nacionalizacion:"Nacionalizaciones"};
-  const PN = {kappa_f:"Difusión por IED (κ_f)", theta_d:"Escala del intercambio desigual (θ)", b4:"Conflicto: rentas de recursos", m_scale:"Escala: importaciones de manufacturas", r_scale:"Escala: I+D + educación", w_scale:"Escala: gasto social", eps_w:"Redistribución → captura de élites", aid_eff:"Efecto de la ayuda oficial", phi_h:"Capacidad de absorción (capital humano)", g0:"Deriva de la frontera tecnológica (g₀)", kappa:"Velocidad de difusión (κ)", kappa_m:"Difusión incorporada: importaciones/IED (κₘ)", lam0:"Tasa de saltos tecnológicos (λ₀)", j0:"Tamaño medio del salto (j₀)", sig_a:"Ruido de PTF (σ)", tau:"Intercambio desigual (τ)", b0:"Conflicto: intercepto", b1:"Conflicto: sensibilidad a log PSI", b2:"Conflicto: efecto del ingreso", bp:"Persistencia del conflicto (logit)", b3:"Conflicto: efecto de la asabiya", r_R:"Pendiente logística de la capacidad extractiva (r_R)", x0:"Fracción ya extraída al entrar (x₀)", x_hist:"Rentas reinvertidas en extracción (histórico)"};
+  const E1N = {financiamiento:"Financiamiento (Feldstein-Horioka)", golpes:"Golpes (logit)", transicion_ad:"Autocracia → democracia", transicion_da:"Democracia → autocracia", crisis:"Crisis financieras", deuda:"Dinámica de la deuda", nacionalizacion:"Nacionalizaciones"};
+  const PN = {kappa_f:"Difusión por IED (κ_f)", theta_d:"Escala del intercambio desigual (θ)", b4:"Conflicto: rentas de recursos", m_scale:"Escala: importaciones de manufacturas", r_scale:"Escala: I+D + educación", w_scale:"Escala: gasto social", eps_w:"Redistribución → captura de élites", aid_eff:"Efecto de la ayuda oficial", phi_h:"Capacidad de absorción (capital humano)", g0:"Deriva de la frontera tecnológica (g₀)", kappa:"Velocidad de difusión (κ)", kappa_m:"Difusión incorporada: importaciones/IED (κₘ)", lam0:"Tasa de saltos tecnológicos (λ₀)", j0:"Tamaño medio del salto (j₀)", sig_a:"Ruido de PTF (σ)", tau:"Intercambio desigual (τ)", b0:"Conflicto: intercepto", b1:"Conflicto: sensibilidad a log PSI", b2:"Conflicto: efecto del ingreso", bp:"Persistencia del conflicto (logit)", b3:"Conflicto: efecto de la asabiya", r_R:"Pendiente logística de la capacidad extractiva (r_R)", x0:"Fracción ya extraída al entrar (x₀)", x_hist:"Rentas reinvertidas en extracción (histórico)", chi_k:"Costo de ajuste del capital (χ)"};
   document.getElementById("paramKV").innerHTML = `<dt style="grid-column:1/-1;font-weight:600;color:var(--ink)">Etapa 2 · por simulación</dt>` + Object.entries(P).map(([k,v])=>`<dt>${PN[k]||k}</dt><dd>${f3(v)}</dd>`).join("")
     + (D.calibration.etapa1 ? `<dt style="grid-column:1/-1;font-weight:600;color:var(--ink);margin-top:8px">Etapa 1 · estimación directa con datos</dt>` + Object.entries(D.calibration.etapa1).map(([k,v])=>`<dt>${E1N[k]||k} (n = ${d3.format(",")(v.n)})</dt><dd>${Object.entries(v.coef).map(([a,b])=>`${a} ${f2(b)}`).join(" · ")}</dd>`).join("") : "");
 }
 
-buildControls(); renderAll(); buildInverse(); buildValidation(); buildPolicies(); buildClimate(); buildMech();
+buildControls(); renderAll(); buildInverse(); buildValidation(); buildPolicies(); buildRecs(); buildClimate(); buildMech();
 document.getElementById("findings").innerHTML = __FINDINGS__;
 document.getElementById("limits").innerHTML = __LIMITS__;
 document.getElementById("climaProse").innerHTML = __CLIMA__;

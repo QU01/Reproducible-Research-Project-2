@@ -11,7 +11,7 @@ import numpy as np
 from behavior import BehaviorModel, BehaviorPolicy
 from calibrate import CONF, DEBT, LY, W
 from model import CHANNEL_NAMES, CHANNELS, Params, Simulator, build_world
-from rl import mlp, observe, rollout, to_shares, load_irl_theta
+from rl import mlp, observe, rollout, to_budget, to_shares, load_irl_theta
 
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT / "results"
@@ -89,6 +89,15 @@ def outcomes(o, t19=69):
     return res
 
 
+def financing(o, t0=20, t1=69):
+    """Spending, foreign borrowing above the historical path and forced saving (shares of GDP)."""
+    tot = sum(o[c] for c in CHANNELS)[:, :, t0:t1 + 1]
+    return dict(presupuesto_medio=float(np.nanmean(tot)),
+                endeudamiento_extra_medio=float(np.nanmean(o["borrow"][:, :, t0:t1 + 1])),
+                recorte_forzado_medio=float(np.nanmean(o["squeeze"][:, :, t0:t1 + 1])),
+                costo_ajuste_medio=float(np.nanmean(o["adjcost"][:, :, t0:t1 + 1])))
+
+
 def kmeans(X, k=4, seed=0, iters=100):
     rng = np.random.default_rng(seed)
     best = None
@@ -163,6 +172,7 @@ def main():
     mean["conflict"] = np.nanmean(o["hazard"], 0)
     data["scenarios"]["modelo_hist"] = {k: rnd(pad(mean[k])) for k in VARS}
     summary["modelo_hist"] = outcomes(o)
+    summary["modelo_hist"].update(financing(o))
     tot_h = sum(o[c] for c in CHANNELS)
     zh = zone_of(o["ly"])
     summary["modelo_hist"]["asignacion_por_zona"] = {
@@ -254,6 +264,7 @@ def main():
             m[c] = m[c] / tot
         data["scenarios"][f"rl_{mode}"] = {k: rnd(pad(m[k])) for k in VARS}
         out = outcomes(rec)
+        out.update(financing(rec))
         z = zone_of(rec["ly"])
         tot_r = sum(rec[c] for c in CHANNELS)
         out["asignacion_por_zona"] = {zn: {c: float(np.nanmean((rec[c] / tot_r)[z == zi])) for c in CHANNELS}
@@ -279,8 +290,10 @@ def main():
             X[:, j] = grid
             if fname == "ly_rel":
                 X[:, 1] = 1 / (1 + np.exp(-(grid - 1.2) / 0.35))
-            sh = to_shares(mlp(th["pol"], X))
-            resp[mode][fname] = {"grid": grid.round(3).tolist(), **{c: sh[:, k].round(4).tolist() for k, c in enumerate(CHANNELS)}}
+            zz = mlp(th["pol"], X)
+            sh = to_shares(zz)
+            resp[mode][fname] = {"grid": grid.round(3).tolist(), **{c: sh[:, k].round(4).tolist() for k, c in enumerate(CHANNELS)},
+                                 "presupuesto": to_budget(zz).round(4).tolist()}
 
     # observed allocation by zone (data) for comparison with the learned policies
     shares = np.stack([W.extra[f"a_{c}"] for c in CHANNELS], -1) if all(f"a_{c}" in W.extra for c in CHANNELS) else None
@@ -316,6 +329,8 @@ def main():
         data["arquetipos"] = arche
         data["arquetipo_pais"] = country_arch
     data["respuesta"] = resp
+    if (RES / "recomendaciones.json").exists():
+        data["recomendaciones"] = json.load(open(RES / "recomendaciones.json"))
     summary["rl"] = rl_summary
     data["resumen"] = summary
     json.dump(data, open(RES / "dashboard_data.json", "w"), separators=(",", ":"))

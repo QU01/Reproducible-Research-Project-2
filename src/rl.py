@@ -4,8 +4,10 @@ Every country is an agent. All agents share one policy network (parameter sharin
 but each one conditions on its own state, so heterogeneous strategies can emerge
 (core vs periphery, stable vs unstable, cohesive vs fragmented...).
 
-Decision: every 5 years each nation splits a discretionary budget of SIGMA*GDP over the
-six channels [k, r, m, x, f, w] (softmax of Gaussian logits).
+Decision: every 5 years each nation chooses how much to spend (budget between SIG_LO and SIG_HI
+of GDP, the rest is consumed) and how to split it over the six channels [k, r, m, x, f, w]
+(softmax of Gaussian logits). Spending above the historical path is financed partly by domestic
+saving (less consumption) and partly by foreign borrowing up to a deficit ceiling (model.py).
 Algorithm: PPO (clipped surrogate) + GAE, implemented with numpy/autograd.
 
 Reward schemes (one policy is trained per scheme):
@@ -29,10 +31,12 @@ from model import CHANNELS, Params, Simulator, build_world
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
-SIGMA = 0.35
+SIGMA = 0.35                      # budget of the default mix
+SIG_LO, SIG_HI = 0.10, 0.60       # range of the chosen budget (share of GDP)
 STEP = 5
 N_OBS = 22
-N_ACT = len(CHANNELS)
+N_CH = len(CHANNELS)
+N_ACT = N_CH + 1                  # six channel logits + budget level
 HIST_DEFAULT = np.array([0.20, 0.018, 0.075, 0.01, 0.01, 0.037]) / 0.35  # typical historical mix (model units)
 
 
@@ -126,8 +130,15 @@ def observe(sim, t):
 
 
 def to_shares(z):
+    """Channel shares from the first six logits."""
+    z = z[..., :N_CH]
     e = np.exp(z - z.max(-1, keepdims=True))
     return e / e.sum(-1, keepdims=True)
+
+
+def to_budget(z):
+    """Budget (share of GDP) from the last logit."""
+    return SIG_LO + (SIG_HI - SIG_LO) / (1 + np.exp(-z[..., N_CH]))
 
 
 def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0):
@@ -142,13 +153,15 @@ def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0
     rec = {k: np.full((R, N, T - t0), np.nan) for k in sim.REC} if record else None
     if record:
         rec["price"] = np.full((R, T - t0), np.nan)
-    shares = np.broadcast_to(HIST_DEFAULT, (R, N, N_ACT)).copy()
+    shares = np.broadcast_to(HIST_DEFAULT, (R, N, N_CH)).copy()
+    budget = np.full((R, N), SIGMA)
     for s, t_dec in enumerate(steps):
         obs = observe(sim, t_dec)
         mean = mlp(pol, obs.reshape(-1, N_OBS)).reshape(R, N, N_ACT)
         z = mean if deterministic else mean + np.exp(logstd) * rng.standard_normal(mean.shape)
         mask = sim.active.copy()
         shares = np.where(mask[..., None], to_shares(z), shares)
+        budget = np.where(mask, to_budget(z), budget)
         start = _metrics(sim, mode) if mode != "irl" else None
         conf_years = np.zeros((R, N))
         r_irl = np.zeros((R, N))
@@ -156,7 +169,8 @@ def rollout(sim, pol, logstd, rng, mode, deterministic=False, record=False, t0=0
             newly = ~mask & sim.active   # entrants inside the block use the default mix
             if newly.any():
                 shares = np.where(newly[..., None], HIST_DEFAULT, shares)
-            acts = {c: SIGMA * shares[..., j] for j, c in enumerate(CHANNELS)}
+                budget = np.where(newly, SIGMA, budget)
+            acts = {c: budget * shares[..., j] for j, c in enumerate(CHANNELS)}
             prev = _irl_state(sim) if mode == "irl" else None
             out = sim.step(acts)
             conf_years += np.nan_to_num(out["conflict"])
@@ -248,7 +262,7 @@ def train(mode, params, iters=250, R=12, seed=0, log=print):
     sim = Simulator(w, params, R=R, seed=seed)
     pol = init_mlp([N_OBS, 64, 64, N_ACT], rng)
     # bias the initial policy toward the historical mix so exploration starts from plausible behaviour
-    pol[-1][1] = np.log(HIST_DEFAULT)
+    pol[-1][1] = np.append(np.log(HIST_DEFAULT), 0.0)     # budget logit 0 -> SIGMA
     vf = init_mlp([N_OBS, 64, 64, 1], rng, out_scale=0.1)
     logstd = np.full(N_ACT, -0.5)
     th = {"pol": pol, "logstd": logstd}
@@ -294,9 +308,10 @@ def train(mode, params, iters=250, R=12, seed=0, log=print):
         ep_ret = float(buf["rew"].sum(2)[m[:, :, 0] | m.any(2)].mean())
         hist.append(ep_ret)
         if it % 10 == 0 or it == iters - 1:
-            mean_sh = to_shares(mlp(th["pol"], O))
+            out = mlp(th["pol"], O)
             log(f"[{mode}] it {it:3d} ret {ep_ret:+.3f} std {np.exp(th['logstd']).mean():.2f} "
-                f"shares {np.round(mean_sh.mean(0), 3)} ({time.time() - t_start:.0f}s)")
+                f"budget {to_budget(out).mean():.3f} shares {np.round(to_shares(out).mean(0), 3)} "
+                f"({time.time() - t_start:.0f}s)")
     return th, vf, hist
 
 
